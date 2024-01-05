@@ -27,3 +27,4 @@ add_subdirectory(dependencies)
 add_executable(${BINARY_NAME} Main.cpp ${SRC_LIST})
 
 target_link_libraries(${BINARY_NAME} pthread)
+target_link_libraries(${BINARY_NAME} fmt)
