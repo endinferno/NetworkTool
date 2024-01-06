@@ -2,18 +2,16 @@
 
 #include <memory>
 
+#include "EpollHandler.hpp"
 #include "Epoller.hpp"
 
-class TcpConnector
+class TcpConnector : public EpollHandler
 {
 public:
     TcpConnector(std::shared_ptr<Epoller>& epoller);
-    void HandleErrorEvent(std::shared_ptr<TcpConnection>& tcpConn);
-    void HandleReadEvent(std::shared_ptr<TcpConnection>& tcpConn);
-    void HandleWriteEvent(std::shared_ptr<TcpConnection>& tcpConn);
+    void HandleErrorEvent(std::shared_ptr<TcpConnection>& tcpConn) override;
+    void HandleReadEvent(std::shared_ptr<TcpConnection>& tcpConn) override;
+    void HandleWriteEvent(std::shared_ptr<TcpConnection>& tcpConn) override;
     std::shared_ptr<TcpConnection> Connect(std::shared_ptr<TcpSocket>& tcpSock);
     ~TcpConnector() = default;
-
-private:
-    std::shared_ptr<Epoller> epoller_;
 };

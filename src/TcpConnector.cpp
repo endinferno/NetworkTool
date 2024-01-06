@@ -4,7 +4,7 @@
 #include "TcpConnector.hpp"
 
 TcpConnector::TcpConnector(std::shared_ptr<Epoller>& epoller)
-    : epoller_(epoller)
+    : EpollHandler(epoller)
 {}
 
 void TcpConnector::HandleErrorEvent(std::shared_ptr<TcpConnection>& tcpConn)
