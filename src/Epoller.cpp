@@ -8,7 +8,7 @@
 
 Epoller::Epoller()
     : epollFd_(epoll_create(EPOLL_MAX_EVENT))
-    , events_(32)
+    , events_(EPOLL_MAX_EVENT)
     , isQuit_(false)
 {}
 
