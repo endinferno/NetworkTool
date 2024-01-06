@@ -1,7 +1,3 @@
-#include <memory>
-
-#include <sys/epoll.h>
-
 #include "Logger.hpp"
 #include "TcpClient.hpp"
 #include "TcpConnection.hpp"
