@@ -4,36 +4,36 @@
 #include <unistd.h>
 
 #include "Logger.hpp"
-#include "TcpClient.hpp"
+#include "Epoller.hpp"
 
-TcpClient::TcpClient()
+Epoller::Epoller()
     : epollFd_(epoll_create(EPOLL_MAX_EVENT))
     , events_(32)
     , isQuit_(false)
 {}
 
-void TcpClient::AddEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event)
+void Epoller::AddEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event)
 {
     EpollEventCtl(conn.get(), EPOLL_CTL_ADD, event);
 }
 
-void TcpClient::ModEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event)
+void Epoller::ModEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event)
 {
     EpollEventCtl(conn.get(), EPOLL_CTL_MOD, event);
 }
 
-void TcpClient::DelEvent(std::shared_ptr<TcpConnection>& conn)
+void Epoller::DelEvent(std::shared_ptr<TcpConnection>& conn)
 {
     EpollEventCtl(conn.get(), EPOLL_CTL_DEL, 0);
 }
 
-void TcpClient::Run()
+void Epoller::Run()
 {
     epollThread_ =
-        std::make_shared<std::thread>(&TcpClient::EpollThreadFn, this);
+        std::make_shared<std::thread>(&Epoller::EpollThreadFn, this);
 }
 
-void TcpClient::EpollThreadFn()
+void Epoller::EpollThreadFn()
 {
     while (!isQuit_) {
         auto conns = PollEvent();
@@ -41,7 +41,7 @@ void TcpClient::EpollThreadFn()
     }
 }
 
-std::vector<TcpConnection*> TcpClient::PollEvent()
+std::vector<TcpConnection*> Epoller::PollEvent()
 {
     std::vector<TcpConnection*> conns;
     int eventCnt =
@@ -62,7 +62,7 @@ std::vector<TcpConnection*> TcpClient::PollEvent()
     return conns;
 }
 
-void TcpClient::HandleEvent(std::vector<TcpConnection*>& conns)
+void Epoller::HandleEvent(std::vector<TcpConnection*>& conns)
 {
     for (auto& conn : conns) {
         uint32_t event = conn->GetEvent();
@@ -79,7 +79,7 @@ void TcpClient::HandleEvent(std::vector<TcpConnection*>& conns)
     }
 }
 
-void TcpClient::EpollEventCtl(TcpConnection* conn, int op, uint32_t event)
+void Epoller::EpollEventCtl(TcpConnection* conn, int op, uint32_t event)
 {
     struct epoll_event epollEvt;
     epollEvt.data.ptr = static_cast<void*>(conn);
@@ -92,7 +92,7 @@ void TcpClient::EpollEventCtl(TcpConnection* conn, int op, uint32_t event)
     }
 }
 
-TcpClient::~TcpClient()
+Epoller::~Epoller()
 {
     isQuit_ = true;
     if (epollThread_->joinable()) {

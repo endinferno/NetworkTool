@@ -2,12 +2,12 @@
 
 #include <memory>
 
-#include "TcpClient.hpp"
+#include "Epoller.hpp"
 
 class TcpConnector
 {
 public:
-    TcpConnector(std::shared_ptr<TcpClient>& tcpClient);
+    TcpConnector(std::shared_ptr<Epoller>& epoller);
     void HandleErrorEvent(std::shared_ptr<TcpConnection>& tcpConn);
     void HandleReadEvent(std::shared_ptr<TcpConnection>& tcpConn);
     void HandleWriteEvent(std::shared_ptr<TcpConnection>& tcpConn);
@@ -15,5 +15,5 @@ public:
     ~TcpConnector() = default;
 
 private:
-    std::shared_ptr<TcpClient> tcpClient_;
+    std::shared_ptr<Epoller> epoller_;
 };

@@ -9,15 +9,15 @@
 #include "NonCopyable.hpp"
 #include "TcpSocket.hpp"
 
-class TcpClient : public NonCopyable
+class Epoller : public NonCopyable
 {
 public:
-    TcpClient();
+    Epoller();
     void AddEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event);
     void ModEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event);
     void DelEvent(std::shared_ptr<TcpConnection>& conn);
     void Run();
-    ~TcpClient();
+    ~Epoller();
 
 private:
     void EpollThreadFn();

@@ -3,8 +3,8 @@
 #include "Logger.hpp"
 #include "TcpConnector.hpp"
 
-TcpConnector::TcpConnector(std::shared_ptr<TcpClient>& tcpClient)
-    : tcpClient_(tcpClient)
+TcpConnector::TcpConnector(std::shared_ptr<Epoller>& epoller)
+    : epoller_(epoller)
 {}
 
 void TcpConnector::HandleErrorEvent(std::shared_ptr<TcpConnection>& tcpConn)
@@ -25,7 +25,7 @@ void TcpConnector::HandleWriteEvent(std::shared_ptr<TcpConnection>& tcpConn)
         throw std::runtime_error(fmt::format("Fail to connect {}", opt));
     }
     INFO("Success to connect\n");
-    tcpClient_->DelEvent(tcpConn);
+    epoller_->DelEvent(tcpConn);
 }
 
 std::shared_ptr<TcpConnection> TcpConnector::Connect(
@@ -44,6 +44,6 @@ std::shared_ptr<TcpConnection> TcpConnector::Connect(
     tcpConn->SetErrorCallback(
         std::bind(&TcpConnector::HandleErrorEvent, this, tcpConn));
 
-    tcpClient_->AddEvent(tcpConn, EPOLLOUT | EPOLLET);
+    epoller_->AddEvent(tcpConn, EPOLLOUT | EPOLLET);
     return tcpConn;
 }
