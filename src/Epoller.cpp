@@ -3,8 +3,8 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
-#include "Logger.hpp"
 #include "Epoller.hpp"
+#include "Logger.hpp"
 
 Epoller::Epoller()
     : epollFd_(epoll_create(EPOLL_MAX_EVENT))
@@ -29,8 +29,7 @@ void Epoller::DelEvent(std::shared_ptr<TcpConnection>& conn)
 
 void Epoller::Run()
 {
-    epollThread_ =
-        std::make_shared<std::thread>(&Epoller::EpollThreadFn, this);
+    epollThread_ = std::make_shared<std::thread>(&Epoller::EpollThreadFn, this);
 }
 
 void Epoller::EpollThreadFn()
