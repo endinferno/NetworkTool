@@ -8,7 +8,7 @@
 class TcpClient : public EpollHandler
 {
 public:
-    TcpClient(std::shared_ptr<Epoller>& epoller);
+    explicit TcpClient(std::shared_ptr<Epoller>& epoller);
     void HandleErrorEvent(std::shared_ptr<TcpChannel> tcpChan) override;
     void HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan) override;
     void HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan) override;
