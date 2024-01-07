@@ -78,7 +78,6 @@ void TcpSocket::Connect(const std::string& domainName, uint16_t port)
 
 ssize_t TcpSocket::Write(const std::vector<char>& writeBuf)
 {
-    DEBUG("123\n");
     ssize_t writeBytes = ::write(sockFd_, writeBuf.data(), writeBuf.size());
     SetErrno(errno);
     return writeBytes;
