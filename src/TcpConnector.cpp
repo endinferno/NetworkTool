@@ -36,9 +36,10 @@ void TcpConnector::SetNewConnectionCallback(NewConnectionCallback callback)
     callback_ = std::move(callback);
 }
 
-void TcpConnector::Connect(std::shared_ptr<TcpSocket>& tcpSock)
+void TcpConnector::Connect(std::shared_ptr<TcpSocket>& tcpSock,
+                           const std::string& domainName, uint16_t port)
 {
-    tcpSock->Connect("hq.sinajs.cn", 80);
+    tcpSock->Connect(domainName, port);
 
     auto tcpChan = std::make_shared<TcpChannel>(tcpSock);
     tcpChan->SetReadCallback(

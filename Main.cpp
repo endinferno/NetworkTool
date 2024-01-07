@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     epoller->Run();
 
     std::shared_ptr<TcpClient> client = std::make_shared<TcpClient>(epoller);
-    client->Connect();
+    client->Connect("hq.sinajs.cn", 80);
 
     std::string writeMsg;
     writeMsg += "GET /list=sz002603 HTTP/1.1\r\n";

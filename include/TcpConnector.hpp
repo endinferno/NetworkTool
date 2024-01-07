@@ -15,7 +15,8 @@ public:
     void HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan) override;
     void HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan) override;
     void SetNewConnectionCallback(NewConnectionCallback callback);
-    void Connect(std::shared_ptr<TcpSocket>& tcpSock);
+    void Connect(std::shared_ptr<TcpSocket>& tcpSock,
+                 const std::string& domainName, uint16_t port);
     ~TcpConnector() = default;
 
 private:

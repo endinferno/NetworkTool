@@ -53,7 +53,7 @@ ssize_t TcpClient::Write(const std::vector<char>& writeBuf)
     return tcpConn_->Write(writeBuf);
 }
 
-void TcpClient::Connect()
+void TcpClient::Connect(const std::string& domainName, uint16_t port)
 {
     auto tcpSock_ = std::make_shared<TcpSocket>();
     tcpSock_->SetReuseAddr();
@@ -61,7 +61,7 @@ void TcpClient::Connect()
     tcpSock_->SetNonBlock();
     tcpConnector_.SetNewConnectionCallback(std::bind(
         &TcpClient::HandleNewConnection, this, std::placeholders::_1));
-    tcpConnector_.Connect(tcpSock_);
+    tcpConnector_.Connect(tcpSock_, domainName, port);
 }
 
 void TcpClient::HandleNewConnection(std::shared_ptr<TcpChannel> tcpChan)

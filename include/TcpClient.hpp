@@ -13,7 +13,7 @@ public:
     void HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan) override;
     void HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan) override;
     ssize_t Write(const std::vector<char>& writeBuf);
-    void Connect();
+    void Connect(const std::string& domainName, uint16_t port);
     ~TcpClient() = default;
 
 private:
@@ -25,5 +25,5 @@ private:
     TcpConnector tcpConnector_;
     std::shared_ptr<TcpConnection> tcpConn_;
     std::vector<char> readBuf_;
-	bool isWritable;
+    bool isWritable;
 };
