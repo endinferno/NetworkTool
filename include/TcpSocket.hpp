@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <memory>
 #include <string>
 #include <vector>
 
@@ -9,12 +8,8 @@
 #include <unistd.h>
 
 #include "NonCopyable.hpp"
-#include "TcpConnection.hpp"
 
-class TcpConnection;
-
-class TcpSocket : public NonCopyable,
-                  public std::enable_shared_from_this<TcpSocket>
+class TcpSocket : public NonCopyable
 {
 public:
     TcpSocket();
@@ -26,11 +21,14 @@ public:
     ssize_t Write(const std::vector<char>& writeBuf);
     ssize_t Read(std::vector<char>& readBuf);
     [[nodiscard]] int GetFd() const;
+    [[nodiscard]] int GetErrno() const;
     ~TcpSocket();
 
 private:
+    void SetErrno(int err);
     uint32_t GetIPFromDomain(const std::string& domainName);
 
 private:
     int sockFd_;
+    int savedErrno_;
 };

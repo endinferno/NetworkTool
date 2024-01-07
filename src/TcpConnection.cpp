@@ -1,60 +1,23 @@
+#include <memory>
+
 #include "TcpConnection.hpp"
 
-
-TcpConnection::TcpConnection(const std::shared_ptr<TcpSocket>& sock)
-    : tcpSock_(sock)
-    , readCallback_(nullptr)
-    , writeCallback_(nullptr)
-    , errorCallback_(nullptr)
+TcpConnection::TcpConnection(const std::shared_ptr<TcpSocket>& tcpSock)
+    : tcpSock_(tcpSock)
+    , isConnect_(false)
 {}
 
-void TcpConnection::SetReadCallback(EventCallback callback)
+void TcpConnection::SetConnectStatus(bool status)
 {
-    readCallback_ = std::move(callback);
+    isConnect_ = status;
 }
 
-void TcpConnection::SetWriteCallback(EventCallback callback)
+bool TcpConnection::GetConnectStatus() const
 {
-    writeCallback_ = std::move(callback);
+    return isConnect_;
 }
 
-void TcpConnection::SetErrorCallback(EventCallback callback)
+ssize_t TcpConnection::Write(const std::vector<char>& writeBuf)
 {
-    errorCallback_ = std::move(callback);
-}
-
-void TcpConnection::OnReadable()
-{
-    if (readCallback_ != nullptr) {
-        readCallback_(shared_from_this());
-    }
-}
-
-void TcpConnection::OnWritable()
-{
-    if (writeCallback_ != nullptr) {
-        writeCallback_(shared_from_this());
-    }
-}
-
-void TcpConnection::OnErrorable()
-{
-    if (errorCallback_ != nullptr) {
-        errorCallback_(shared_from_this());
-    }
-}
-
-void TcpConnection::SetEvent(uint32_t event)
-{
-    epollEvt_ = event;
-}
-
-uint32_t TcpConnection::GetEvent() const
-{
-    return epollEvt_;
-}
-
-std::shared_ptr<TcpSocket> TcpConnection::GetSock() const
-{
-    return tcpSock_;
+    return tcpSock_->Write(writeBuf);
 }

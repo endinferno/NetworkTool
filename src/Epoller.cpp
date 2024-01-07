@@ -12,19 +12,21 @@ Epoller::Epoller()
     , isQuit_(false)
 {}
 
-void Epoller::AddEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event)
+void Epoller::AddEvent(std::shared_ptr<TcpChannel>& tcpChan, uint32_t event)
 {
-    EpollEventCtl(conn.get(), EPOLL_CTL_ADD, event);
+    channels_.insert(tcpChan);
+    EpollEventCtl(tcpChan.get(), EPOLL_CTL_ADD, event);
 }
 
-void Epoller::ModEvent(std::shared_ptr<TcpConnection>& conn, uint32_t event)
+void Epoller::ModEvent(std::shared_ptr<TcpChannel>& tcpChan, uint32_t event)
 {
-    EpollEventCtl(conn.get(), EPOLL_CTL_MOD, event);
+    EpollEventCtl(tcpChan.get(), EPOLL_CTL_MOD, event);
 }
 
-void Epoller::DelEvent(std::shared_ptr<TcpConnection>& conn)
+void Epoller::DelEvent(std::shared_ptr<TcpChannel>& tcpChan)
 {
-    EpollEventCtl(conn.get(), EPOLL_CTL_DEL, 0);
+    channels_.erase(tcpChan);
+    EpollEventCtl(tcpChan.get(), EPOLL_CTL_DEL, 0);
 }
 
 void Epoller::Run()
@@ -35,14 +37,14 @@ void Epoller::Run()
 void Epoller::EpollThreadFn()
 {
     while (!isQuit_) {
-        auto conns = PollEvent();
-        HandleEvent(conns);
+        auto tcpChans = PollEvent();
+        HandleEvent(tcpChans);
     }
 }
 
-std::vector<TcpConnection*> Epoller::PollEvent()
+Epoller::TcpChannels Epoller::PollEvent()
 {
-    std::vector<TcpConnection*> conns;
+    std::vector<TcpChannel*> tcpChans;
     int eventCnt =
         ::epoll_wait(epollFd_, events_.data(), EPOLL_MAX_EVENT, EPOLL_TIMEOUT);
     DEBUG("eventCnt {}\n", eventCnt);
@@ -51,40 +53,40 @@ std::vector<TcpConnection*> Epoller::PollEvent()
             fmt::format("Fail to epoll_wait {} {}\n", eventCnt, errno));
     } else if (eventCnt == 0) {
         // Timeout rings
-        return conns;
+        return tcpChans;
     }
     for (int i = 0; i < eventCnt; i++) {
-        auto conn = static_cast<TcpConnection*>(events_[i].data.ptr);
-        conn->SetEvent(events_[i].events);
-        conns.emplace_back(conn);
+        auto tcpChan = static_cast<TcpChannel*>(events_[i].data.ptr);
+        tcpChan->SetEvent(events_[i].events);
+        tcpChans.emplace_back(tcpChan);
     }
-    return conns;
+    return tcpChans;
 }
 
-void Epoller::HandleEvent(std::vector<TcpConnection*>& conns)
+void Epoller::HandleEvent(TcpChannels& tcpChans)
 {
-    for (auto& conn : conns) {
-        uint32_t event = conn->GetEvent();
+    for (auto& tcpChan : tcpChans) {
+        uint32_t event = tcpChan->GetEvent();
         DEBUG("Epoll event {:x}\n", event);
         if (event & EPOLLERR) {
-            conn->OnErrorable();
+            tcpChan->OnErrorable();
         }
         if (event & EPOLLOUT) {
-            conn->OnWritable();
+            tcpChan->OnWritable();
         }
         if (event & EPOLLIN) {
-            conn->OnReadable();
+            tcpChan->OnReadable();
         }
     }
 }
 
-void Epoller::EpollEventCtl(TcpConnection* conn, int op, uint32_t event)
+void Epoller::EpollEventCtl(TcpChannel* tcpChan, int op, uint32_t event)
 {
     struct epoll_event epollEvt;
-    epollEvt.data.ptr = static_cast<void*>(conn);
+    epollEvt.data.ptr = static_cast<void*>(tcpChan);
     epollEvt.events = event;
 
-    int ret = ::epoll_ctl(epollFd_, op, conn->GetSock()->GetFd(), &epollEvt);
+    int ret = ::epoll_ctl(epollFd_, op, tcpChan->GetSock()->GetFd(), &epollEvt);
     if (ret == -1) {
         throw std::runtime_error(
             fmt::format("Fail to {} epoll event {}\n", op, event));

@@ -78,12 +78,27 @@ void TcpSocket::Connect(const std::string& domainName, uint16_t port)
 
 ssize_t TcpSocket::Write(const std::vector<char>& writeBuf)
 {
-    return ::write(sockFd_, (const void*)writeBuf.data(), writeBuf.size());
+    DEBUG("123\n");
+    ssize_t writeBytes = ::write(sockFd_, writeBuf.data(), writeBuf.size());
+    SetErrno(errno);
+    return writeBytes;
 }
 
 ssize_t TcpSocket::Read(std::vector<char>& readBuf)
 {
-    return ::read(sockFd_, readBuf.data(), readBuf.size());
+    ssize_t readBytes = ::read(sockFd_, readBuf.data(), readBuf.size());
+    SetErrno(errno);
+    return readBytes;
+}
+
+int TcpSocket::GetErrno() const
+{
+    return savedErrno_;
+}
+
+void TcpSocket::SetErrno(int err)
+{
+    savedErrno_ = err;
 }
 
 uint32_t TcpSocket::GetIPFromDomain(const std::string& domainName)
