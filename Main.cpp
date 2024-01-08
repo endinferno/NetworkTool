@@ -1,4 +1,5 @@
 #include "Epoller.hpp"
+#include "HttpRequest.hpp"
 #include "Logger.hpp"
 #include "Signal.hpp"
 #include "TcpClient.hpp"
@@ -13,13 +14,12 @@ int main(int argc, char* argv[])
     std::shared_ptr<TcpClient> client = std::make_shared<TcpClient>(epoller);
     client->Connect("hq.sinajs.cn", 80);
 
-    std::string writeMsg;
-    writeMsg += "GET /list=sz002603 HTTP/1.1\r\n";
-    writeMsg += "Host: hq.sinajs.cn\r\n";
-    writeMsg += "Referer: http://finance.sina.com.cn\r\n";
-    writeMsg += "\r\n";
-
-    std::vector<char> writeBuf(writeMsg.begin(), writeMsg.end());
+    HttpRequest httpReq;
+    httpReq.SetReqType(HttpRequest::ReqType::GET);
+    httpReq.SetUrl("/list=sz002603");
+    httpReq.AddHeader("Host", "hq.sinajs.cn");
+    httpReq.AddHeader("Referer", "http://finance.sina.com.cn");
+    auto writeBuf = httpReq.Get();
 
     while (!signal.IsSignalTrigger()) {
         ssize_t writeBytes = client->Write(writeBuf);
