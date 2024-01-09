@@ -1,8 +1,6 @@
-#include <memory>
-
 #include "TcpConnection.hpp"
 
-TcpConnection::TcpConnection(const std::shared_ptr<TcpSocket>& tcpSock)
+TcpConnection::TcpConnection(TcpSocketPtr& tcpSock)
     : tcpSock_(tcpSock)
     , isConnect_(false)
 {}

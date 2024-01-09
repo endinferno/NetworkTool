@@ -1,7 +1,7 @@
 #include "TcpClient.hpp"
 #include "Logger.hpp"
 
-TcpClient::TcpClient(std::shared_ptr<Epoller>& epoller)
+TcpClient::TcpClient(EpollerPtr& epoller)
     : EpollHandler(epoller)
     , tcpConnector_(epoller)
     , tcpConn_(nullptr)
@@ -9,12 +9,12 @@ TcpClient::TcpClient(std::shared_ptr<Epoller>& epoller)
     , isWritable(false)
 {}
 
-void TcpClient::HandleErrorEvent(std::shared_ptr<TcpChannel> tcpChan)
+void TcpClient::HandleErrorEvent(TcpChannelPtr tcpChan)
 {
     ERROR("Fail to handle client\n");
 }
 
-void TcpClient::HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan)
+void TcpClient::HandleReadEvent(TcpChannelPtr tcpChan)
 {
     auto tcpSock = tcpChan->GetSock();
     while (true) {
@@ -37,7 +37,7 @@ void TcpClient::HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan)
     }
 }
 
-void TcpClient::HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan)
+void TcpClient::HandleWriteEvent(TcpChannelPtr tcpChan)
 {
     isWritable = true;
 }
@@ -61,7 +61,7 @@ void TcpClient::Connect(const std::string& domainName, uint16_t port)
     tcpConnector_.Connect(tcpSock_, domainName, port);
 }
 
-void TcpClient::HandleNewConnection(std::shared_ptr<TcpChannel> tcpChan)
+void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)
 {
     INFO("New connection construct\n");
     tcpConn_ = std::make_shared<TcpConnection>(tcpChan->GetSock());

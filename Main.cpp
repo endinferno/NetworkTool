@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 {
     Signal signal;
 
-    std::shared_ptr<Epoller> epoller = std::make_shared<Epoller>();
+    EpollerPtr epoller = std::make_shared<Epoller>();
     epoller->Run();
 
     std::shared_ptr<TcpClient> client = std::make_shared<TcpClient>(epoller);

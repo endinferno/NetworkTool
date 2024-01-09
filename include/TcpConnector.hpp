@@ -1,22 +1,19 @@
 #pragma once
 
-#include <memory>
-
 #include "EpollHandler.hpp"
 #include "Epoller.hpp"
 
 class TcpConnector : public EpollHandler
 {
 public:
-    using NewConnectionCallback =
-        std::function<void(std::shared_ptr<TcpChannel>)>;
-    TcpConnector(std::shared_ptr<Epoller>& epoller);
-    void HandleErrorEvent(std::shared_ptr<TcpChannel> tcpChan) override;
-    void HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan) override;
-    void HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan) override;
+    using NewConnectionCallback = std::function<void(TcpChannelPtr)>;
+    TcpConnector(EpollerPtr& epoller);
+    void HandleErrorEvent(TcpChannelPtr tcpChan) override;
+    void HandleReadEvent(TcpChannelPtr tcpChan) override;
+    void HandleWriteEvent(TcpChannelPtr tcpChan) override;
     void SetNewConnectionCallback(NewConnectionCallback callback);
-    void Connect(std::shared_ptr<TcpSocket>& tcpSock,
-                 const std::string& domainName, uint16_t port);
+    void Connect(TcpSocketPtr& tcpSock, const std::string& domainName,
+                 uint16_t port);
     ~TcpConnector() = default;
 
 private:

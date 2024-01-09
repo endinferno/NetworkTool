@@ -1,6 +1,6 @@
 #include "TcpChannel.hpp"
 
-TcpChannel::TcpChannel(const std::shared_ptr<TcpSocket>& sock)
+TcpChannel::TcpChannel(TcpSocketPtr& sock)
     : tcpSock_(sock)
     , readCallback_(nullptr)
     , writeCallback_(nullptr)
@@ -53,7 +53,7 @@ uint32_t TcpChannel::GetEvent() const
     return epollEvt_;
 }
 
-std::shared_ptr<TcpSocket> TcpChannel::GetSock() const
+TcpSocketPtr TcpChannel::GetSock() const
 {
     return tcpSock_;
 }

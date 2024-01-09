@@ -3,21 +3,21 @@
 #include "Logger.hpp"
 #include "TcpConnector.hpp"
 
-TcpConnector::TcpConnector(std::shared_ptr<Epoller>& epoller)
+TcpConnector::TcpConnector(EpollerPtr& epoller)
     : EpollHandler(epoller)
 {}
 
-void TcpConnector::HandleErrorEvent(std::shared_ptr<TcpChannel> tcpChan)
+void TcpConnector::HandleErrorEvent(TcpChannelPtr tcpChan)
 {
     ERROR("Fail to connect\n");
 }
 
-void TcpConnector::HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan)
+void TcpConnector::HandleReadEvent(TcpChannelPtr tcpChan)
 {
     assert(true);
 }
 
-void TcpConnector::HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan)
+void TcpConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
 {
     auto tcpSock = tcpChan->GetSock();
     int opt = tcpSock->GetSockOpt(SOL_SOCKET, SO_ERROR);
@@ -36,8 +36,8 @@ void TcpConnector::SetNewConnectionCallback(NewConnectionCallback callback)
     callback_ = std::move(callback);
 }
 
-void TcpConnector::Connect(std::shared_ptr<TcpSocket>& tcpSock,
-                           const std::string& domainName, uint16_t port)
+void TcpConnector::Connect(TcpSocketPtr& tcpSock, const std::string& domainName,
+                           uint16_t port)
 {
     tcpSock->Connect(domainName, port);
 

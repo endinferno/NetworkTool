@@ -6,14 +6,14 @@
 class EpollHandler
 {
 public:
-    explicit EpollHandler(std::shared_ptr<Epoller>& epoller)
+    explicit EpollHandler(EpollerPtr& epoller)
         : epoller_(epoller)
     {}
-    virtual void HandleErrorEvent(std::shared_ptr<TcpChannel> tcpChan) = 0;
-    virtual void HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan) = 0;
-    virtual void HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan) = 0;
+    virtual void HandleErrorEvent(TcpChannelPtr tcpChan) = 0;
+    virtual void HandleReadEvent(TcpChannelPtr tcpChan) = 0;
+    virtual void HandleWriteEvent(TcpChannelPtr tcpChan) = 0;
     ~EpollHandler() = default;
 
 protected:
-    std::shared_ptr<Epoller> epoller_;
+    EpollerPtr epoller_;
 };

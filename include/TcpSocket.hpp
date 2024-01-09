@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 #include <sys/socket.h>
@@ -31,3 +32,5 @@ private:
     int sockFd_;
     int savedErrno_;
 };
+
+using TcpSocketPtr = std::shared_ptr<TcpSocket>;

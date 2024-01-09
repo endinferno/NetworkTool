@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <thread>
 #include <unordered_set>
 #include <vector>
@@ -16,9 +15,9 @@ public:
     using TcpChannels = std::vector<TcpChannel*>;
 
     Epoller();
-    void AddEvent(std::shared_ptr<TcpChannel>& tcpChan, uint32_t event);
-    void ModEvent(std::shared_ptr<TcpChannel>& tcpChan, uint32_t event);
-    void DelEvent(std::shared_ptr<TcpChannel>& tcpChan);
+    void AddEvent(TcpChannelPtr& tcpChan, uint32_t event);
+    void ModEvent(TcpChannelPtr& tcpChan, uint32_t event);
+    void DelEvent(TcpChannelPtr& tcpChan);
     void Run();
     ~Epoller();
 
@@ -35,6 +34,8 @@ private:
     int epollFd_;
     std::vector<struct epoll_event> events_;
     std::shared_ptr<std::thread> epollThread_;
-    std::unordered_set<std::shared_ptr<TcpChannel>> channels_;
+    std::unordered_set<TcpChannelPtr> channels_;
     bool isQuit_;
 };
+
+using EpollerPtr = std::shared_ptr<Epoller>;

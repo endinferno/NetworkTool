@@ -12,18 +12,18 @@ Epoller::Epoller()
     , isQuit_(false)
 {}
 
-void Epoller::AddEvent(std::shared_ptr<TcpChannel>& tcpChan, uint32_t event)
+void Epoller::AddEvent(TcpChannelPtr& tcpChan, uint32_t event)
 {
     channels_.insert(tcpChan);
     EpollEventCtl(tcpChan.get(), EPOLL_CTL_ADD, event);
 }
 
-void Epoller::ModEvent(std::shared_ptr<TcpChannel>& tcpChan, uint32_t event)
+void Epoller::ModEvent(TcpChannelPtr& tcpChan, uint32_t event)
 {
     EpollEventCtl(tcpChan.get(), EPOLL_CTL_MOD, event);
 }
 
-void Epoller::DelEvent(std::shared_ptr<TcpChannel>& tcpChan)
+void Epoller::DelEvent(TcpChannelPtr& tcpChan)
 {
     channels_.erase(tcpChan);
     EpollEventCtl(tcpChan.get(), EPOLL_CTL_DEL, 0);

@@ -1,16 +1,19 @@
 #pragma once
 
 #include <functional>
-#include <memory>
 
 #include "TcpSocket.hpp"
+
+class TcpChannel;
+
+using TcpChannelPtr = std::shared_ptr<TcpChannel>;
 
 class TcpChannel : public std::enable_shared_from_this<TcpChannel>
 {
 public:
-    using EventCallback = std::function<void(std::shared_ptr<TcpChannel>)>;
+    using EventCallback = std::function<void(TcpChannelPtr)>;
 
-    explicit TcpChannel(const std::shared_ptr<TcpSocket>& tcpSock);
+    explicit TcpChannel(TcpSocketPtr& tcpSock);
     void SetReadCallback(EventCallback callback);
     void SetWriteCallback(EventCallback callback);
     void SetErrorCallback(EventCallback callback);
@@ -19,11 +22,11 @@ public:
     void OnErrorable();
     void SetEvent(uint32_t event);
     [[nodiscard]] uint32_t GetEvent() const;
-    [[nodiscard]] std::shared_ptr<TcpSocket> GetSock() const;
+    [[nodiscard]] TcpSocketPtr GetSock() const;
     ~TcpChannel() = default;
 
 private:
-    std::shared_ptr<TcpSocket> tcpSock_;
+    TcpSocketPtr tcpSock_;
     uint32_t epollEvt_;
     EventCallback readCallback_;
     EventCallback writeCallback_;
