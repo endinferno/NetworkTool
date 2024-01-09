@@ -27,7 +27,7 @@ void HttpRequest::AddParam(const std::string& key, const std::string& value)
     paramMap_.insert({ key, value });
 }
 
-std::string HttpRequest::GetBuffer() const
+std::string HttpRequest::Stringify() const
 {
     return fmt::format("{}{}\r\n", GetReqLine(), GetReqHeader());
 }

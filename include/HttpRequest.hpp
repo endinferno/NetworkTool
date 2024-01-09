@@ -18,7 +18,7 @@ public:
     void SetUrl(const std::string& url);
     void AddHeader(const std::string& key, const std::string& value);
     void AddParam(const std::string& key, const std::string& value);
-    std::string GetBuffer() const;
+    std::string Stringify() const;
     ~HttpRequest() = default;
 
 private:

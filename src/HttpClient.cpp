@@ -14,7 +14,7 @@ void HttpClient::Connect(const std::string& domainName, uint16_t port)
 
 void HttpClient::Request(const HttpRequest& httpReq)
 {
-    tcpClient_.Write(httpReq.GetBuffer());
+    tcpClient_.Write(httpReq.Stringify());
 }
 
 void HttpClient::OnMessage(const std::string& httpMsg)
