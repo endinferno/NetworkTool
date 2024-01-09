@@ -27,10 +27,9 @@ void HttpRequest::AddParam(const std::string& key, const std::string& value)
     paramMap_.insert({ key, value });
 }
 
-std::vector<char> HttpRequest::Get() const
+std::string HttpRequest::GetBuffer() const
 {
-    std::string req = fmt::format("{}{}\r\n", GetReqLine(), GetReqHeader());
-    return { req.begin(), req.end() };
+    return fmt::format("{}{}\r\n", GetReqLine(), GetReqHeader());
 }
 
 std::string HttpRequest::GetReqType() const
@@ -39,12 +38,10 @@ std::string HttpRequest::GetReqType() const
     case ReqType::GET:
     {
         return "GET";
-        break;
     }
     case ReqType::POST:
     {
         return "POST";
-        break;
     }
     case ReqType::UNKNOWN:
     {

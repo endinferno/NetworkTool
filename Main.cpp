@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
     httpReq.SetUrl("/list=sz002603");
     httpReq.AddHeader("Host", "hq.sinajs.cn");
     httpReq.AddHeader("Referer", "http://finance.sina.com.cn");
-    auto writeBuf = httpReq.Get();
+    auto writeBuf = httpReq.GetBuffer();
 
     while (!signal.IsSignalTrigger()) {
         ssize_t writeBytes = client->Write(writeBuf);

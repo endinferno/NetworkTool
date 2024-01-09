@@ -5,7 +5,7 @@ TcpClient::TcpClient(std::shared_ptr<Epoller>& epoller)
     : EpollHandler(epoller)
     , tcpConnector_(epoller)
     , tcpConn_(nullptr)
-    , readBuf_(MAX_READ_BUFFER)
+    , readBuf_(MAX_READ_BUFFER, 0)
     , isWritable(false)
 {}
 
@@ -33,10 +33,7 @@ void TcpClient::HandleReadEvent(std::shared_ptr<TcpChannel> tcpChan)
             break;
         }
         DEBUG("Read Bytes {}\n", readBytes);
-        for (ssize_t i = 0; i < readBytes; i++) {
-            INFO("{}", readBuf_[i]);
-        }
-        INFO("\n");
+        DEBUG("{}\n", readBuf_);
     }
 }
 
@@ -45,7 +42,7 @@ void TcpClient::HandleWriteEvent(std::shared_ptr<TcpChannel> tcpChan)
     isWritable = true;
 }
 
-ssize_t TcpClient::Write(const std::vector<char>& writeBuf)
+ssize_t TcpClient::Write(const std::string& writeBuf)
 {
     if (isWritable == false) {
         return 0;

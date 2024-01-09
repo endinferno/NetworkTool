@@ -17,7 +17,7 @@ bool TcpConnection::GetConnectStatus() const
     return isConnect_;
 }
 
-ssize_t TcpConnection::Write(const std::vector<char>& writeBuf)
+ssize_t TcpConnection::Write(const std::string& writeBuf)
 {
     return tcpSock_->Write(writeBuf);
 }

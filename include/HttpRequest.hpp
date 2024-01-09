@@ -2,7 +2,6 @@
 
 #include <string>
 #include <unordered_map>
-#include <vector>
 
 class HttpRequest
 {
@@ -19,7 +18,7 @@ public:
     void SetUrl(const std::string& url);
     void AddHeader(const std::string& key, const std::string& value);
     void AddParam(const std::string& key, const std::string& value);
-    std::vector<char> Get() const;
+    std::string GetBuffer() const;
     ~HttpRequest() = default;
 
 private:

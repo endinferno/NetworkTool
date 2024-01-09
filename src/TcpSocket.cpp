@@ -76,14 +76,14 @@ void TcpSocket::Connect(const std::string& domainName, uint16_t port)
     }
 }
 
-ssize_t TcpSocket::Write(const std::vector<char>& writeBuf)
+ssize_t TcpSocket::Write(const std::string& writeBuf)
 {
     ssize_t writeBytes = ::write(sockFd_, writeBuf.data(), writeBuf.size());
     SetErrno(errno);
     return writeBytes;
 }
 
-ssize_t TcpSocket::Read(std::vector<char>& readBuf)
+ssize_t TcpSocket::Read(std::string& readBuf)
 {
     ssize_t readBytes = ::read(sockFd_, readBuf.data(), readBuf.size());
     SetErrno(errno);
