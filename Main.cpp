@@ -1,8 +1,5 @@
-#include "Epoller.hpp"
-#include "HttpRequest.hpp"
-#include "Logger.hpp"
+#include "HttpClient.hpp"
 #include "Signal.hpp"
-#include "TcpClient.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -11,20 +8,18 @@ int main(int argc, char* argv[])
     EpollerPtr epoller = std::make_shared<Epoller>();
     epoller->Run();
 
-    TcpClientPtr client = std::make_shared<TcpClient>(epoller);
-    client->Connect("hq.sinajs.cn", 80);
+    HttpClient client(epoller);
+    client.Connect("hq.sinajs.cn");
 
     HttpRequest httpReq;
     httpReq.SetReqType(HttpRequest::ReqType::GET);
     httpReq.SetUrl("/list=sz002603");
     httpReq.AddHeader("Host", "hq.sinajs.cn");
     httpReq.AddHeader("Referer", "http://finance.sina.com.cn");
-    auto writeBuf = httpReq.GetBuffer();
 
     while (!signal.IsSignalTrigger()) {
-        ssize_t writeBytes = client->Write(writeBuf);
-        DEBUG("{}\n", writeBytes);
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        client.Request(httpReq);
+        std::this_thread::sleep_for(std::chrono::seconds(2));
     }
 
     return 0;

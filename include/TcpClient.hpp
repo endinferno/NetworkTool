@@ -8,12 +8,15 @@
 class TcpClient : public EpollHandler
 {
 public:
+    using OnMessageCallback = std::function<void(const std::string& msg)>;
+
     explicit TcpClient(EpollerPtr& epoller);
     void HandleErrorEvent(TcpChannelPtr tcpChan) override;
     void HandleReadEvent(TcpChannelPtr tcpChan) override;
     void HandleWriteEvent(TcpChannelPtr tcpChan) override;
-    ssize_t Write(const std::string& writeBuf);
+    void Write(const std::string& writeBuf);
     void Connect(const std::string& domainName, uint16_t port);
+    void SetOnMessageCallback(OnMessageCallback callback);
     ~TcpClient() = default;
 
 private:
@@ -25,6 +28,7 @@ private:
     TcpConnector tcpConnector_;
     TcpConnection tcpConn_;
     std::string readBuf_;
+    OnMessageCallback callback_;
 };
 
 using TcpClientPtr = std::shared_ptr<TcpClient>;

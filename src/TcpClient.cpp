@@ -30,8 +30,9 @@ void TcpClient::HandleReadEvent(TcpChannelPtr tcpChan)
             ERROR("Connection closed\n");
             break;
         }
-        DEBUG("Read Bytes {}\n", readBytes);
-        DEBUG("{}\n", readBuf_);
+        if (callback_ != nullptr) {
+            callback_(readBuf_);
+        }
     }
 }
 
@@ -40,12 +41,12 @@ void TcpClient::HandleWriteEvent(TcpChannelPtr tcpChan)
     tcpConn_.SetConnectStatus(true);
 }
 
-ssize_t TcpClient::Write(const std::string& writeBuf)
+void TcpClient::Write(const std::string& writeBuf)
 {
     if (tcpConn_.GetConnectStatus() == false) {
-        return 0;
+        return;
     }
-    return tcpConn_.Write(writeBuf);
+    tcpConn_.Write(writeBuf);
 }
 
 void TcpClient::Connect(const std::string& domainName, uint16_t port)
@@ -57,6 +58,11 @@ void TcpClient::Connect(const std::string& domainName, uint16_t port)
     tcpConnector_.SetNewConnectionCallback(std::bind(
         &TcpClient::HandleNewConnection, this, std::placeholders::_1));
     tcpConnector_.Connect(tcpSock, domainName, port);
+}
+
+void TcpClient::SetOnMessageCallback(OnMessageCallback callback)
+{
+    callback_ = std::move(callback);
 }
 
 void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)

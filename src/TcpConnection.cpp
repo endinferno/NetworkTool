@@ -25,7 +25,10 @@ bool TcpConnection::GetConnectStatus() const
     return isConnect_;
 }
 
-ssize_t TcpConnection::Write(const std::string& writeBuf)
+void TcpConnection::Write(const std::string& writeBuf)
 {
-    return tcpSock_->Write(writeBuf);
+    ssize_t writeBytes = tcpSock_->Write(writeBuf);
+    if (writeBytes != static_cast<ssize_t>(writeBuf.size())) {
+        throw std::runtime_error("Fail to write to socket\n");
+    }
 }
