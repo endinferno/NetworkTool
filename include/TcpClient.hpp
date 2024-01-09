@@ -23,9 +23,8 @@ private:
     constexpr static int MAX_READ_BUFFER = 2048;
 
     TcpConnector tcpConnector_;
-    TcpConnectionPtr tcpConn_;
+    TcpConnection tcpConn_;
     std::string readBuf_;
-    bool isWritable;
 };
 
 using TcpClientPtr = std::shared_ptr<TcpClient>;

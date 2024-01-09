@@ -4,9 +4,7 @@
 TcpClient::TcpClient(EpollerPtr& epoller)
     : EpollHandler(epoller)
     , tcpConnector_(epoller)
-    , tcpConn_(nullptr)
     , readBuf_(MAX_READ_BUFFER, 0)
-    , isWritable(false)
 {}
 
 void TcpClient::HandleErrorEvent(TcpChannelPtr tcpChan)
@@ -39,15 +37,15 @@ void TcpClient::HandleReadEvent(TcpChannelPtr tcpChan)
 
 void TcpClient::HandleWriteEvent(TcpChannelPtr tcpChan)
 {
-    isWritable = true;
+    tcpConn_.SetConnectStatus(true);
 }
 
 ssize_t TcpClient::Write(const std::string& writeBuf)
 {
-    if (isWritable == false) {
+    if (tcpConn_.GetConnectStatus() == false) {
         return 0;
     }
-    return tcpConn_->Write(writeBuf);
+    return tcpConn_.Write(writeBuf);
 }
 
 void TcpClient::Connect(const std::string& domainName, uint16_t port)
@@ -64,8 +62,8 @@ void TcpClient::Connect(const std::string& domainName, uint16_t port)
 void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)
 {
     INFO("New connection construct\n");
-    tcpConn_ = std::make_shared<TcpConnection>(tcpChan->GetSock());
-    tcpConn_->SetConnectStatus(true);
+    tcpConn_.Bind(tcpChan->GetSock());
+    tcpConn_.SetConnectStatus(true);
 
     tcpChan->SetReadCallback(
         std::bind(&TcpClient::HandleReadEvent, this, std::placeholders::_1));

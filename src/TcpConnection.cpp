@@ -1,9 +1,19 @@
 #include "TcpConnection.hpp"
 
+TcpConnection::TcpConnection()
+    : tcpSock_(nullptr)
+    , isConnect_(false)
+{}
+
 TcpConnection::TcpConnection(TcpSocketPtr& tcpSock)
     : tcpSock_(tcpSock)
     , isConnect_(false)
 {}
+
+void TcpConnection::Bind(const TcpSocketPtr& tcpSock)
+{
+    tcpSock_ = tcpSock;
+}
 
 void TcpConnection::SetConnectStatus(bool status)
 {
