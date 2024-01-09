@@ -7,6 +7,7 @@ class TcpConnector : public EpollHandler
 {
 public:
     using NewConnectionCallback = std::function<void(TcpChannelPtr)>;
+
     TcpConnector(EpollerPtr& epoller);
     void HandleErrorEvent(TcpChannelPtr tcpChan) override;
     void HandleReadEvent(TcpChannelPtr tcpChan) override;
