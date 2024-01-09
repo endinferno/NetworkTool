@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     EpollerPtr epoller = std::make_shared<Epoller>();
     epoller->Run();
 
-    std::shared_ptr<TcpClient> client = std::make_shared<TcpClient>(epoller);
+    TcpClientPtr client = std::make_shared<TcpClient>(epoller);
     client->Connect("hq.sinajs.cn", 80);
 
     HttpRequest httpReq;

@@ -27,3 +27,5 @@ private:
     std::string readBuf_;
     bool isWritable;
 };
+
+using TcpClientPtr = std::shared_ptr<TcpClient>;
