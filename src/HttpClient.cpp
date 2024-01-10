@@ -19,5 +19,13 @@ void HttpClient::Request(const HttpRequest& httpReq)
 
 void HttpClient::OnMessage(const std::string& httpMsg)
 {
-    DEBUG("{}\n", httpMsg);
+    response_.Parse(httpMsg);
+    int statusCode = response_.GetStatus();
+    if (statusCode != HttpStatusCode::OK) {
+        throw std::runtime_error(
+            fmt::format("Wrong http status code {}\n", statusCode));
+    }
+
+    std::string httpBody = response_.GetBody();
+    DEBUG("{}\n", httpBody);
 }

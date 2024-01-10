@@ -16,6 +16,8 @@ void TcpClient::HandleReadEvent(TcpChannelPtr tcpChan)
 {
     auto tcpSock = tcpChan->GetSock();
     while (true) {
+        // TODO: maybe there is a better way
+        readBuf_.resize(MAX_READ_BUFFER);
         ssize_t readBytes = tcpSock->Read(readBuf_);
         int savedErr = tcpSock->GetErrno();
         if (readBytes == -1) {
@@ -31,6 +33,8 @@ void TcpClient::HandleReadEvent(TcpChannelPtr tcpChan)
             break;
         }
         if (callback_ != nullptr) {
+            // TODO: maybe there is a better way
+            readBuf_.resize(readBytes);
             callback_(readBuf_);
         }
     }
