@@ -11,10 +11,12 @@ public:
     {
         OK = 200,
     };
+    using MessageDecodeCallback = std::function<void(const std::string& msg)>;
 
     explicit HttpClient(EpollerPtr& epoller);
     void Connect(const std::string& domainName, uint16_t port = 80);
     void Request(const HttpRequest& httpReq);
+    void SetMessageDecodeCallback(MessageDecodeCallback callback);
     ~HttpClient() = default;
 
 private:
@@ -23,4 +25,5 @@ private:
 private:
     TcpClient tcpClient_;
     HttpResponse response_;
+    MessageDecodeCallback callback_;
 };

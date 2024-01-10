@@ -17,6 +17,11 @@ void HttpClient::Request(const HttpRequest& httpReq)
     tcpClient_.Write(httpReq.Stringify());
 }
 
+void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback callback)
+{
+    callback_ = std::move(callback);
+}
+
 void HttpClient::OnMessage(const std::string& httpMsg)
 {
     response_.Parse(httpMsg);
@@ -26,6 +31,7 @@ void HttpClient::OnMessage(const std::string& httpMsg)
             fmt::format("Wrong http status code {}\n", statusCode));
     }
 
-    std::string httpBody = response_.GetBody();
-    DEBUG("{}\n", httpBody);
+    if (callback_ != nullptr) {
+        callback_(response_.GetBody());
+    }
 }
