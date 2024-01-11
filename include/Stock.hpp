@@ -19,18 +19,42 @@ public:
     {}
     virtual void Parse(const std::string& msg) = 0;
 
-    [[nodiscard]] std::string GetId() const { return id_; }
-    [[nodiscard]] std::string GetName() const { return name_; }
-    [[nodiscard]] float GetTodayOpenPrice() const { return todayOpenPrice_; }
+    [[nodiscard]] std::string GetId() const
+    {
+        return id_;
+    }
+    [[nodiscard]] std::string GetName() const
+    {
+        return name_;
+    }
+    [[nodiscard]] float GetTodayOpenPrice() const
+    {
+        return todayOpenPrice_;
+    }
     [[nodiscard]] float GetYesterdayOpenPrice() const
     {
         return yesterdayOpenPrice_;
     }
-    [[nodiscard]] float GetLatestTxnPrice() const { return latestTxnPrice_; }
-    [[nodiscard]] float GetHighestTxnPrice() const { return highestTxnPrice_; }
-    [[nodiscard]] float GetLowestTxnPrice() const { return lowestTxnPrice_; }
-    [[nodiscard]] uint32_t GetTxnVolume() const { return txnVolume_; }
-    [[nodiscard]] float GetTxnAmount() const { return txnAmount_; }
+    [[nodiscard]] float GetLatestTxnPrice() const
+    {
+        return latestTxnPrice_;
+    }
+    [[nodiscard]] float GetHighestTxnPrice() const
+    {
+        return highestTxnPrice_;
+    }
+    [[nodiscard]] float GetLowestTxnPrice() const
+    {
+        return lowestTxnPrice_;
+    }
+    [[nodiscard]] uint32_t GetTxnVolume() const
+    {
+        return txnVolume_;
+    }
+    [[nodiscard]] float GetTxnAmount() const
+    {
+        return txnAmount_;
+    }
     [[nodiscard]] uint32_t GetBidVolume(size_t idx = 0) const
     {
         return bidVolume_[idx];
@@ -47,9 +71,18 @@ public:
     {
         return askPrice_[idx];
     }
-    [[nodiscard]] std::string GetDate() const { return date_; }
-    [[nodiscard]] std::string GetTime() const { return time_; }
-    [[nodiscard]] std::string GetCloseStatus() const { return closeStatus_; }
+    [[nodiscard]] std::string GetDate() const
+    {
+        return date_;
+    }
+    [[nodiscard]] std::string GetTime() const
+    {
+        return time_;
+    }
+    [[nodiscard]] std::string GetCloseStatus() const
+    {
+        return closeStatus_;
+    }
     ~Stock() = default;
 
 protected:
