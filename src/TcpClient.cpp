@@ -55,13 +55,9 @@ void TcpClient::Write(const std::string& writeBuf)
 
 void TcpClient::Connect(const std::string& domainName, uint16_t port)
 {
-    auto tcpSock = std::make_shared<TcpSocket>();
-    tcpSock->SetReuseAddr();
-    tcpSock->SetReusePort();
-    tcpSock->SetNonBlock();
     tcpConnector_.SetNewConnectionCallback(std::bind(
         &TcpClient::HandleNewConnection, this, std::placeholders::_1));
-    tcpConnector_.Connect(tcpSock, domainName, port);
+    tcpConnector_.Connect(domainName, port);
 }
 
 void TcpClient::SetOnMessageCallback(OnMessageCallback callback)

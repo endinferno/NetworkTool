@@ -13,8 +13,7 @@ public:
     void HandleReadEvent(TcpChannelPtr tcpChan) override;
     void HandleWriteEvent(TcpChannelPtr tcpChan) override;
     void SetNewConnectionCallback(NewConnectionCallback callback);
-    void Connect(TcpSocketPtr& tcpSock, const std::string& domainName,
-                 uint16_t port);
+    void Connect(const std::string& domainName, uint16_t port);
     ~TcpConnector() = default;
 
 private:
