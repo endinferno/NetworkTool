@@ -15,7 +15,6 @@ public:
 private:
     void StockDecodeCallback(const std::string& msg);
     HttpRequest ConstructStockRequest(const std::string& stockId);
-    void WaitUntilConnect() const;
 
 private:
     const std::string sinaStockDomainName = "hq.sinajs.cn";
