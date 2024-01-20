@@ -1,19 +1,15 @@
 #pragma once
 
-#include <array>
-
+#include "FormatConvertor.hpp"
 #include "StockParser.hpp"
 
 class SinaStockParser : public StockParser
 {
 public:
-    SinaStockParser() = default;
+    SinaStockParser();
     Stock Parse(const std::string& msg) override;
     ~SinaStockParser() = default;
 
 private:
-    [[nodiscard]] std::string ConvertGbkToUtf8(
-        const std::string& gbkName) const;
-
-    std::array<char, 20> gbkName_;
+    FormatConvertor convertor_;
 };

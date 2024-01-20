@@ -1,38 +1,15 @@
-#include <codecvt>
-#include <locale>
-#include <stdexcept>
+#include <array>
 
 #include "SinaStockParser.hpp"
 
-// Maybe change to libiconv in the future
-std::string SinaStockParser::ConvertGbkToUtf8(const std::string& gbkName) const
-{
-    std::vector<wchar_t> buff(gbkName.size());
-    std::locale loc("zh_CN.GB18030");
-    wchar_t* pwszNext = nullptr;
-    const char* pszNext = nullptr;
-    mbstate_t state = {};
-    int res = std::use_facet<std::codecvt<wchar_t, char, mbstate_t>>(loc).in(
-        state,
-        gbkName.data(),
-        gbkName.data() + gbkName.size(),
-        pszNext,
-        buff.data(),
-        buff.data() + buff.size(),
-        pwszNext);
-
-    if (std::codecvt_base::ok == res) {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>> cutf8;
-        return cutf8.to_bytes(std::wstring(buff.data(), pwszNext));
-    }
-
-    throw std::runtime_error("Fail to convert from GBK to UTF-8\n");
-}
-
+SinaStockParser::SinaStockParser()
+    : convertor_("gb2312", "utf-8")
+{}
 
 Stock SinaStockParser::Parse(const std::string& msg)
 {
     float tmp;
+    std::array<char, 20> gbkName;
     Stock stock;
     std::sscanf(msg.data(),
                 "var hq_str_%[^=]="
@@ -41,7 +18,7 @@ Stock SinaStockParser::Parse(const std::string& msg)
                 "%u,%f,%u,%f,%u,%f,%u,%f,%u,%f,"
                 "%[^,],%[^,],%[^\"]\"",
                 stock.id.data(),
-                gbkName_.data(),
+                gbkName.data(),
                 &stock.todayOpenPrice,
                 &stock.yesterdayOpenPrice,
                 &stock.latestTxnPrice,
@@ -72,6 +49,6 @@ Stock SinaStockParser::Parse(const std::string& msg)
                 stock.date.data(),
                 stock.time.data(),
                 stock.closeStatus.data());
-    stock.name = ConvertGbkToUtf8(gbkName_.data());
+    stock.name = convertor_.Convert(gbkName.data());
     return stock;
 }
