@@ -13,7 +13,7 @@ public:
     void HandleWriteEvent(TcpChannelPtr tcpChan) override;
     void SetNewConnectionCallback(NewConnectionCallback callback);
     void Connect(const std::string& domainName, uint16_t port);
-    ~TcpConnector() = default;
+    ~TcpConnector() override = default;
 
 private:
     NewConnectionCallback callback_;

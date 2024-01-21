@@ -16,7 +16,7 @@ public:
     void Write(const std::string& writeBuf);
     void Connect(const std::string& domainName, uint16_t port);
     void SetOnMessageCallback(OnMessageCallback callback);
-    ~TcpClient() = default;
+    ~TcpClient() override = default;
 
 private:
     void HandleNewConnection(TcpChannelPtr tcpChan);

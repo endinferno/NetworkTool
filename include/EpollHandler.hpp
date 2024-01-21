@@ -12,7 +12,7 @@ public:
     virtual void HandleErrorEvent(TcpChannelPtr tcpChan) = 0;
     virtual void HandleReadEvent(TcpChannelPtr tcpChan) = 0;
     virtual void HandleWriteEvent(TcpChannelPtr tcpChan) = 0;
-    ~EpollHandler() = default;
+    virtual ~EpollHandler() = default;
 
 protected:
     EpollerPtr epoller_;
