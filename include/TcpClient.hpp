@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EpollHandler.hpp"
-#include "Epoller.hpp"
 #include "TcpConnection.hpp"
 #include "TcpConnector.hpp"
 

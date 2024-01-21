@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EpollHandler.hpp"
-#include "Epoller.hpp"
 
 class TcpConnector : public EpollHandler
 {
