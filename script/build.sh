@@ -55,6 +55,19 @@ GetPollType() {
     fi
 }
 
+InitPollType() {
+    unames=$(uname -s)
+    if [ $unames == "Darwin" ]
+    then
+        POLL_TYPE=poll
+    elif [ $uname == "Linux" ] # Linux
+    then
+        POLL_TYPE=epoll
+    else
+        POLL_TYPE=epoll
+    fi
+}
+
 BUILD_DIR=$(pwd)/build
 # Create build directory
 if [ ! -d $BUILD_DIR ];
@@ -64,7 +77,7 @@ fi
 
 # Read Build Type
 BUILD_TYPE=debug
-POLL_TYPE=epoll
+InitPollType
 if [ $# -eq 1 ];
 then
     GetBuildType $1

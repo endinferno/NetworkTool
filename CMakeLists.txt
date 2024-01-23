@@ -54,3 +54,6 @@ add_executable(${BINARY_NAME} Main.cpp ${SRC_LIST} ${POLLER_SRC})
 
 target_link_libraries(${BINARY_NAME} pthread)
 target_link_libraries(${BINARY_NAME} fmt)
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    target_link_libraries(${BINARY_NAME} iconv)
+endif()
