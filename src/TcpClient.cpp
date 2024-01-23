@@ -78,7 +78,12 @@ void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)
     tcpChan->SetErrorCallback(
         std::bind(&TcpClient::HandleErrorEvent, this, std::placeholders::_1));
 
+#if POLL_TYPE == 0
     poller_->AddEvent(tcpChan,
                       Pollable::Event::EventIn | Pollable::Event::EventOut |
                           Pollable::Event::EventEt);
+#elif POLL_TYPE == 1
+    poller_->AddEvent(tcpChan,
+                      Pollable::Event::EventIn | Pollable::Event::EventEt);
+#endif
 }

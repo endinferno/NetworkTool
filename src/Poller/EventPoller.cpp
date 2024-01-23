@@ -1,9 +1,17 @@
 #include "Poller/EventPoller.hpp"
 #include "Logger.hpp"
-#include "Poller/Epoller.hpp"
+#if POLL_TYPE == 0
+#    include "Poller/Epoller.hpp"
+#elif POLL_TYPE == 1
+#    include "Poller/Poller.hpp"
+#endif
 
 EventPoller::EventPoller()
+#if POLL_TYPE == 0
     : poller_(std::make_unique<Epoller>())
+#elif POLL_TYPE == 1
+    : poller_(std::make_unique<Poller>())
+#endif
 {}
 
 void EventPoller::AddEvent(TcpChannelPtr& tcpChan, uint32_t event)
@@ -19,7 +27,7 @@ void EventPoller::ModEvent(TcpChannelPtr& tcpChan, uint32_t event)
 
 void EventPoller::DelEvent(TcpChannelPtr& tcpChan)
 {
-    channels_.insert(tcpChan);
+    channels_.erase(tcpChan);
     poller_->EventCtl(tcpChan.get(), Pollable::EventCtl::Del, 0);
 }
 
