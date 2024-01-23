@@ -7,6 +7,7 @@
 class TcpChannel;
 
 using TcpChannelPtr = std::shared_ptr<TcpChannel>;
+using TcpChannels = std::vector<TcpChannel*>;
 
 class TcpChannel : public std::enable_shared_from_this<TcpChannel>
 {

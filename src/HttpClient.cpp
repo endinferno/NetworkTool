@@ -1,8 +1,8 @@
 #include "HttpClient.hpp"
 #include "Logger.hpp"
 
-HttpClient::HttpClient(EpollerPtr& epoller)
-    : tcpClient_(epoller)
+HttpClient::HttpClient(EventPollerPtr& poller)
+    : tcpClient_(poller)
 {}
 
 void HttpClient::Connect(const std::string& domainName, uint16_t port)

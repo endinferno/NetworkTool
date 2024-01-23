@@ -6,7 +6,7 @@
 class SinaStockClient
 {
 public:
-    SinaStockClient(EpollerPtr& epoller);
+    SinaStockClient(EventPollerPtr& poller);
     void Connect();
     bool IsConnect() const;
     void GetStock(const std::string& stockId);

@@ -1,8 +1,8 @@
 #include "SinaStockClient.hpp"
 #include "Logger.hpp"
 
-SinaStockClient::SinaStockClient(EpollerPtr& epoller)
-    : httpClient_(epoller)
+SinaStockClient::SinaStockClient(EventPollerPtr& poller)
+    : httpClient_(poller)
 {}
 
 void SinaStockClient::Connect()

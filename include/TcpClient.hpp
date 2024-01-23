@@ -9,7 +9,7 @@ class TcpClient : public EpollHandler
 public:
     using OnMessageCallback = std::function<void(const std::string& msg)>;
 
-    explicit TcpClient(EpollerPtr& epoller);
+    explicit TcpClient(EventPollerPtr& poller);
     void HandleErrorEvent(TcpChannelPtr tcpChan) override;
     void HandleReadEvent(TcpChannelPtr tcpChan) override;
     void HandleWriteEvent(TcpChannelPtr tcpChan) override;

@@ -5,10 +5,10 @@ int main(int argc, char* argv[])
 {
     Signal signal;
 
-    EpollerPtr epoller = std::make_shared<Epoller>();
-    epoller->Run();
+    EventPollerPtr poller = std::make_shared<EventPoller>();
+    poller->Run();
 
-    SinaStockClient client(epoller);
+    SinaStockClient client(poller);
     client.Connect();
 
     while (!signal.IsSignalTrigger()) {

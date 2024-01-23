@@ -1,9 +1,9 @@
 #include "TcpClient.hpp"
 #include "Logger.hpp"
 
-TcpClient::TcpClient(EpollerPtr& epoller)
-    : EpollHandler(epoller)
-    , tcpConnector_(epoller)
+TcpClient::TcpClient(EventPollerPtr& poller)
+    : EpollHandler(poller)
+    , tcpConnector_(poller)
     , readBuf_(MAX_READ_BUFFER, 0)
 {}
 
@@ -78,5 +78,7 @@ void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)
     tcpChan->SetErrorCallback(
         std::bind(&TcpClient::HandleErrorEvent, this, std::placeholders::_1));
 
-    epoller_->AddEvent(tcpChan, EPOLLIN | EPOLLOUT | EPOLLET);
+    poller_->AddEvent(tcpChan,
+                      Pollable::Event::EventIn | Pollable::Event::EventOut |
+                          Pollable::Event::EventEt);
 }

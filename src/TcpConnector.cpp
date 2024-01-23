@@ -3,8 +3,8 @@
 #include "Logger.hpp"
 #include "TcpConnector.hpp"
 
-TcpConnector::TcpConnector(EpollerPtr& epoller)
-    : EpollHandler(epoller)
+TcpConnector::TcpConnector(EventPollerPtr& poller)
+    : EpollHandler(poller)
 {}
 
 void TcpConnector::HandleErrorEvent(TcpChannelPtr tcpChan)
@@ -25,7 +25,7 @@ void TcpConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
         throw std::runtime_error(fmt::format("Fail to connect {}", opt));
     }
     INFO("Success to connect\n");
-    epoller_->DelEvent(tcpChan);
+    poller_->DelEvent(tcpChan);
     if (callback_ != nullptr) {
         callback_(tcpChan);
     }
@@ -52,5 +52,6 @@ void TcpConnector::Connect(const std::string& domainName, uint16_t port)
     tcpChan->SetErrorCallback(std::bind(
         &TcpConnector::HandleErrorEvent, this, std::placeholders::_1));
 
-    epoller_->AddEvent(tcpChan, EPOLLOUT | EPOLLET);
+    poller_->AddEvent(tcpChan,
+                      Pollable::Event::EventOut | Pollable::Event::EventEt);
 }

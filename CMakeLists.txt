@@ -21,13 +21,25 @@ elseif(CMAKE_BUILD_TYPE MATCHES Release)
 endif()
 
 if(POLL_TYPE MATCHES EPOLL)
-    file(GLOB POLLER_SRC src/Poller/Epoller.cpp)
+    file(GLOB POLLER_SRC
+        src/Poller/Pollable.cpp
+        src/Poller/Epoller.cpp
+        src/Poller/EventPoller.cpp)
 elseif(POLL_TYPE MATCHES POLL)
-    file(GLOB POLLER_SRC src/Poller/Poller.cpp)
+    file(GLOB POLLER_SRC
+        src/Poller/Pollable.cpp
+        src/Poller/Poller.cpp
+        src/Poller/EventPoller.cpp)
 elseif(POLL_TYPE MATCHES SELECT)
-    file(GLOB POLLER_SRC src/Poller/Selecter.cpp)
+    file(GLOB POLLER_SRC
+        src/Poller/Pollable.cpp
+        src/Poller/Selecter.cpp
+        src/Poller/EventPoller.cpp)
 else()
-    file(GLOB POLLER_SRC src/Poller/Epoller.cpp)
+    file(GLOB POLLER_SRC
+        src/Poller/Pollable.cpp
+        src/Poller/Epoller.cpp
+        src/Poller/EventPoller.cpp)
 endif()
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LIST)
