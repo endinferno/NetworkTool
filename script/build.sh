@@ -60,7 +60,7 @@ InitPollType() {
     if [ $unames == "Darwin" ]
     then
         POLL_TYPE=poll
-    elif [ $uname == "Linux" ] # Linux
+    elif [ $unames == "Linux" ]
     then
         POLL_TYPE=epoll
     else
