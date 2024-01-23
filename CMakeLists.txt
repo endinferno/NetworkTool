@@ -24,22 +24,22 @@ if(POLL_TYPE MATCHES Epoll)
     file(GLOB POLLER_SRC
         src/Poller/Epoller.cpp
         src/Poller/EventPoller.cpp)
-    add_compile_definitions(POLL_TYPE=0)
+    add_compile_definitions(USE_EPOLL)
 elseif(POLL_TYPE MATCHES Poll)
     file(GLOB POLLER_SRC
         src/Poller/Poller.cpp
         src/Poller/EventPoller.cpp)
-    add_compile_definitions(POLL_TYPE=1)
+    add_compile_definitions(USE_POLL)
 elseif(POLL_TYPE MATCHES Select)
     file(GLOB POLLER_SRC
         src/Poller/Selecter.cpp
         src/Poller/EventPoller.cpp)
-    add_compile_definitions(POLL_TYPE=2)
+    add_compile_definitions(USE_SELECT)
 else()
     file(GLOB POLLER_SRC
         src/Poller/Epoller.cpp
         src/Poller/EventPoller.cpp)
-    add_compile_definitions(POLL_TYPE=0)
+    add_compile_definitions(USE_EPOLL)
 endif()
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LIST)

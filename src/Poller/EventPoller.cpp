@@ -1,15 +1,15 @@
 #include "Poller/EventPoller.hpp"
 #include "Logger.hpp"
-#if POLL_TYPE == 0
+#if defined(USE_EPOLL)
 #    include "Poller/Epoller.hpp"
-#elif POLL_TYPE == 1
+#elif defined(USE_POLL)
 #    include "Poller/Poller.hpp"
 #endif
 
 EventPoller::EventPoller()
-#if POLL_TYPE == 0
+#if defined(USE_EPOLL)
     : poller_(std::make_unique<Epoller>())
-#elif POLL_TYPE == 1
+#elif defined(USE_POLL)
     : poller_(std::make_unique<Poller>())
 #endif
 {}
