@@ -32,7 +32,7 @@ elseif(POLL_TYPE MATCHES Poll)
     add_compile_definitions(USE_POLL)
 elseif(POLL_TYPE MATCHES Select)
     file(GLOB POLLER_SRC
-        src/Poller/Selecter.cpp
+        src/Poller/Selector.cpp
         src/Poller/EventPoller.cpp)
     add_compile_definitions(USE_SELECT)
 else()

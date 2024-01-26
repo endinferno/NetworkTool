@@ -52,6 +52,12 @@ void TcpConnector::Connect(const std::string& domainName, uint16_t port)
     tcpChan->SetErrorCallback(std::bind(
         &TcpConnector::HandleErrorEvent, this, std::placeholders::_1));
 
+#if defined(USE_EPOLL)
     poller_->AddEvent(tcpChan,
                       Pollable::Event::EventOut | Pollable::Event::EventEt);
+#elif defined(USE_POLL)
+    poller_->AddEvent(tcpChan, Pollable::Event::EventOut);
+#elif defined(USE_SELECT)
+    poller_->AddEvent(tcpChan, Pollable::Event::EventOut);
+#endif
 }
