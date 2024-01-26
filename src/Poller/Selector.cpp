@@ -64,7 +64,8 @@ void Selector::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
         break;
     }
     default:
-        throw std::runtime_error(fmt::format("No such operation {}\n", op));
+        throw std::runtime_error(
+            fmt::format("No such operation {}\n", static_cast<int>(op)));
     }
 }
 

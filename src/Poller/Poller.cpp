@@ -57,7 +57,9 @@ void Poller::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
         ModEvent(fd, event);
         break;
     }
-    default: throw std::runtime_error("");
+    default:
+        throw std::runtime_error(
+            fmt::format("No such operation {}\n", static_cast<int>(op)));
     }
 }
 
