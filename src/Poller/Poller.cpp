@@ -4,8 +4,7 @@
 #include "Poller/Poller.hpp"
 
 Poller::Poller()
-    : pollEventMask((1u << 6) - 1)
-    , eventSet(0)
+    : eventSet(0)
     , events_(EVENT_POLLER_MAX_EVENT)
 {
     for (auto& pollEvt : events_) {
@@ -42,28 +41,27 @@ TcpChannels Poller::PollEvent()
 void Poller::EventCtl(TcpChannel* tcpChan, int op, uint32_t event)
 {
     int fd = tcpChan->GetSock()->GetFd();
-    event &= pollEventMask;
     switch (op) {
     case Pollable::EventCtl::Add:
     {
-        AddEvent(tcpChan, fd, static_cast<short>(event));
+        AddEvent(tcpChan, fd, event);
         break;
     }
     case Pollable::EventCtl::Del:
     {
-        DelEvent(fd, static_cast<short>(event));
+        DelEvent(fd);
         break;
     }
     case Pollable::EventCtl::Mod:
     {
-        ModEvent(fd, static_cast<short>(event));
+        ModEvent(fd, event);
         break;
     }
     default: throw std::runtime_error("");
     }
 }
 
-void Poller::AddEvent(TcpChannel* tcpChan, int fd, short event)
+void Poller::AddEvent(TcpChannel* tcpChan, int fd, uint32_t event)
 {
     if (eventSet == events_.size()) {
         throw std::runtime_error("Poll list is full\n");
@@ -75,10 +73,10 @@ void Poller::AddEvent(TcpChannel* tcpChan, int fd, short event)
     eventSet++;
 }
 
-void Poller::DelEvent(int fd, short event)
+void Poller::DelEvent(int fd)
 {
-    if (eventSet == 0) {
-        throw std::runtime_error("Poll list is empty\n");
+    if (!channelMap.count(fd)) {
+        return;
     }
     channelMap.erase(fd);
     auto endIt =
@@ -98,11 +96,8 @@ void Poller::DelEvent(int fd, short event)
     eventSet--;
 }
 
-void Poller::ModEvent(int fd, short event)
+void Poller::ModEvent(int fd, uint32_t event)
 {
-    if (eventSet == 0) {
-        throw std::runtime_error("Poll list is empty\n");
-    }
     for (auto& poll : events_) {
         if (poll.fd == fd) {
             poll.events = static_cast<short>(event);

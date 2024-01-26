@@ -13,12 +13,11 @@ public:
     ~Poller() override = default;
 
 private:
-    void AddEvent(TcpChannel* tcpChan, int fd, short event);
-    void DelEvent(int fd, short event);
-    void ModEvent(int fd, short event);
+    void AddEvent(TcpChannel* tcpChan, int fd, uint32_t event);
+    void DelEvent(int fd);
+    void ModEvent(int fd, uint32_t event);
 
 private:
-    uint32_t pollEventMask;
     size_t eventSet;
     std::vector<struct pollfd> events_;
     std::unordered_map<int, TcpChannel*> channelMap;
