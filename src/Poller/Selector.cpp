@@ -44,7 +44,7 @@ TcpChannels Selector::PollEvent()
     return tcpChans;
 }
 
-void Selector::EventCtl(TcpChannel* tcpChan, int op, uint32_t event)
+void Selector::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
 {
     int fd = tcpChan->GetSock()->GetFd();
     switch (op) {

@@ -9,7 +9,8 @@ class Selector : public Pollable
 public:
     Selector() = default;
     TcpChannels PollEvent() override;
-    void EventCtl(TcpChannel* tcpChan, int op, uint32_t event) override;
+    void EventCtl(TcpChannel* tcpChan, enum EventCtl op,
+                  uint32_t event) override;
     ~Selector() override = default;
 
 private:

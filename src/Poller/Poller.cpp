@@ -38,7 +38,7 @@ TcpChannels Poller::PollEvent()
     return tcpChans;
 }
 
-void Poller::EventCtl(TcpChannel* tcpChan, int op, uint32_t event)
+void Poller::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
 {
     int fd = tcpChan->GetSock()->GetFd();
     switch (op) {

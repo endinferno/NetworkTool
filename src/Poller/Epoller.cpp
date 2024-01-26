@@ -37,15 +37,16 @@ TcpChannels Epoller::PollEvent()
     return tcpChans;
 }
 
-void Epoller::EventCtl(TcpChannel* tcpChan, int op, uint32_t event)
+void Epoller::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
 {
     struct epoll_event epollEvt;
     epollEvt.data.ptr = static_cast<void*>(tcpChan);
     epollEvt.events = event;
 
-    int ret = ::epoll_ctl(epollFd_, op, tcpChan->GetSock()->GetFd(), &epollEvt);
+    int ret = ::epoll_ctl(
+        epollFd_, static_cast<int>(op), tcpChan->GetSock()->GetFd(), &epollEvt);
     if (ret == -1) {
-        throw std::runtime_error(
-            fmt::format("Fail to {} epoll event {}\n", op, event));
+        throw std::runtime_error(fmt::format(
+            "Fail to {} epoll event {}\n", static_cast<int>(op), event));
     }
 }

@@ -20,7 +20,8 @@ public:
     };
     Pollable() = default;
     virtual TcpChannels PollEvent() = 0;
-    virtual void EventCtl(TcpChannel* tcpChan, int op, uint32_t event) = 0;
+    virtual void EventCtl(TcpChannel* tcpChan, enum EventCtl op,
+                          uint32_t event) = 0;
     virtual ~Pollable() = default;
 
 protected:
