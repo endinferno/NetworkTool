@@ -13,14 +13,12 @@ void TcpSslConnector::HandleErrorEvent(TcpChannelPtr tcpChan)
 
 void TcpSslConnector::HandleReadEvent(TcpChannelPtr tcpChan)
 {
-    DEBUG("\n");
     poller_->DelEvent(tcpChan);
     ConstructSslConnectionn(tcpChan);
 }
 
 void TcpSslConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
 {
-    DEBUG("\n");
     poller_->DelEvent(tcpChan);
     ConstructSslConnectionn(tcpChan);
 }
