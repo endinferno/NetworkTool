@@ -12,9 +12,8 @@ void SinaStockClient::Connect()
 
 void SinaStockClient::GetStock(const std::string& stockId)
 {
-    httpClient_.SetMessageDecodeCallback(std::bind(
-        &SinaStockClient::StockDecodeCallback, this, std::placeholders::_1));
-
+    httpClient_.SetMessageDecodeCallback(
+        [this](const std::string& msg) { StockDecodeCallback(msg); });
     httpClient_.Request(ConstructStockRequest(stockId));
 }
 

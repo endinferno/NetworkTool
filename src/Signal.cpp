@@ -10,12 +10,12 @@ Signal::Signal()
     ::signal(SIGINT, Signal::HandleSignal);
 }
 
-void Signal::HandleSignal(int signum)
+void Signal::HandleSignal([[maybe_unused]] int signum)
 {
     sigTrigger.store(true);
 }
 
-bool Signal::IsSignalTrigger() const
+bool Signal::IsSignalTrigger()
 {
     return sigTrigger.load();
 }

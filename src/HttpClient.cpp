@@ -9,7 +9,7 @@ void HttpClient::Connect(const std::string& domainName, uint16_t port)
 {
     tcpClient_.Connect(domainName, port);
     tcpClient_.SetOnMessageCallback(
-        std::bind(&HttpClient::OnMessage, this, std::placeholders::_1));
+        [this](const std::string& httpMsg) { OnMessage(httpMsg); });
 }
 
 void HttpClient::Request(const HttpRequest& httpReq)

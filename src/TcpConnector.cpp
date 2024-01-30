@@ -1,20 +1,18 @@
-#include <cassert>
-
-#include "Logger.hpp"
 #include "TcpConnector.hpp"
+#include "Logger.hpp"
 
 TcpConnector::TcpConnector(EventPollerPtr& poller)
     : EpollHandler(poller)
 {}
 
-void TcpConnector::HandleErrorEvent(TcpChannelPtr tcpChan)
+void TcpConnector::HandleErrorEvent([[maybe_unused]] TcpChannelPtr tcpChan)
 {
     ERROR("Fail to connect\n");
 }
 
-void TcpConnector::HandleReadEvent(TcpChannelPtr tcpChan)
+void TcpConnector::HandleReadEvent([[maybe_unused]] TcpChannelPtr tcpChan)
 {
-    assert(true);
+    static_assert(true);
 }
 
 void TcpConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
@@ -45,12 +43,11 @@ void TcpConnector::Connect(const std::string& domainName, uint16_t port)
     tcpSock->Connect(domainName, port);
 
     auto tcpChan = std::make_shared<TcpChannel>(tcpSock);
-    tcpChan->SetReadCallback(
-        std::bind(&TcpConnector::HandleReadEvent, this, std::placeholders::_1));
-    tcpChan->SetWriteCallback(std::bind(
-        &TcpConnector::HandleWriteEvent, this, std::placeholders::_1));
-    tcpChan->SetErrorCallback(std::bind(
-        &TcpConnector::HandleErrorEvent, this, std::placeholders::_1));
+    tcpChan->SetReadCallback(nullptr);
+    tcpChan->SetWriteCallback(
+        [this](TcpChannelPtr&& tcpChan) { HandleWriteEvent(tcpChan); });
+    tcpChan->SetErrorCallback(
+        [this](TcpChannelPtr&& tcpChan) { HandleErrorEvent(tcpChan); });
 
 #if defined(USE_EPOLL)
     poller_->AddEvent(tcpChan,

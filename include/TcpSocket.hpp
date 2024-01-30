@@ -13,10 +13,10 @@ class TcpSocket : public NonCopyable
 {
 public:
     TcpSocket();
-    void SetReuseAddr();
-    void SetReusePort();
-    void SetNonBlock();
-    int GetSockOpt(int level, int optName);
+    void SetReuseAddr() const;
+    void SetReusePort() const;
+    void SetNonBlock() const;
+    [[nodiscard]] int GetSockOpt(int level, int optName) const;
     void Connect(const std::string& domainName, uint16_t port);
     ssize_t Write(const std::string& writeBuf);
     ssize_t Read(std::string& readBuf);

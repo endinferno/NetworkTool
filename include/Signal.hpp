@@ -7,7 +7,7 @@ class Signal
 public:
     Signal();
     static void HandleSignal(int signum);
-    [[nodiscard]] bool IsSignalTrigger() const;
+    static bool IsSignalTrigger();
     ~Signal() = default;
 
 private:

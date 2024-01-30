@@ -1,7 +1,7 @@
 #include "Signal.hpp"
 #include "SinaStockClient.hpp"
 
-int main(int argc, char* argv[])
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
     Signal signal;
 
@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
     SinaStockClient client(poller);
     client.Connect();
 
-    while (!signal.IsSignalTrigger()) {
+    while (!Signal::IsSignalTrigger()) {
         client.GetStock("sz002603");
         std::this_thread::sleep_for(std::chrono::seconds(2));
     }

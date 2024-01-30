@@ -19,7 +19,6 @@
 #  -google-readability-namespace-comments the *_CLIENT_NS is a macro, and
 #   clang-tidy fails to match it against the initial value.
 Checks: >
-  # -*,
   bugprone-*,
   google-*,
   misc-*,
@@ -28,20 +27,12 @@ Checks: >
   portability-*,
   readability-*,
   -modernize-use-trailing-return-type,
-  google-readability-namespace-comments,
-  google-runtime-int,
-  google-runtime-references,
-  misc-non-private-member-variables-in-classes,
-  readability-named-parameter,
-  readability-braces-around-statements,
-  readability-magic-numbers
-  # -google-readability-namespace-comments,
-  # -google-runtime-int,
-  # -google-runtime-references,
-  # -misc-non-private-member-variables-in-classes,
-  # -readability-named-parameter,
-  # -readability-braces-around-statements,
-  # -readability-magic-numbers
+  -readability-convert-member-functions-to-static,
+  -readability-else-after-return,
+  -google-readability-todo,
+  -readability-magic-numbers,
+  -readability-container-data-pointer,
+  -readability-qualified-auto,
 
 # Turn all the warnings from the checks above into errors.
 WarningsAsErrors: "*"

@@ -6,10 +6,10 @@ class SslWrapper
 {
 public:
     SslWrapper();
-    void SetFd(int fd);
+    void SetFd(int sockFd);
     void SetConnectState();
     int ShakeHands();
-    int GetError(int r);
+    int GetError(int shakeHandRet);
     ~SslWrapper();
 
 private:

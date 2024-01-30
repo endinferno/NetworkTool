@@ -11,11 +11,11 @@ std::string HttpResponse::GetVersion() const
 
 std::string HttpResponse::GetHeader(const std::string& header) const
 {
-    auto it = headerMap_.find(header);
-    if (it == headerMap_.end()) {
+    auto headerIt = headerMap_.find(header);
+    if (headerIt == headerMap_.end()) {
         throw std::runtime_error(fmt::format("No such header {}", header));
     }
-    return it->second;
+    return headerIt->second;
 }
 
 int HttpResponse::GetStatus() const
@@ -31,18 +31,13 @@ std::string HttpResponse::GetBody() const
 void HttpResponse::ParseStatusLine(const std::string& line)
 {
     version_.resize(3);
-    std::string tmp(5, '0');
-    std::sscanf(line.data(),
-                "HTTP/%s %d %s\n",
-                version_.data(),
-                &statusCode_,
-                tmp.data());
+    std::sscanf(line.data(), "HTTP/%s %d \n", version_.data(), &statusCode_);
 }
 
 void HttpResponse::ParseHeader(const std::string& line)
 {
     auto pos = line.find(':');
-    if (pos == line.npos) {
+    if (pos == std::string::npos) {
         return;
     }
     std::string key(line.substr(0, pos));

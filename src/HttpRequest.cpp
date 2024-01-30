@@ -55,7 +55,7 @@ std::string HttpRequest::GetReqParam() const
 {
     size_t cnt = 0;
     std::string reqParam;
-    for (auto& [key, val] : paramMap_) {
+    for (const auto& [key, val] : paramMap_) {
         reqParam += fmt::format("{}={}", key, val);
         if (cnt != paramMap_.size() - 1) {
             reqParam.push_back('&');
@@ -80,7 +80,7 @@ std::string HttpRequest::GetReqLine() const
 std::string HttpRequest::GetReqHeader() const
 {
     std::string reqParam;
-    for (auto& [key, val] : headerMap_) {
+    for (const auto& [key, val] : headerMap_) {
         reqParam += fmt::format("{}: {}\r\n", key, val);
     }
     return reqParam;

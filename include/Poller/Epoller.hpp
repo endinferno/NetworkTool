@@ -11,7 +11,7 @@ class Epoller : public Pollable
 public:
     Epoller();
     TcpChannels PollEvent() override;
-    void EventCtl(TcpChannel* tcpChan, enum EventCtl op,
+    void EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
                   uint32_t event) override;
     ~Epoller() override;
 

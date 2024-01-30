@@ -10,9 +10,9 @@ SslWrapper::SslWrapper()
     sslHandle_ = SSL_new(sslContext_);
 }
 
-void SslWrapper::SetFd(int fd)
+void SslWrapper::SetFd(int sockFd)
 {
-    int ret = SSL_set_fd(sslHandle_, fd);
+    int ret = SSL_set_fd(sslHandle_, sockFd);
     if (ret == 0) {
         throw std::runtime_error("Fail to set ssl fd\n");
     }
@@ -28,9 +28,9 @@ int SslWrapper::ShakeHands()
     return SSL_do_handshake(sslHandle_);
 }
 
-int SslWrapper::GetError(int r)
+int SslWrapper::GetError(int shakeHandRet)
 {
-    return SSL_get_error(sslHandle_, r);
+    return SSL_get_error(sslHandle_, shakeHandRet);
 }
 
 SslWrapper::~SslWrapper()

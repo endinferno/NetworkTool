@@ -57,13 +57,13 @@ void EventPoller::HandleEvent(TcpChannels& tcpChans)
     for (auto& tcpChan : tcpChans) {
         uint32_t event = tcpChan->GetEvent();
         DEBUG("Poll event {:x}\n", event);
-        if (event & Pollable::Event::EventErr) {
+        if ((event & Pollable::Event::EventErr) != 0) {
             tcpChan->OnErrorable();
         }
-        if (event & Pollable::Event::EventOut) {
+        if ((event & Pollable::Event::EventOut) != 0) {
             tcpChan->OnWritable();
         }
-        if (event & Pollable::Event::EventIn) {
+        if ((event & Pollable::Event::EventIn) != 0) {
             tcpChan->OnReadable();
         }
     }

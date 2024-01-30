@@ -7,7 +7,7 @@ TcpClient::TcpClient(EventPollerPtr& poller)
     , readBuf_(MAX_READ_BUFFER, 0)
 {}
 
-void TcpClient::HandleErrorEvent(TcpChannelPtr tcpChan)
+void TcpClient::HandleErrorEvent([[maybe_unused]] TcpChannelPtr tcpChan)
 {
     ERROR("Fail to handle client\n");
 }
@@ -40,14 +40,14 @@ void TcpClient::HandleReadEvent(TcpChannelPtr tcpChan)
     }
 }
 
-void TcpClient::HandleWriteEvent(TcpChannelPtr tcpChan)
+void TcpClient::HandleWriteEvent([[maybe_unused]] TcpChannelPtr tcpChan)
 {
     tcpConn_.SetConnectStatus(true);
 }
 
 void TcpClient::Write(const std::string& writeBuf)
 {
-    if (tcpConn_.GetConnectStatus() == false) {
+    if (!tcpConn_.GetConnectStatus()) {
         return;
     }
     tcpConn_.Write(writeBuf);
@@ -55,8 +55,8 @@ void TcpClient::Write(const std::string& writeBuf)
 
 void TcpClient::Connect(const std::string& domainName, uint16_t port)
 {
-    tcpConnector_.SetNewConnectionCallback(std::bind(
-        &TcpClient::HandleNewConnection, this, std::placeholders::_1));
+    tcpConnector_.SetNewConnectionCallback(
+        [this](TcpChannelPtr&& tcpChan) { HandleNewConnection(tcpChan); });
     tcpConnector_.Connect(domainName, port);
 }
 
@@ -72,11 +72,11 @@ void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)
     tcpConn_.SetConnectStatus(true);
 
     tcpChan->SetReadCallback(
-        std::bind(&TcpClient::HandleReadEvent, this, std::placeholders::_1));
+        [this](TcpChannelPtr&& tcpChan) { HandleReadEvent(tcpChan); });
     tcpChan->SetWriteCallback(
-        std::bind(&TcpClient::HandleWriteEvent, this, std::placeholders::_1));
+        [this](TcpChannelPtr&& tcpChan) { HandleWriteEvent(tcpChan); });
     tcpChan->SetErrorCallback(
-        std::bind(&TcpClient::HandleErrorEvent, this, std::placeholders::_1));
+        [this](TcpChannelPtr&& tcpChan) { HandleErrorEvent(tcpChan); });
 
 #if defined(USE_EPOLL)
     poller_->AddEvent(tcpChan,
