@@ -1,5 +1,6 @@
 #include <array>
 
+#include "Logger.hpp"
 #include "SinaStockParser.hpp"
 
 SinaStockParser::SinaStockParser()
@@ -12,8 +13,8 @@ Stock SinaStockParser::Parse(const std::string& msg)
     std::array<char, 20> gbkName;
     Stock stock;
     std::sscanf(msg.data(),
-                "var hq_str_%[^=]="
-                "\"%[^,],%f,%f,%f,%f,%f,%f,%f,"
+                "var hq_str_%[^=]=\"%[^,],"
+                "%f,%f,%f,%f,%f,%f,%f,%u,%f,"
                 "%u,%f,%u,%f,%u,%f,%u,%f,%u,%f,"
                 "%u,%f,%u,%f,%u,%f,%u,%f,%u,%f,"
                 "%[^,],%[^,],%[^\"]\"",
@@ -26,6 +27,8 @@ Stock SinaStockParser::Parse(const std::string& msg)
                 &stock.lowestTxnPrice,
                 &tmp,
                 &tmp,
+                &stock.txnVolume,
+                &stock.txnAmount,
                 &stock.bidVolume[0],
                 &stock.bidPrice[0],
                 &stock.bidVolume[1],
