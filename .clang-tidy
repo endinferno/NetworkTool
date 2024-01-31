@@ -33,6 +33,7 @@ Checks: >
   -readability-magic-numbers,
   -readability-container-data-pointer,
   -readability-qualified-auto,
+  -readability-function-cognitive-complexity,
 
 # Turn all the warnings from the checks above into errors.
 WarningsAsErrors: "*"

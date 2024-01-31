@@ -9,4 +9,5 @@ run-clang-tidy -p $compileCommandDir \
     $rootDir/include/Poller/*.hpp \
     $rootDir/src/*.cpp \
     $rootDir/src/Poller/*.cpp \
+    $rootDir/test/*.cpp \
     -quiet

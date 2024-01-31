@@ -1,5 +1,8 @@
 #!/bin/bash
 
-clang-format -style=file -i Main.cpp
-find src -regex '.*\.\(cpp\|hpp\)' -exec clang-format -style=file -i {} \;
-find include -regex '.*\.\(cpp\|hpp\)' -exec clang-format -style=file -i {} \;
+rootDir=$(git rev-parse --show-toplevel)
+
+clang-format -style=file -i $rootDir/Main.cpp
+find $rootDir/src -regex '.*\.\(cpp\|hpp\)' -exec clang-format -style=file -i {} \;
+find $rootDir/include -regex '.*\.\(cpp\|hpp\)' -exec clang-format -style=file -i {} \;
+find $rootDir/test -regex '.*\.\(cpp\|hpp\)' -exec clang-format -style=file -i {} \;
