@@ -20,17 +20,17 @@ public:
 
     std::string id;
     std::string name;
-    float todayOpenPrice;
-    float yesterdayOpenPrice;
-    float latestTxnPrice;
-    float highestTxnPrice;
-    float lowestTxnPrice;
+    uint32_t todayOpenPrice;
+    uint32_t yesterdayOpenPrice;
+    uint32_t latestTxnPrice;
+    uint32_t highestTxnPrice;
+    uint32_t lowestTxnPrice;
     uint32_t txnVolume;
-    float txnAmount;
+    uint64_t txnAmount;
     std::vector<uint32_t> bidVolume;
-    std::vector<float> bidPrice;
+    std::vector<uint32_t> bidPrice;
     std::vector<uint32_t> askVolume;
-    std::vector<float> askPrice;
+    std::vector<uint32_t> askPrice;
 
     std::string date;
     std::string time;

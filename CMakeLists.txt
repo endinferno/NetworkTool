@@ -59,3 +59,5 @@ if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 endif()
 target_link_libraries(${BINARY_NAME} ssl)
 target_link_libraries(${BINARY_NAME} crypto)
+
+add_subdirectory(test)
