@@ -7,6 +7,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "IPAddress.hpp"
 #include "NonCopyable.hpp"
 
 class TcpSocket : public NonCopyable
@@ -26,7 +27,7 @@ public:
 
 private:
     void SetErrno(int err);
-    uint32_t GetIPFromDomain(const std::string& domainName);
+    IPAddress GetIPFromDomain(const std::string& domainName);
 
     int sockFd_;
     int savedErrno_;

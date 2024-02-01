@@ -7,7 +7,8 @@ enable_testing()
 
 include_directories(${INCLUDE_LIST})
 add_executable(${BINARY_NAME}  ${SRC_LIST} ${POLLER_SRC}
-    SinaStockParserTest.cpp)
+    SinaStockParserTest.cpp
+    IPAddressTest.cpp)
 
 target_link_libraries(${BINARY_NAME} pthread)
 target_link_libraries(${BINARY_NAME} fmt)
