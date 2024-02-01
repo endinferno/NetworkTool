@@ -22,7 +22,6 @@ public:
 private:
     void OnMessage(const std::string& httpMsg);
 
-private:
     TcpClient tcpClient_;
     HttpResponse response_;
     MessageDecodeCallback callback_;

@@ -18,7 +18,6 @@ private:
     void ParseStatusLine(const std::string& line);
     void ParseHeader(const std::string& line);
 
-private:
     std::string version_;
     int statusCode_;
     std::unordered_map<std::string, std::string> headerMap_;

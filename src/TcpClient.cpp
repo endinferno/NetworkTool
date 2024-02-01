@@ -79,12 +79,12 @@ void TcpClient::HandleNewConnection(TcpChannelPtr tcpChan)
         [this](TcpChannelPtr&& tcpChan) { HandleErrorEvent(tcpChan); });
 
 #if defined(USE_EPOLL)
-    poller_->AddEvent(tcpChan,
-                      Pollable::Event::EventIn | Pollable::Event::EventOut |
-                          Pollable::Event::EventEt);
+    AddEvent(tcpChan,
+             Pollable::Event::EventIn | Pollable::Event::EventOut |
+                 Pollable::Event::EventEt);
 #elif defined(USE_POLL)
-    poller_->AddEvent(tcpChan, Pollable::Event::EventIn);
+    AddEvent(tcpChan, Pollable::Event::EventIn);
 #elif defined(USE_SELECT)
-    poller_->AddEvent(tcpChan, Pollable::Event::EventIn);
+    AddEvent(tcpChan, Pollable::Event::EventIn);
 #endif
 }

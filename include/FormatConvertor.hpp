@@ -15,5 +15,5 @@ public:
     ~FormatConvertor();
 
 private:
-    iconv_t iconvFd;
+    iconv_t iconvFd_;
 };

@@ -23,7 +23,7 @@ TcpChannels Selector::PollEvent()
         // Timeout rings
         return tcpChans;
     }
-    for (auto& [fd, eventChan] : eventChanMap) {
+    for (auto& [fd, eventChan] : eventChanMap_) {
         auto tcpChan = eventChan.second;
         uint32_t event = 0;
         if (FD_ISSET(fd, &readFds)) {
@@ -44,28 +44,29 @@ TcpChannels Selector::PollEvent()
     return tcpChans;
 }
 
-void Selector::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
+void Selector::EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
+                        uint32_t event)
 {
-    int fd = tcpChan->GetSock()->GetFd();
-    switch (op) {
+    int sockFd = tcpChan->GetSock()->GetFd();
+    switch (opera) {
     case Pollable::EventCtl::Add:
     {
-        eventChanMap[fd] = { event, tcpChan };
+        eventChanMap_[sockFd] = { event, tcpChan };
         break;
     }
     case Pollable::EventCtl::Del:
     {
-        eventChanMap.erase(fd);
+        eventChanMap_.erase(sockFd);
         break;
     }
     case Pollable::EventCtl::Mod:
     {
-        eventChanMap[fd].first = event;
+        eventChanMap_[sockFd].first = event;
         break;
     }
     default:
         throw std::runtime_error(
-            fmt::format("No such operation {}\n", static_cast<int>(op)));
+            fmt::format("No such operation {}\n", static_cast<int>(opera)));
     }
 }
 
@@ -73,16 +74,16 @@ void Selector::FillFds(fd_set* readFds, fd_set* writeFds, fd_set* exceptFds,
                        int& maxFd)
 {
     EmptyFds(readFds, writeFds, exceptFds);
-    for (auto& [fd, eventChan] : eventChanMap) {
+    for (auto& [fd, eventChan] : eventChanMap_) {
         maxFd = std::max(maxFd, fd);
         uint32_t event = eventChan.first;
-        if (event & Pollable::Event::EventIn) {
+        if ((event & Pollable::Event::EventIn) != 0U) {
             FD_SET(fd, readFds);
         }
-        if (event & Pollable::Event::EventOut) {
+        if ((event & Pollable::Event::EventOut) != 0U) {
             FD_SET(fd, writeFds);
         }
-        if (event & Pollable::Event::EventErr) {
+        if ((event & Pollable::Event::EventErr) != 0U) {
             FD_SET(fd, exceptFds);
         }
     }
@@ -98,5 +99,5 @@ void Selector::EmptyFds(fd_set* readFds, fd_set* writeFds, fd_set* exceptFds)
 void Selector::FillIntervalTime(struct timeval& intervalTime)
 {
     intervalTime.tv_sec = EVENT_POLLER_TIMEOUT / 1000;
-    intervalTime.tv_usec = static_cast<long>(EVENT_POLLER_TIMEOUT) * 1000;
+    intervalTime.tv_usec = static_cast<int64_t>(EVENT_POLLER_TIMEOUT) * 1000;
 }

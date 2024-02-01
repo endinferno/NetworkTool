@@ -6,7 +6,7 @@ class TcpConnection
 {
 public:
     TcpConnection();
-    TcpConnection(TcpSocketPtr& tcpSock);
+    explicit TcpConnection(TcpSocketPtr& tcpSock);
     void Bind(const TcpSocketPtr& tcpSock);
     void Write(const std::string& writeBuf);
     void SetConnectStatus(bool status);

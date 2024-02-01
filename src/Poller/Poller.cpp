@@ -4,7 +4,7 @@
 #include "Poller/Poller.hpp"
 
 Poller::Poller()
-    : eventSet(0)
+    : eventSet_(0)
     , events_(EVENT_POLLER_MAX_EVENT)
 {
     for (auto& pollEvt : events_) {
@@ -17,7 +17,7 @@ Poller::Poller()
 TcpChannels Poller::PollEvent()
 {
     std::vector<TcpChannel*> tcpChans;
-    int eventCnt = ::poll(events_.data(), eventSet, EVENT_POLLER_TIMEOUT);
+    int eventCnt = ::poll(events_.data(), eventSet_, EVENT_POLLER_TIMEOUT);
     DEBUG("eventCnt {}\n", eventCnt);
     if (eventCnt == -1) {
         throw std::runtime_error(
@@ -26,11 +26,11 @@ TcpChannels Poller::PollEvent()
         // Timeout rings
         return tcpChans;
     }
-    for (size_t i = 0; i < eventSet; i++) {
+    for (size_t i = 0; i < eventSet_; i++) {
         if (events_[i].revents == 0) {
             continue;
         }
-        auto tcpChan = channelMap[events_[i].fd];
+        auto tcpChan = channelMap_[events_[i].fd];
         tcpChan->SetEvent(events_[i].revents);
         events_[i].revents = 0;
         tcpChans.emplace_back(tcpChan);
@@ -38,54 +38,54 @@ TcpChannels Poller::PollEvent()
     return tcpChans;
 }
 
-void Poller::EventCtl(TcpChannel* tcpChan, enum EventCtl op, uint32_t event)
+void Poller::EventCtl(TcpChannel* tcpChan, enum EventCtl opera, uint32_t event)
 {
-    int fd = tcpChan->GetSock()->GetFd();
-    switch (op) {
+    int sockFd = tcpChan->GetSock()->GetFd();
+    switch (opera) {
     case Pollable::EventCtl::Add:
     {
-        AddEvent(tcpChan, fd, event);
+        AddEvent(tcpChan, sockFd, event);
         break;
     }
     case Pollable::EventCtl::Del:
     {
-        DelEvent(fd);
+        DelEvent(sockFd);
         break;
     }
     case Pollable::EventCtl::Mod:
     {
-        ModEvent(fd, event);
+        ModEvent(sockFd, event);
         break;
     }
     default:
         throw std::runtime_error(
-            fmt::format("No such operation {}\n", static_cast<int>(op)));
+            fmt::format("No such operation {}\n", static_cast<int>(opera)));
     }
 }
 
-void Poller::AddEvent(TcpChannel* tcpChan, int fd, uint32_t event)
+void Poller::AddEvent(TcpChannel* tcpChan, int sockFd, uint32_t event)
 {
-    if (eventSet == events_.size()) {
+    if (eventSet_ == events_.size()) {
         throw std::runtime_error("Poll list is full\n");
     }
-    channelMap[fd] = tcpChan;
-    events_[eventSet].fd = fd;
-    events_[eventSet].events = static_cast<short>(event);
-    events_[eventSet].revents = 0;
-    eventSet++;
+    channelMap_[sockFd] = tcpChan;
+    events_[eventSet_].fd = sockFd;
+    events_[eventSet_].events = static_cast<int16_t>(event);
+    events_[eventSet_].revents = 0;
+    eventSet_++;
 }
 
-void Poller::DelEvent(int fd)
+void Poller::DelEvent(int sockFd)
 {
-    if (!channelMap.count(fd)) {
+    if (!channelMap_.count(sockFd)) {
         return;
     }
-    channelMap.erase(fd);
+    channelMap_.erase(sockFd);
     auto endIt =
         events_.begin() +
-        static_cast<std::vector<struct pollfd>::difference_type>(eventSet) - 1;
+        static_cast<std::vector<struct pollfd>::difference_type>(eventSet_) - 1;
     for (auto& poll : events_) {
-        if (poll.fd == fd) {
+        if (poll.fd == sockFd) {
             poll.fd = endIt->fd;
             poll.events = endIt->events;
             poll.revents = 0;
@@ -95,14 +95,14 @@ void Poller::DelEvent(int fd)
             break;
         }
     }
-    eventSet--;
+    eventSet_--;
 }
 
-void Poller::ModEvent(int fd, uint32_t event)
+void Poller::ModEvent(int sockFd, uint32_t event)
 {
     for (auto& poll : events_) {
-        if (poll.fd == fd) {
-            poll.events = static_cast<short>(event);
+        if (poll.fd == sockFd) {
+            poll.events = static_cast<int16_t>(event);
             poll.revents = 0;
             break;
         }

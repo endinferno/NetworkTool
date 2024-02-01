@@ -10,7 +10,7 @@ class TcpSslConnector : public EpollHandler
 public:
     using NewConnectionCallback = std::function<void(TcpChannelPtr)>;
 
-    TcpSslConnector(EventPollerPtr& poller);
+    explicit TcpSslConnector(EventPollerPtr& poller);
     void HandleErrorEvent(TcpChannelPtr tcpChan) override;
     void HandleReadEvent(TcpChannelPtr tcpChan) override;
     void HandleWriteEvent(TcpChannelPtr tcpChan) override;
@@ -23,7 +23,6 @@ private:
     bool ShakeSslHands(TcpChannelPtr tcpChan);
     void ConstructSslConnectionn(TcpChannelPtr& tcpChan);
 
-private:
     SslWrapper ssl_;
     TcpConnector tcpConnector_;
     TcpConnection tcpConn_;

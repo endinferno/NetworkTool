@@ -13,13 +13,13 @@ void TcpSslConnector::HandleErrorEvent([[maybe_unused]] TcpChannelPtr tcpChan)
 
 void TcpSslConnector::HandleReadEvent(TcpChannelPtr tcpChan)
 {
-    poller_->DelEvent(tcpChan);
+    DelEvent(tcpChan);
     ConstructSslConnectionn(tcpChan);
 }
 
 void TcpSslConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
 {
-    poller_->DelEvent(tcpChan);
+    DelEvent(tcpChan);
     ConstructSslConnectionn(tcpChan);
 }
 
@@ -72,7 +72,7 @@ bool TcpSslConnector::ShakeSslHands(TcpChannelPtr tcpChan)
     } else {
         ERROR("Fail to shake ssl hands\n");
     }
-    poller_->AddEvent(tcpChan, event);
+    AddEvent(tcpChan, event);
     return false;
 }
 

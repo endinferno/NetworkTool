@@ -21,7 +21,6 @@ private:
     void HandleEvent(TcpChannels& tcpChans);
     void EpollThreadFn();
 
-private:
     std::unique_ptr<Pollable> poller_;
     bool isQuit_ = false;
     std::unique_ptr<std::thread> eventPollThread_;

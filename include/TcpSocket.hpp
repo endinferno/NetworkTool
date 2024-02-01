@@ -28,7 +28,6 @@ private:
     void SetErrno(int err);
     uint32_t GetIPFromDomain(const std::string& domainName);
 
-private:
     int sockFd_;
     int savedErrno_;
 };

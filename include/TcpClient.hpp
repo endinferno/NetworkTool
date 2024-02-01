@@ -21,7 +21,6 @@ public:
 private:
     void HandleNewConnection(TcpChannelPtr tcpChan);
 
-private:
     constexpr static int MAX_READ_BUFFER = 2048;
 
     TcpConnector tcpConnector_;

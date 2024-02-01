@@ -10,7 +10,7 @@ public:
         EventIn = 0x01,
         EventOut = 0x04,
         EventErr = 0x08,
-        EventEt = 1u << 31
+        EventEt = 1U << 31
     };
     enum EventCtl
     {
@@ -20,7 +20,7 @@ public:
     };
     Pollable() = default;
     virtual TcpChannels PollEvent() = 0;
-    virtual void EventCtl(TcpChannel* tcpChan, enum EventCtl op,
+    virtual void EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
                           uint32_t event) = 0;
     virtual ~Pollable() = default;
 

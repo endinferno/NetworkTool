@@ -1,6 +1,5 @@
 #include <array>
 
-#include "Logger.hpp"
 #include "SinaStockParser.hpp"
 
 SinaStockParser::SinaStockParser()

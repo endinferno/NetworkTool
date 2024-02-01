@@ -28,7 +28,6 @@ private:
     std::string GetReqHeader() const;
     std::string GetReqData() const;
 
-private:
     std::string version_ = "1.1";
     ReqType reqType_;
     std::string url_;

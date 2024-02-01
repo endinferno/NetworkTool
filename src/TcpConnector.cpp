@@ -23,7 +23,7 @@ void TcpConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
         throw std::runtime_error(fmt::format("Fail to connect {}", opt));
     }
     INFO("Success to connect\n");
-    poller_->DelEvent(tcpChan);
+    DelEvent(tcpChan);
     if (callback_ != nullptr) {
         callback_(tcpChan);
     }
@@ -50,11 +50,10 @@ void TcpConnector::Connect(const std::string& domainName, uint16_t port)
         [this](TcpChannelPtr&& tcpChan) { HandleErrorEvent(tcpChan); });
 
 #if defined(USE_EPOLL)
-    poller_->AddEvent(tcpChan,
-                      Pollable::Event::EventOut | Pollable::Event::EventEt);
+    AddEvent(tcpChan, Pollable::Event::EventOut | Pollable::Event::EventEt);
 #elif defined(USE_POLL)
-    poller_->AddEvent(tcpChan, Pollable::Event::EventOut);
+    AddEvent(tcpChan, Pollable::Event::EventOut);
 #elif defined(USE_SELECT)
-    poller_->AddEvent(tcpChan, Pollable::Event::EventOut);
+    AddEvent(tcpChan, Pollable::Event::EventOut);
 #endif
 }

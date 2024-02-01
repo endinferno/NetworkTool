@@ -7,7 +7,7 @@ SinaStockClient::SinaStockClient(EventPollerPtr& poller)
 
 void SinaStockClient::Connect()
 {
-    httpClient_.Connect(sinaStockDomainName, sinaStockDomainPort);
+    httpClient_.Connect(sinaStockDomainName_, sinaStockDomainPort_);
 }
 
 void SinaStockClient::GetStock(const std::string& stockId)
@@ -22,7 +22,7 @@ HttpRequest SinaStockClient::ConstructStockRequest(const std::string& stockId)
     HttpRequest httpReq;
     httpReq.SetReqType(HttpRequest::ReqType::GET);
     httpReq.SetUrl(fmt::format("/list={}", stockId));
-    httpReq.AddHeader("Host", sinaStockDomainName);
+    httpReq.AddHeader("Host", sinaStockDomainName_);
     httpReq.AddHeader("Referer", "http://finance.sina.com.cn");
     return httpReq;
 }
