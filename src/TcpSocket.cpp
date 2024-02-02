@@ -112,8 +112,8 @@ IPAddress TcpSocket::GetIPFromDomain(const std::string& domainName)
         throw std::runtime_error("Fail to get IP from domain name " +
                                  domainName);
     }
-    uint32_t hostIp = *(reinterpret_cast<uint32_t*>(host->h_addr));
-    return IPAddress(htonl(hostIp));
+    uint32_t netIp = *(reinterpret_cast<uint32_t*>(host->h_addr));
+    return IPAddress(ntohl(netIp));
 }
 
 int TcpSocket::GetFd() const
