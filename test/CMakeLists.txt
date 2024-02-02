@@ -7,6 +7,7 @@ enable_testing()
 
 include_directories(${INCLUDE_LIST})
 add_executable(${BINARY_NAME}  ${SRC_LIST} ${POLLER_SRC}
+    ConnectorTest.cpp
     SinaStockParserTest.cpp
     IPAddressTest.cpp)
 
