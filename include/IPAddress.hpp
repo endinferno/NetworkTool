@@ -14,5 +14,5 @@ public:
     [[nodiscard]] std::string Stringify() const;
 
 private:
-    uint32_t ip_;
+    uint32_t hostIp_;
 };
