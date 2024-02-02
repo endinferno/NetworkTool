@@ -22,7 +22,6 @@ private:
     void HandleNewConnection(ChannelPtr chan);
 
     constexpr static int MAX_READ_BUFFER = 2048;
-
     Connector connector_;
     Connection tcpConn_;
     std::string readBuf_;
