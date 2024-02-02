@@ -14,9 +14,9 @@ Poller::Poller()
     }
 }
 
-TcpChannels Poller::PollEvent()
+Channels Poller::PollEvent()
 {
-    std::vector<TcpChannel*> tcpChans;
+    std::vector<Channel*> chans;
     int eventCnt = ::poll(events_.data(), eventSet_, EVENT_POLLER_TIMEOUT);
     DEBUG("eventCnt {}\n", eventCnt);
     if (eventCnt == -1) {
@@ -24,27 +24,27 @@ TcpChannels Poller::PollEvent()
             fmt::format("Fail to epoll_wait {} {}\n", eventCnt, errno));
     } else if (eventCnt == 0) {
         // Timeout rings
-        return tcpChans;
+        return chans;
     }
     for (size_t i = 0; i < eventSet_; i++) {
         if (events_[i].revents == 0) {
             continue;
         }
-        auto tcpChan = channelMap_[events_[i].fd];
-        tcpChan->SetEvent(events_[i].revents);
+        auto chan = channelMap_[events_[i].fd];
+        chan->SetEvent(events_[i].revents);
         events_[i].revents = 0;
-        tcpChans.emplace_back(tcpChan);
+        chans.emplace_back(chan);
     }
-    return tcpChans;
+    return chans;
 }
 
-void Poller::EventCtl(TcpChannel* tcpChan, enum EventCtl opera, uint32_t event)
+void Poller::EventCtl(Channel* chan, enum EventCtl opera, uint32_t event)
 {
-    int sockFd = tcpChan->GetSock()->GetFd();
+    int sockFd = chan->GetSock()->GetFd();
     switch (opera) {
     case Pollable::EventCtl::Add:
     {
-        AddEvent(tcpChan, sockFd, event);
+        AddEvent(chan, sockFd, event);
         break;
     }
     case Pollable::EventCtl::Del:
@@ -63,12 +63,12 @@ void Poller::EventCtl(TcpChannel* tcpChan, enum EventCtl opera, uint32_t event)
     }
 }
 
-void Poller::AddEvent(TcpChannel* tcpChan, int sockFd, uint32_t event)
+void Poller::AddEvent(Channel* chan, int sockFd, uint32_t event)
 {
     if (eventSet_ == events_.size()) {
         throw std::runtime_error("Poll list is full\n");
     }
-    channelMap_[sockFd] = tcpChan;
+    channelMap_[sockFd] = chan;
     events_[eventSet_].fd = sockFd;
     events_[eventSet_].events = static_cast<int16_t>(event);
     events_[eventSet_].revents = 0;

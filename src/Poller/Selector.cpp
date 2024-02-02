@@ -1,14 +1,14 @@
 #include "Poller/Selector.hpp"
 #include "Logger.hpp"
 
-TcpChannels Selector::PollEvent()
+Channels Selector::PollEvent()
 {
     int maxFd = -1;
     fd_set readFds;
     fd_set writeFds;
     fd_set exceptFds;
     struct timeval intervalTime;
-    std::vector<TcpChannel*> tcpChans;
+    std::vector<Channel*> chans;
 
     FillIntervalTime(intervalTime);
     FillFds(&readFds, &writeFds, &exceptFds, maxFd);
@@ -21,10 +21,10 @@ TcpChannels Selector::PollEvent()
             fmt::format("Fail to poll event {} {}\n", eventCnt, errno));
     } else if (eventCnt == 0) {
         // Timeout rings
-        return tcpChans;
+        return chans;
     }
     for (auto& [fd, eventChan] : eventChanMap_) {
-        auto tcpChan = eventChan.second;
+        auto chan = eventChan.second;
         uint32_t event = 0;
         if (FD_ISSET(fd, &readFds)) {
             event |= Pollable::Event::EventIn;
@@ -38,20 +38,19 @@ TcpChannels Selector::PollEvent()
         if (event == 0) {
             continue;
         }
-        tcpChan->SetEvent(event);
-        tcpChans.emplace_back(tcpChan);
+        chan->SetEvent(event);
+        chans.emplace_back(chan);
     }
-    return tcpChans;
+    return chans;
 }
 
-void Selector::EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
-                        uint32_t event)
+void Selector::EventCtl(Channel* chan, enum EventCtl opera, uint32_t event)
 {
-    int sockFd = tcpChan->GetSock()->GetFd();
+    int sockFd = chan->GetSock()->GetFd();
     switch (opera) {
     case Pollable::EventCtl::Add:
     {
-        eventChanMap_[sockFd] = { event, tcpChan };
+        eventChanMap_[sockFd] = { event, chan };
         break;
     }
     case Pollable::EventCtl::Del:

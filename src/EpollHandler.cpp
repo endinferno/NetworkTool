@@ -4,17 +4,17 @@ EpollHandler::EpollHandler(EventPollerPtr& poller)
     : poller_(poller)
 {}
 
-void EpollHandler::AddEvent(TcpChannelPtr& tcpChan, uint32_t event)
+void EpollHandler::AddEvent(ChannelPtr& chan, uint32_t event)
 {
-    poller_->AddEvent(tcpChan, event);
+    poller_->AddEvent(chan, event);
 }
 
-void EpollHandler::ModEvent(TcpChannelPtr& tcpChan, uint32_t event)
+void EpollHandler::ModEvent(ChannelPtr& chan, uint32_t event)
 {
-    poller_->ModEvent(tcpChan, event);
+    poller_->ModEvent(chan, event);
 }
 
-void EpollHandler::DelEvent(TcpChannelPtr& tcpChan)
+void EpollHandler::DelEvent(ChannelPtr& chan)
 {
-    poller_->DelEvent(tcpChan);
+    poller_->DelEvent(chan);
 }

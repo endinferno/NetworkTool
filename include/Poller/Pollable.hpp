@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TcpChannel.hpp"
+#include "Channel.hpp"
 
 class Pollable
 {
@@ -19,8 +19,8 @@ public:
         Mod = 0x03,
     };
     Pollable() = default;
-    virtual TcpChannels PollEvent() = 0;
-    virtual void EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
+    virtual Channels PollEvent() = 0;
+    virtual void EventCtl(Channel* chan, enum EventCtl opera,
                           uint32_t event) = 0;
     virtual ~Pollable() = default;
 

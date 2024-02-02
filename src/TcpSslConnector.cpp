@@ -3,24 +3,24 @@
 
 TcpSslConnector::TcpSslConnector(EventPollerPtr& poller)
     : EpollHandler(poller)
-    , tcpConnector_(poller)
+    , connector_(poller)
 {}
 
-void TcpSslConnector::HandleErrorEvent([[maybe_unused]] TcpChannelPtr tcpChan)
+void TcpSslConnector::HandleErrorEvent([[maybe_unused]] ChannelPtr chan)
 {
     ERROR("Fail to connect\n");
 }
 
-void TcpSslConnector::HandleReadEvent(TcpChannelPtr tcpChan)
+void TcpSslConnector::HandleReadEvent(ChannelPtr chan)
 {
-    DelEvent(tcpChan);
-    ConstructSslConnectionn(tcpChan);
+    DelEvent(chan);
+    ConstructSslConnectionn(chan);
 }
 
-void TcpSslConnector::HandleWriteEvent(TcpChannelPtr tcpChan)
+void TcpSslConnector::HandleWriteEvent(ChannelPtr chan)
 {
-    DelEvent(tcpChan);
-    ConstructSslConnectionn(tcpChan);
+    DelEvent(chan);
+    ConstructSslConnectionn(chan);
 }
 
 void TcpSslConnector::SetNewConnectionCallback(NewConnectionCallback callback)
@@ -30,31 +30,30 @@ void TcpSslConnector::SetNewConnectionCallback(NewConnectionCallback callback)
 
 void TcpSslConnector::Connect(const std::string& domainName, uint16_t port)
 {
-    tcpConnector_.SetNewConnectionCallback(
-        [this](TcpChannelPtr&& tcpChan) { HandleNewSslConnection(tcpChan); });
-    tcpConnector_.Connect(domainName, port);
+    connector_.SetNewConnectionCallback(
+        [this](ChannelPtr&& chan) { HandleNewSslConnection(chan); });
+    connector_.Connect(domainName, port);
 }
 
-void TcpSslConnector::HandleNewSslConnection(TcpChannelPtr tcpChan)
+void TcpSslConnector::HandleNewSslConnection(ChannelPtr chan)
 {
     INFO("New connection construct\n");
-    auto tcpSock = tcpChan->GetSock();
-    tcpConn_.Bind(tcpSock);
-    tcpConn_.SetConnectStatus(true);
+    auto sock = chan->GetSock();
+    conn_.Bind(sock);
+    conn_.SetConnectStatus(true);
 
-    tcpChan->SetReadCallback(
-        [this](TcpChannelPtr&& tcpChan) { HandleReadEvent(tcpChan); });
-    tcpChan->SetWriteCallback(
-        [this](TcpChannelPtr&& tcpChan) { HandleWriteEvent(tcpChan); });
-    tcpChan->SetErrorCallback(
-        [this](TcpChannelPtr&& tcpChan) { HandleErrorEvent(tcpChan); });
+    chan->SetReadCallback([this](ChannelPtr&& chan) { HandleReadEvent(chan); });
+    chan->SetWriteCallback(
+        [this](ChannelPtr&& chan) { HandleWriteEvent(chan); });
+    chan->SetErrorCallback(
+        [this](ChannelPtr&& chan) { HandleErrorEvent(chan); });
 
-    ssl_.SetFd(tcpSock->GetFd());
+    ssl_.SetFd(sock->GetFd());
     ssl_.SetConnectState();
-    ConstructSslConnectionn(tcpChan);
+    ConstructSslConnectionn(chan);
 }
 
-bool TcpSslConnector::ShakeSslHands(TcpChannelPtr tcpChan)
+bool TcpSslConnector::ShakeSslHands(ChannelPtr chan)
 {
     int ret = ssl_.ShakeHands();
     if (ret == 1) {
@@ -72,18 +71,18 @@ bool TcpSslConnector::ShakeSslHands(TcpChannelPtr tcpChan)
     } else {
         ERROR("Fail to shake ssl hands\n");
     }
-    AddEvent(tcpChan, event);
+    AddEvent(chan, event);
     return false;
 }
 
-void TcpSslConnector::ConstructSslConnectionn(TcpChannelPtr& tcpChan)
+void TcpSslConnector::ConstructSslConnectionn(ChannelPtr& chan)
 {
-    bool isSslConnect = ShakeSslHands(tcpChan);
+    bool isSslConnect = ShakeSslHands(chan);
     if (!isSslConnect) {
         return;
     }
     INFO("SSL connection construct\n");
     if (callback_ != nullptr) {
-        callback_(tcpChan);
+        callback_(chan);
     }
 }

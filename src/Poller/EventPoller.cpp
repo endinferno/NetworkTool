@@ -18,21 +18,21 @@ EventPoller::EventPoller()
 #endif
 {}
 
-void EventPoller::AddEvent(TcpChannelPtr& tcpChan, uint32_t event)
+void EventPoller::AddEvent(ChannelPtr& chan, uint32_t event)
 {
-    channels_.insert(tcpChan);
-    poller_->EventCtl(tcpChan.get(), Pollable::EventCtl::Add, event);
+    channels_.insert(chan);
+    poller_->EventCtl(chan.get(), Pollable::EventCtl::Add, event);
 }
 
-void EventPoller::ModEvent(TcpChannelPtr& tcpChan, uint32_t event)
+void EventPoller::ModEvent(ChannelPtr& chan, uint32_t event)
 {
-    poller_->EventCtl(tcpChan.get(), Pollable::EventCtl::Mod, event);
+    poller_->EventCtl(chan.get(), Pollable::EventCtl::Mod, event);
 }
 
-void EventPoller::DelEvent(TcpChannelPtr& tcpChan)
+void EventPoller::DelEvent(ChannelPtr& chan)
 {
-    channels_.erase(tcpChan);
-    poller_->EventCtl(tcpChan.get(), Pollable::EventCtl::Del, 0);
+    channels_.erase(chan);
+    poller_->EventCtl(chan.get(), Pollable::EventCtl::Del, 0);
 }
 
 void EventPoller::Run()
@@ -52,19 +52,19 @@ EventPoller::~EventPoller()
     poller_.reset();
 }
 
-void EventPoller::HandleEvent(TcpChannels& tcpChans)
+void EventPoller::HandleEvent(Channels& chans)
 {
-    for (auto& tcpChan : tcpChans) {
-        uint32_t event = tcpChan->GetEvent();
+    for (auto& chan : chans) {
+        uint32_t event = chan->GetEvent();
         DEBUG("Poll event {:x}\n", event);
         if ((event & Pollable::Event::EventErr) != 0) {
-            tcpChan->OnErrorable();
+            chan->OnErrorable();
         }
         if ((event & Pollable::Event::EventOut) != 0) {
-            tcpChan->OnWritable();
+            chan->OnWritable();
         }
         if ((event & Pollable::Event::EventIn) != 0) {
-            tcpChan->OnReadable();
+            chan->OnReadable();
         }
     }
 }
@@ -72,7 +72,7 @@ void EventPoller::HandleEvent(TcpChannels& tcpChans)
 void EventPoller::EpollThreadFn()
 {
     while (!isQuit_) {
-        auto tcpChans = poller_->PollEvent();
-        HandleEvent(tcpChans);
+        auto chans = poller_->PollEvent();
+        HandleEvent(chans);
     }
 }

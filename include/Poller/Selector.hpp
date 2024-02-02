@@ -8,9 +8,8 @@ class Selector : public Pollable
 {
 public:
     Selector() = default;
-    TcpChannels PollEvent() override;
-    void EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
-                  uint32_t event) override;
+    Channels PollEvent() override;
+    void EventCtl(Channel* chan, enum EventCtl opera, uint32_t event) override;
     ~Selector() override = default;
 
 private:
@@ -19,5 +18,5 @@ private:
     void EmptyFds(fd_set* readFds, fd_set* writeFds, fd_set* exceptFds);
     void FillIntervalTime(struct timeval& intervalTime);
 
-    std::unordered_map<int, std::pair<uint32_t, TcpChannel*>> eventChanMap_;
+    std::unordered_map<int, std::pair<uint32_t, Channel*>> eventChanMap_;
 };

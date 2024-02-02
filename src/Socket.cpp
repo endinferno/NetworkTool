@@ -1,18 +1,19 @@
-#include <stdexcept>
-
+#include <arpa/inet.h>
 #include <fcntl.h>
 #include <netdb.h>
-#include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
-#include "Logger.hpp"
-#include "TcpSocket.hpp"
+#include <stdexcept>
 
-TcpSocket::TcpSocket()
-    : sockFd_(::socket(AF_INET, SOCK_STREAM, 0))
+#include "Logger.hpp"
+#include "Socket.hpp"
+
+Socket::Socket(int sockFd)
+    : sockFd_(sockFd)
 {}
 
-void TcpSocket::SetReuseAddr() const
+void Socket::SetReuseAddr() const
 {
     int opt = 1;
     int ret = ::setsockopt(sockFd_,
@@ -25,7 +26,7 @@ void TcpSocket::SetReuseAddr() const
     }
 }
 
-void TcpSocket::SetReusePort() const
+void Socket::SetReusePort() const
 {
     int opt = 1;
     int ret = ::setsockopt(sockFd_,
@@ -38,13 +39,13 @@ void TcpSocket::SetReusePort() const
     }
 }
 
-void TcpSocket::SetNonBlock() const
+void Socket::SetNonBlock() const
 {
     int oldSockFlag = ::fcntl(sockFd_, F_GETFL, 0);
     ::fcntl(sockFd_, F_SETFL, oldSockFlag | O_NONBLOCK);
 }
 
-int TcpSocket::GetSockOpt(int level, int optName) const
+int Socket::GetSockOpt(int level, int optName) const
 {
     int opt;
     socklen_t len = sizeof(int);
@@ -57,7 +58,7 @@ int TcpSocket::GetSockOpt(int level, int optName) const
     return opt;
 }
 
-void TcpSocket::Connect(const std::string& domainName, uint16_t port)
+void Socket::Connect(const std::string& domainName, uint16_t port)
 {
     struct sockaddr_in serverAddr;
 
@@ -81,31 +82,31 @@ void TcpSocket::Connect(const std::string& domainName, uint16_t port)
     }
 }
 
-ssize_t TcpSocket::Write(const std::string& writeBuf)
+ssize_t Socket::Write(const std::string& writeBuf)
 {
     ssize_t writeBytes = ::write(sockFd_, writeBuf.data(), writeBuf.size());
     SetErrno(errno);
     return writeBytes;
 }
 
-ssize_t TcpSocket::Read(std::string& readBuf)
+ssize_t Socket::Read(std::string& readBuf)
 {
     ssize_t readBytes = ::read(sockFd_, readBuf.data(), readBuf.size());
     SetErrno(errno);
     return readBytes;
 }
 
-int TcpSocket::GetErrno() const
+int Socket::GetErrno() const
 {
     return savedErrno_;
 }
 
-void TcpSocket::SetErrno(int err)
+void Socket::SetErrno(int err)
 {
     savedErrno_ = err;
 }
 
-IPAddress TcpSocket::GetIPFromDomain(const std::string& domainName)
+IPAddress Socket::GetIPFromDomain(const std::string& domainName)
 {
     struct hostent* host = ::gethostbyname(domainName.c_str());
     if (host == nullptr) {
@@ -116,12 +117,7 @@ IPAddress TcpSocket::GetIPFromDomain(const std::string& domainName)
     return IPAddress(ntohl(netIp));
 }
 
-int TcpSocket::GetFd() const
+int Socket::GetFd() const
 {
     return sockFd_;
-}
-
-TcpSocket::~TcpSocket()
-{
-    ::close(sockFd_);
 }

@@ -10,9 +10,8 @@ class Epoller : public Pollable
 {
 public:
     Epoller();
-    TcpChannels PollEvent() override;
-    void EventCtl(TcpChannel* tcpChan, enum EventCtl opera,
-                  uint32_t event) override;
+    Channels PollEvent() override;
+    void EventCtl(Channel* chan, enum EventCtl opera, uint32_t event) override;
     ~Epoller() override;
 
 private:
