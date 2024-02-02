@@ -23,7 +23,7 @@ private:
 
     constexpr static int MAX_READ_BUFFER = 2048;
     Connector connector_;
-    Connection tcpConn_;
+    Connection conn_;
     std::string readBuf_;
     OnMessageCallback callback_;
 };

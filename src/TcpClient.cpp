@@ -42,15 +42,15 @@ void TcpClient::HandleReadEvent(ChannelPtr chan)
 
 void TcpClient::HandleWriteEvent([[maybe_unused]] ChannelPtr chan)
 {
-    tcpConn_.SetConnectStatus(true);
+    conn_.SetConnectStatus(true);
 }
 
 void TcpClient::Write(const std::string& writeBuf)
 {
-    if (!tcpConn_.GetConnectStatus()) {
+    if (!conn_.GetConnectStatus()) {
         return;
     }
-    tcpConn_.Write(writeBuf);
+    conn_.Write(writeBuf);
 }
 
 void TcpClient::Connect(const std::string& domainName, uint16_t port)
@@ -68,8 +68,8 @@ void TcpClient::SetOnMessageCallback(OnMessageCallback callback)
 void TcpClient::HandleNewConnection(ChannelPtr chan)
 {
     INFO("New connection construct\n");
-    tcpConn_.Bind(chan->GetSock());
-    tcpConn_.SetConnectStatus(true);
+    conn_.Bind(chan->GetSock());
+    conn_.SetConnectStatus(true);
 
     chan->SetReadCallback([this](ChannelPtr&& chan) { HandleReadEvent(chan); });
     chan->SetWriteCallback(
