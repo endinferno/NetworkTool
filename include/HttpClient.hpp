@@ -14,7 +14,7 @@ public:
     using MessageDecodeCallback = std::function<void(const std::string& msg)>;
 
     explicit HttpClient(EventPollerPtr& poller);
-    void Connect(const std::string& domainName, uint16_t port = 80);
+    void Connect(IPAddress serverIp, uint16_t serverPort);
     void Request(const HttpRequest& httpReq);
     void SetMessageDecodeCallback(MessageDecodeCallback callback);
     ~HttpClient() = default;

@@ -28,11 +28,11 @@ void TcpSslConnector::SetNewConnectionCallback(NewConnectionCallback callback)
     callback_ = std::move(callback);
 }
 
-void TcpSslConnector::Connect(const std::string& domainName, uint16_t port)
+void TcpSslConnector::Connect(IPAddress serverIp, uint16_t serverPort)
 {
     connector_.SetNewConnectionCallback(
         [this](ChannelPtr&& chan) { HandleNewSslConnection(chan); });
-    connector_.Connect(domainName, port);
+    connector_.Connect(serverIp, serverPort);
 }
 
 void TcpSslConnector::HandleNewSslConnection(ChannelPtr chan)

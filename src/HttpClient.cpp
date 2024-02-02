@@ -5,9 +5,9 @@ HttpClient::HttpClient(EventPollerPtr& poller)
     : tcpClient_(poller)
 {}
 
-void HttpClient::Connect(const std::string& domainName, uint16_t port)
+void HttpClient::Connect(IPAddress serverIp, uint16_t serverPort)
 {
-    tcpClient_.Connect(domainName, port);
+    tcpClient_.Connect(serverIp, serverPort);
     tcpClient_.SetOnMessageCallback(
         [this](const std::string& httpMsg) { OnMessage(httpMsg); });
 }

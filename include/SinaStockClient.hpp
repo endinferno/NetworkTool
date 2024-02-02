@@ -16,8 +16,9 @@ private:
     void StockDecodeCallback(const std::string& msg);
     HttpRequest ConstructStockRequest(const std::string& stockId);
 
-    const std::string sinaStockDomainName_ = "hq.sinajs.cn";
-    const uint16_t sinaStockDomainPort_ = 80;
+    const std::string sinaStockDomain_ = "hq.sinajs.cn";
+    const std::string sinaStockIp_ = "183.60.95.165";
+    const uint16_t sinaStockPort_ = 80;
     HttpClient httpClient_;
     SinaStockParser stockParser_;
 };

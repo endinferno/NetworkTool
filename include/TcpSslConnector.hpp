@@ -15,7 +15,7 @@ public:
     void HandleReadEvent(ChannelPtr chan) override;
     void HandleWriteEvent(ChannelPtr chan) override;
     void SetNewConnectionCallback(NewConnectionCallback callback);
-    void Connect(const std::string& domainName, uint16_t port);
+    void Connect(IPAddress serverIp, uint16_t serverPort);
     ~TcpSslConnector() override = default;
 
 private:

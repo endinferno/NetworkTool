@@ -14,7 +14,7 @@ public:
     void SetReusePort() const;
     void SetNonBlock() const;
     [[nodiscard]] int GetSockOpt(int level, int optName) const;
-    void Connect(const std::string& domainName, uint16_t port);
+    void Connect(IPAddress serverIp, uint16_t serverPort) const;
     ssize_t Write(const std::string& writeBuf);
     ssize_t Read(std::string& readBuf);
     [[nodiscard]] int GetFd() const;
@@ -23,7 +23,6 @@ public:
 
 private:
     void SetErrno(int err);
-    IPAddress GetIPFromDomain(const std::string& domainName);
 
     int sockFd_;
     int savedErrno_;

@@ -53,11 +53,11 @@ void TcpClient::Write(const std::string& writeBuf)
     conn_.Write(writeBuf);
 }
 
-void TcpClient::Connect(const std::string& domainName, uint16_t port)
+void TcpClient::Connect(IPAddress serverIp, uint16_t serverPort)
 {
     connector_.SetNewConnectionCallback(
         [this](ChannelPtr&& chan) { HandleNewConnection(chan); });
-    connector_.Connect(domainName, port);
+    connector_.Connect(serverIp, serverPort);
 }
 
 void TcpClient::SetOnMessageCallback(OnMessageCallback callback)

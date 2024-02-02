@@ -14,7 +14,7 @@ public:
     void HandleReadEvent(ChannelPtr chan) override;
     void HandleWriteEvent(ChannelPtr chan) override;
     void Write(const std::string& writeBuf);
-    void Connect(const std::string& domainName, uint16_t port);
+    void Connect(IPAddress serverIp, uint16_t serverPort);
     void SetOnMessageCallback(OnMessageCallback callback);
     ~TcpClient() override = default;
 

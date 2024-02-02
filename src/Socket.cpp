@@ -58,19 +58,15 @@ int Socket::GetSockOpt(int level, int optName) const
     return opt;
 }
 
-void Socket::Connect(const std::string& domainName, uint16_t port)
+void Socket::Connect(IPAddress serverIp, uint16_t serverPort) const
 {
     struct sockaddr_in serverAddr;
 
-    auto domainIp = GetIPFromDomain(domainName);
-    INFO("Connect to domain {} IP {} Port {}\n",
-         domainName,
-         domainIp.Stringify(),
-         port);
+    INFO("Connect to IP {} Port {}\n", serverIp.Stringify(), serverPort);
 
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(port);
-    serverAddr.sin_addr.s_addr = domainIp.GetNetIpAddr();
+    serverAddr.sin_port = htons(serverPort);
+    serverAddr.sin_addr.s_addr = serverIp.GetNetIpAddr();
 
     int ret = ::connect(sockFd_,
                         reinterpret_cast<struct sockaddr*>(&serverAddr),
@@ -104,17 +100,6 @@ int Socket::GetErrno() const
 void Socket::SetErrno(int err)
 {
     savedErrno_ = err;
-}
-
-IPAddress Socket::GetIPFromDomain(const std::string& domainName)
-{
-    struct hostent* host = ::gethostbyname(domainName.c_str());
-    if (host == nullptr) {
-        throw std::runtime_error("Fail to get IP from domain name " +
-                                 domainName);
-    }
-    uint32_t netIp = *(reinterpret_cast<uint32_t*>(host->h_addr));
-    return IPAddress(ntohl(netIp));
 }
 
 int Socket::GetFd() const

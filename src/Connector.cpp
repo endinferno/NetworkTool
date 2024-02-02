@@ -36,13 +36,13 @@ void Connector::SetNewConnectionCallback(NewConnectionCallback callback)
     callback_ = std::move(callback);
 }
 
-void Connector::Connect(const std::string& domainName, uint16_t port)
+void Connector::Connect(IPAddress serverIp, uint16_t serverPort)
 {
     std::shared_ptr<Socket> sock = std::make_shared<TcpSocket>();
     sock->SetReuseAddr();
     sock->SetReusePort();
     sock->SetNonBlock();
-    sock->Connect(domainName, port);
+    sock->Connect(serverIp, serverPort);
 
     auto chan = std::make_shared<Channel>(sock);
     chan->SetReadCallback(nullptr);
