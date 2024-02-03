@@ -1,5 +1,5 @@
 #include "Client/Client.hpp"
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 Client::Client(EventPollerPtr& poller,
                enum Connector::ConnectorType connectorType)

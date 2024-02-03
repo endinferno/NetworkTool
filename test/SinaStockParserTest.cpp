@@ -1,5 +1,5 @@
 #include "SinaStockParser.hpp"
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 #include "gtest/gtest.h"
 

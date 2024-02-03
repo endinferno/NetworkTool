@@ -3,8 +3,8 @@
 #include <memory>
 #include <string>
 
-#include "IPAddress.hpp"
-#include "NonCopyable.hpp"
+#include "Utils/IPAddress.hpp"
+#include "Utils/NonCopyable.hpp"
 
 class Socket : public NonCopyable
 {

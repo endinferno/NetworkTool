@@ -1,5 +1,5 @@
 #include "HttpClient.hpp"
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 HttpClient::HttpClient(EventPollerPtr& poller)
     : tcpClient_(poller)

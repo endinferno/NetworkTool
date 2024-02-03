@@ -2,7 +2,7 @@
 #include <sstream>
 
 #include "HttpResponse.hpp"
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 std::string HttpResponse::GetVersion() const
 {

@@ -1,5 +1,5 @@
 #include "SinaStockClient.hpp"
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 SinaStockClient::SinaStockClient(EventPollerPtr& poller)
     : httpClient_(poller)

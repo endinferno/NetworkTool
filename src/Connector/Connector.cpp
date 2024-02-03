@@ -1,6 +1,6 @@
 #include "Connector/Connector.hpp"
 #include "Channel.hpp"
-#include "Logger.hpp"
+#include "Utils/Logger.hpp"
 
 Connector::Connector(EventPollerPtr& poller, enum Socket::SocketType sockType)
     : EpollHandler(poller)

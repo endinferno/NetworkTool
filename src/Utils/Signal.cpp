@@ -1,6 +1,6 @@
 #include <csignal>
 
-#include "Signal.hpp"
+#include "Utils/Signal.hpp"
 
 std::atomic<bool> Signal::sigTrigger = false;
 

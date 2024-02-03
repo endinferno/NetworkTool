@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SslWrapper.hpp"
 #include "TcpConnector.hpp"
+#include "Utils/SslWrapper.hpp"
 
 class SslConnector : public TcpConnector
 {

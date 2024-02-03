@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "SslWrapper.hpp"
+#include "Utils/SslWrapper.hpp"
 
 SslWrapper::SslWrapper()
 {

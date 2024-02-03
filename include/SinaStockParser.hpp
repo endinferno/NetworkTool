@@ -1,7 +1,7 @@
 #pragma once
 
-#include "FormatConvertor.hpp"
 #include "StockParser.hpp"
+#include "Utils/FormatConvertor.hpp"
 
 class SinaStockParser : public StockParser
 {
