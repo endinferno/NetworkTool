@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Connection.hpp"
-#include "TcpConnector.hpp"
+#include "Connector.hpp"
 
 class TcpClient : public EpollHandler
 {
@@ -21,7 +21,7 @@ private:
     void HandleNewConnection(ChannelPtr chan);
 
     constexpr static int MAX_READ_BUFFER = 2048;
-    TcpConnector tcpConnector_;
+    std::unique_ptr<Connector> connector_;
     Connection conn_;
     std::string readBuf_;
     OnMessageCallback callback_;

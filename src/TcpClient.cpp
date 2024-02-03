@@ -1,9 +1,12 @@
-#include "TcpClient.hpp"
+#include <memory>
+
 #include "Logger.hpp"
+#include "TcpClient.hpp"
+#include "TcpConnector.hpp"
 
 TcpClient::TcpClient(EventPollerPtr& poller)
     : EpollHandler(poller)
-    , tcpConnector_(poller)
+    , connector_(std::make_unique<TcpConnector>(poller))
     , readBuf_(MAX_READ_BUFFER, 0)
 {}
 
@@ -55,9 +58,9 @@ void TcpClient::Write(const std::string& writeBuf)
 
 void TcpClient::Connect(IPAddress serverIp, uint16_t serverPort)
 {
-    tcpConnector_.SetNewConnectionCallback(
+    connector_->SetNewConnectionCallback(
         [this](ChannelPtr&& chan) { HandleNewConnection(chan); });
-    tcpConnector_.Connect(serverIp, serverPort);
+    connector_->Connect(serverIp, serverPort);
 }
 
 void TcpClient::SetOnMessageCallback(OnMessageCallback callback)
