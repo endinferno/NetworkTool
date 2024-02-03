@@ -6,6 +6,12 @@
 class Connector : public EpollHandler
 {
 public:
+    enum ConnectorType
+    {
+        UDP,
+        TCP,
+        SSL
+    };
     using NewConnectionCallback = std::function<void(ChannelPtr)>;
     using ConnectProcedure = std::function<bool(ChannelPtr)>;
 
