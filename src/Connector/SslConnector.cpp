@@ -1,6 +1,5 @@
 #include "Connector/SslConnector.hpp"
 #include "Logger.hpp"
-#include "Socket/TcpSocket.hpp"
 
 SslConnector::SslConnector(EventPollerPtr& poller)
     : TcpConnector(poller)
@@ -9,11 +8,6 @@ SslConnector::SslConnector(EventPollerPtr& poller)
     // construct ssl construction after tcp connection construct
     Connector::SetNewConnectionCallback(
         [this](ChannelPtr&& chan) { TcpConnectCallback(chan); });
-}
-
-SocketPtr SslConnector::CreateSocket()
-{
-    return std::make_shared<TcpSocket>();
 }
 
 void SslConnector::TcpConnectCallback(ChannelPtr chan)

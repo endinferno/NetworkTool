@@ -2,8 +2,9 @@
 #include "Channel.hpp"
 #include "Logger.hpp"
 
-Connector::Connector(EventPollerPtr& poller)
+Connector::Connector(EventPollerPtr& poller, enum Socket::SocketType sockType)
     : EpollHandler(poller)
+    , sockType_(sockType)
 {}
 
 void Connector::HandleErrorEvent([[maybe_unused]] ChannelPtr chan)
@@ -54,7 +55,7 @@ void Connector::SetConnectProcedure(ConnectProcedure procedure)
 
 void Connector::Connect(IPAddress serverIp, uint16_t serverPort)
 {
-    auto sock = CreateSocket();
+    auto sock = sockFactory_.Create(sockType_);
     sock->SetReuseAddr();
     sock->SetReusePort();
     sock->SetNonBlock();

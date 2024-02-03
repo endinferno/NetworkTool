@@ -2,18 +2,12 @@
 
 #include "Connector/TcpConnector.hpp"
 #include "Logger.hpp"
-#include "Socket/TcpSocket.hpp"
 
 TcpConnector::TcpConnector(EventPollerPtr& poller)
-    : Connector(poller)
+    : Connector(poller, Socket::SocketType::TCP)
 {
     SetConnectProcedure(
         [this](ChannelPtr&& chan) -> bool { return HandleConnect(chan); });
-}
-
-SocketPtr TcpConnector::CreateSocket()
-{
-    return std::make_shared<TcpSocket>();
 }
 
 bool TcpConnector::HandleConnect(ChannelPtr chan)

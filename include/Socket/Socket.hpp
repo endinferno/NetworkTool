@@ -9,6 +9,11 @@
 class Socket : public NonCopyable
 {
 public:
+    enum SocketType
+    {
+        TCP,
+        UDP
+    };
     explicit Socket(int sockFd);
     void SetReuseAddr() const;
     void SetReusePort() const;
