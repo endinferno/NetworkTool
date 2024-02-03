@@ -45,6 +45,7 @@ endif()
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Socket SOCKET_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Connector CONNECTOR_SRC_LIST)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/Client CLIENT_SRC_LIST)
 
 set(INCLUDE_LIST ${PROJECT_SOURCE_DIR}/include)
 
@@ -57,7 +58,8 @@ add_executable(${BINARY_NAME}
     ${SRC_LIST}
     ${POLLER_SRC}
     ${SOCKET_SRC_LIST}
-    ${CONNECTOR_SRC_LIST})
+    ${CONNECTOR_SRC_LIST}
+    ${CLIENT_SRC_LIST})
 
 target_link_libraries(${BINARY_NAME} pthread)
 target_link_libraries(${BINARY_NAME} fmt)

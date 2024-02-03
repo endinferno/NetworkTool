@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Client.hpp"
+#include "Client/Client.hpp"
 
 class SslClient : public Client
 {
