@@ -10,6 +10,7 @@ add_executable(${BINARY_NAME}
     ${SRC_LIST}
     ${POLLER_SRC}
     ${SOCKET_SRC_LIST}
+    ${CONNECTOR_SRC_LIST}
     ConnectorTest.cpp
     SinaStockParserTest.cpp
     IPAddressTest.cpp)

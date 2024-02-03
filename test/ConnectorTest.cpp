@@ -1,8 +1,8 @@
 #include <thread>
 
-#include "SslConnector.hpp"
-#include "TcpConnector.hpp"
-#include "UdpConnector.hpp"
+#include "Connector/SslConnector.hpp"
+#include "Connector/TcpConnector.hpp"
+#include "Connector/UdpConnector.hpp"
 
 #include "gtest/gtest.h"
 

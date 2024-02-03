@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Connection.hpp"
-#include "Connector.hpp"
+#include "Connector/Connector.hpp"
 
 class TcpClient : public EpollHandler
 {

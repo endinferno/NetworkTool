@@ -1,8 +1,6 @@
-#include <memory>
-
-#include "Logger.hpp"
 #include "TcpClient.hpp"
-#include "TcpConnector.hpp"
+#include "Connector/TcpConnector.hpp"
+#include "Logger.hpp"
 
 TcpClient::TcpClient(EventPollerPtr& poller)
     : EpollHandler(poller)
