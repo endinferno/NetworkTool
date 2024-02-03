@@ -21,7 +21,7 @@ private:
     void HandleEvent(Channels& chans);
     void EpollThreadFn();
 
-    std::unique_ptr<Pollable> poller_;
+    PollablePtr poller_;
     bool isQuit_ = false;
     std::unique_ptr<std::thread> eventPollThread_;
     std::unordered_set<ChannelPtr> channels_;

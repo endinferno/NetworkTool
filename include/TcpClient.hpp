@@ -21,7 +21,7 @@ private:
     void HandleNewConnection(ChannelPtr chan);
 
     constexpr static int MAX_READ_BUFFER = 2048;
-    std::unique_ptr<Connector> connector_;
+    ConnectorPtr connector_;
     Connection conn_;
     std::string readBuf_;
     OnMessageCallback callback_;

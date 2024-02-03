@@ -18,5 +18,3 @@ private:
     int epollFd_;
     std::vector<struct epoll_event> events_;
 };
-
-using EpollerPtr = std::shared_ptr<Epoller>;

@@ -28,3 +28,5 @@ protected:
     constexpr static int EVENT_POLLER_MAX_EVENT = 32;
     constexpr static int EVENT_POLLER_TIMEOUT = 500;
 };
+
+using PollablePtr = std::unique_ptr<Pollable>;

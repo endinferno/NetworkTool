@@ -25,3 +25,5 @@ private:
     NewConnectionCallback callback_;
     ConnectProcedure handleConnect_;
 };
+
+using ConnectorPtr = std::unique_ptr<Connector>;
