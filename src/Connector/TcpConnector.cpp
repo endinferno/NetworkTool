@@ -1,3 +1,5 @@
+#include <sys/socket.h>
+
 #include "Connector/TcpConnector.hpp"
 #include "Logger.hpp"
 #include "Socket/TcpSocket.hpp"

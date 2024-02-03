@@ -8,13 +8,8 @@
 class UdpSocket : public Socket
 {
 public:
-    UdpSocket()
-        : Socket(::socket(AF_INET, SOCK_DGRAM, 0))
-    {}
-    ~UdpSocket() override
-    {
-        ::close(GetFd());
-    }
+    UdpSocket();
+    ~UdpSocket() override;
 };
 
 using UdpSocketPtr = std::shared_ptr<UdpSocket>;
