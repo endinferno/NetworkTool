@@ -4,23 +4,27 @@
 
 SslConnector::SslConnector(EventPollerPtr& poller)
     : TcpConnector(poller)
-{}
+{
+    // Set callback_ with TcpConnectCallback which used to get ready to
+    // construct ssl construction after tcp connection construct
+    Connector::SetNewConnectionCallback(
+        [this](ChannelPtr&& chan) { TcpConnectCallback(chan); });
+}
 
 SocketPtr SslConnector::CreateSocket()
 {
-    newConnectionCallback_ = GetNewConnectionCallback();
-    SetNewConnectionCallback(
-        [this](ChannelPtr&& chan) { TcpConnectCallback(chan); });
     return std::make_shared<TcpSocket>();
 }
 
 void SslConnector::TcpConnectCallback(ChannelPtr chan)
 {
+    // Set ssl connection procedure
     SetConnectProcedure([this](ChannelPtr&& chan) -> bool {
         DelEvent(chan);
         return HandleSslConnect(chan);
     });
-    SetNewConnectionCallback(newConnectionCallback_);
+    // Set callback_ with user-defined callback after ssl connection construct
+    Connector::SetNewConnectionCallback(newConnectionCallback_);
 
     ssl_.SetFd(chan->GetSock()->GetFd());
     ssl_.SetConnectState();
@@ -48,4 +52,10 @@ bool SslConnector::HandleSslConnect(ChannelPtr& chan)
     }
     AddEvent(chan, event);
     return false;
+}
+
+void SslConnector::SetNewConnectionCallback(NewConnectionCallback callback)
+{
+    // Store user-defined callback to a new callback variable
+    newConnectionCallback_ = std::move(callback);
 }

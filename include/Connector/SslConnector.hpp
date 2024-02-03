@@ -8,6 +8,7 @@ class SslConnector : public TcpConnector
 public:
     explicit SslConnector(EventPollerPtr& poller);
     SocketPtr CreateSocket() override;
+    void SetNewConnectionCallback(NewConnectionCallback callback) override;
     ~SslConnector() override = default;
 
 private:
