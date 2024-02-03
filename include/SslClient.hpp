@@ -5,7 +5,9 @@
 class SslClient : public Client
 {
 public:
-    explicit SslClient(EventPollerPtr& poller);
+    explicit SslClient(EventPollerPtr& poller)
+        : Client(poller, Connector::ConnectorType::SSL)
+    {}
     ~SslClient() override = default;
 };
 

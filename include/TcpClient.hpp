@@ -5,7 +5,9 @@
 class TcpClient : public Client
 {
 public:
-    explicit TcpClient(EventPollerPtr& poller);
+    explicit TcpClient(EventPollerPtr& poller)
+        : Client(poller, Connector::ConnectorType::TCP)
+    {}
     ~TcpClient() override = default;
 };
 

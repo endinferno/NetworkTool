@@ -5,7 +5,9 @@
 class UdpClient : public Client
 {
 public:
-    explicit UdpClient(EventPollerPtr& poller);
+    explicit UdpClient(EventPollerPtr& poller)
+        : Client(poller, Connector::ConnectorType::UDP)
+    {}
     ~UdpClient() override = default;
 };
 
