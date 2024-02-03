@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Socket.hpp"
+#include "Socket/Socket.hpp"
 
 class Connection
 {

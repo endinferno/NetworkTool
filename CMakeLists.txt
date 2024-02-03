@@ -43,6 +43,7 @@ else()
 endif()
 
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LIST)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/Socket SOCKET_SRC_LIST)
 
 set(INCLUDE_LIST ${PROJECT_SOURCE_DIR}/include)
 
@@ -50,7 +51,11 @@ include_directories(${INCLUDE_LIST})
 
 add_subdirectory(dependencies)
 
-add_executable(${BINARY_NAME} Main.cpp ${SRC_LIST} ${POLLER_SRC})
+add_executable(${BINARY_NAME}
+    Main.cpp
+    ${SRC_LIST}
+    ${SOCKET_SRC_LIST}
+    ${POLLER_SRC})
 
 target_link_libraries(${BINARY_NAME} pthread)
 target_link_libraries(${BINARY_NAME} fmt)

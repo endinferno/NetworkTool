@@ -6,7 +6,10 @@ project(${BINARY_NAME})
 enable_testing()
 
 include_directories(${INCLUDE_LIST})
-add_executable(${BINARY_NAME}  ${SRC_LIST} ${POLLER_SRC}
+add_executable(${BINARY_NAME}
+    ${SRC_LIST}
+    ${POLLER_SRC}
+    ${SOCKET_SRC_LIST}
     ConnectorTest.cpp
     SinaStockParserTest.cpp
     IPAddressTest.cpp)

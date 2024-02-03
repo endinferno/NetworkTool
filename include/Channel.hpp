@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "Socket.hpp"
+#include "Socket/Socket.hpp"
 
 class Channel;
 

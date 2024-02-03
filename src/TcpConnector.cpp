@@ -1,6 +1,6 @@
 #include "TcpConnector.hpp"
 #include "Logger.hpp"
-#include "TcpSocket.hpp"
+#include "Socket/TcpSocket.hpp"
 
 TcpConnector::TcpConnector(EventPollerPtr& poller)
     : Connector(poller)

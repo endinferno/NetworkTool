@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 #include "Logger.hpp"
-#include "Socket.hpp"
+#include "Socket/Socket.hpp"
 
 Socket::Socket(int sockFd)
     : sockFd_(sockFd)
