@@ -3,7 +3,6 @@
 #include <memory>
 #include <stdexcept>
 
-#include "Connector/Connector.hpp"
 #include "Connector/SslConnector.hpp"
 #include "Connector/TcpConnector.hpp"
 #include "Connector/UdpConnector.hpp"
