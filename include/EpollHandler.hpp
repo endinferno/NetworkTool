@@ -10,12 +10,10 @@ public:
     virtual void HandleErrorEvent(ChannelPtr chan) = 0;
     virtual void HandleReadEvent(ChannelPtr chan) = 0;
     virtual void HandleWriteEvent(ChannelPtr chan) = 0;
-    virtual ~EpollHandler() = default;
-
-protected:
     void AddEvent(ChannelPtr& chan, uint32_t event);
     void ModEvent(ChannelPtr& chan, uint32_t event);
     void DelEvent(ChannelPtr& chan);
+    virtual ~EpollHandler() = default;
 
 private:
     EventPollerPtr poller_;

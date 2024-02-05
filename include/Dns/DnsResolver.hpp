@@ -14,7 +14,7 @@ public:
     ~DnsResolver() = default;
 
 private:
-    bool HandleDnsMessage(const std::string& udpMsg);
+    void HandleDnsMessage(ChannelPtr chan, const std::string& udpMsg);
     void SendDnsRequest(ChannelPtr chan);
 
     const std::string dnsServerIp_ = "223.5.5.5";

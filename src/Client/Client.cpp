@@ -35,16 +35,10 @@ void Client::HandleReadEvent(ChannelPtr chan)
             break;
         }
         DEBUG("Call message callback\n");
-        if (onMessageCallback_ == nullptr) {
-            return;
-        }
-        // TODO: maybe there is a better way
-        readBuf_.resize(readBytes);
-        // If return value is true, delete the channel and the socket
-        bool isFinish = onMessageCallback_(readBuf_);
-        if (isFinish) {
-            DEBUG("socket cnt {}\n", chan->GetSock().use_count());
-            DelEvent(chan);
+        if (onMessageCallback_ != nullptr) {
+            // TODO: maybe there is a better way
+            readBuf_.resize(readBytes);
+            onMessageCallback_(chan, readBuf_);
         }
     }
 }

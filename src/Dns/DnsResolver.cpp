@@ -4,9 +4,10 @@
 DnsResolver::DnsResolver(EventPollerPtr& poller)
     : client_(poller)
 {
-    client_.SetOnMessageCallback([this](const std::string& udpMsg) -> bool {
-        return HandleDnsMessage(udpMsg);
-    });
+    client_.SetOnMessageCallback(
+        [this](ChannelPtr&& chan, const std::string& udpMsg) {
+            HandleDnsMessage(chan, udpMsg);
+        });
     client_.SetConnectDoneCallback(
         [this](ChannelPtr&& chan) { SendDnsRequest(chan); });
 }
@@ -25,7 +26,7 @@ void DnsResolver::SetDnsMessageCallback(DnsMessageCallback callback)
     callback_ = std::move(callback);
 }
 
-bool DnsResolver::HandleDnsMessage(const std::string& udpMsg)
+void DnsResolver::HandleDnsMessage(ChannelPtr chan, const std::string& udpMsg)
 {
     DEBUG("Handle dns message\n");
     DnsMessage dnsMsg;
@@ -39,9 +40,9 @@ bool DnsResolver::HandleDnsMessage(const std::string& udpMsg)
         if (callback_ != nullptr) {
             callback_(ipAddr);
         }
-        return true;
+        client_.DelEvent(chan);
+        break;
     }
-    return false;
 }
 
 void DnsResolver::SendDnsRequest([[maybe_unused]] ChannelPtr chan)

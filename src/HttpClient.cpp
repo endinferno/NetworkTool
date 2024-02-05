@@ -8,9 +8,10 @@ HttpClient::HttpClient(EventPollerPtr& poller)
 void HttpClient::Connect(IPAddress serverIp, uint16_t serverPort)
 {
     resolver_.reset();
-    tcpClient_.SetOnMessageCallback([this](const std::string& httpMsg) -> bool {
-        return OnMessage(httpMsg);
-    });
+    tcpClient_.SetOnMessageCallback(
+        [this]([[maybe_unused]] ChannelPtr chan, const std::string& httpMsg) {
+            OnMessage(httpMsg);
+        });
     tcpClient_.Connect(serverIp, serverPort);
 }
 
@@ -32,7 +33,7 @@ void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback callback)
     callback_ = std::move(callback);
 }
 
-bool HttpClient::OnMessage(const std::string& httpMsg)
+void HttpClient::OnMessage(const std::string& httpMsg)
 {
     response_.Parse(httpMsg);
     int statusCode = response_.GetStatus();
@@ -44,5 +45,4 @@ bool HttpClient::OnMessage(const std::string& httpMsg)
     if (callback_ != nullptr) {
         callback_(response_.GetBody());
     }
-    return false;
 }

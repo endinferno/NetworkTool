@@ -22,7 +22,7 @@ public:
     ~HttpClient() = default;
 
 private:
-    bool OnMessage(const std::string& httpMsg);
+    void OnMessage(const std::string& httpMsg);
 
     DnsResolverPtr resolver_;
     TcpClient tcpClient_;

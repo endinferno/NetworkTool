@@ -6,7 +6,8 @@
 class Client : public EpollHandler
 {
 public:
-    using OnMessageCallback = std::function<bool(const std::string& msg)>;
+    using OnMessageCallback =
+        std::function<void(ChannelPtr, const std::string& msg)>;
     using ConnectDoneCallback = std::function<void(ChannelPtr)>;
 
     explicit Client(EventPollerPtr& poller,
