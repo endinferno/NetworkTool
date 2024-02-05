@@ -1,4 +1,4 @@
-#include "DnsHeader.hpp"
+#include "Dns/DnsHeader.hpp"
 
 void DnsHeader::SetId(uint16_t dnsId)
 {

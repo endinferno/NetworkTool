@@ -1,4 +1,4 @@
-#include "DnsAnswer.hpp"
+#include "Dns/DnsAnswer.hpp"
 
 std::string DnsAnswer::GetDomain() const
 {

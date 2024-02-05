@@ -1,4 +1,4 @@
-#include "DnsQuestion.hpp"
+#include "Dns/DnsQuestion.hpp"
 
 void DnsQuestion::SetDomain(const std::string& domain)
 {

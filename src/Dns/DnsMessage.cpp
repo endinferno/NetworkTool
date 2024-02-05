@@ -1,6 +1,6 @@
 #include <ctime>
 
-#include "DnsMessage.hpp"
+#include "Dns/DnsMessage.hpp"
 
 DnsMessage::DnsMessage()
 {

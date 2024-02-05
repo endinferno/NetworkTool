@@ -1,6 +1,6 @@
 #include <cstdint>
 
-#include "DnsBaseType.hpp"
+#include "Dns/DnsBaseType.hpp"
 
 std::string DnsBaseType::Stringify(const DnsType& dnsType)
 {

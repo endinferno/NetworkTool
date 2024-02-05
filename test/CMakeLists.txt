@@ -13,6 +13,7 @@ add_executable(${BINARY_NAME}
     ${CONNECTOR_SRC_LIST}
     ${CLIENT_SRC_LIST}
     ${UTILS_SRC_LIST}
+    ${DNS_SRC_LIST}
     ConnectorTest.cpp
     SinaStockParserTest.cpp
     IPAddressTest.cpp

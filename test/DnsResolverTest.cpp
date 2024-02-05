@@ -1,4 +1,4 @@
-#include "DnsFlag.hpp"
+#include "Dns/DnsFlag.hpp"
 
 #include "gtest/gtest.h"
 

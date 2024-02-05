@@ -1,4 +1,4 @@
-#include "DnsFlag.hpp"
+#include "Dns/DnsFlag.hpp"
 
 DnsFlag::DnsFlag(uint16_t flag)
 {

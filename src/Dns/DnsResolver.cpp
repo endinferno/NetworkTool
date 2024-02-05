@@ -1,4 +1,4 @@
-#include "DnsResolver.hpp"
+#include "Dns/DnsResolver.hpp"
 #include "Utils/Logger.hpp"
 
 DnsResolver::DnsResolver(EventPollerPtr& poller)
