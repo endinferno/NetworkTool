@@ -4,8 +4,9 @@
 DnsResolver::DnsResolver(EventPollerPtr& poller)
     : client_(poller)
 {
-    client_.SetOnMessageCallback(
-        [this](const std::string& udpMsg) { HandleDnsMessage(udpMsg); });
+    client_.SetOnMessageCallback([this](const std::string& udpMsg) -> bool {
+        return HandleDnsMessage(udpMsg);
+    });
     client_.SetConnectDoneCallback(
         [this](ChannelPtr&& chan) { SendDnsRequest(chan); });
 }
@@ -24,22 +25,23 @@ void DnsResolver::SetDnsMessageCallback(DnsMessageCallback callback)
     callback_ = std::move(callback);
 }
 
-void DnsResolver::HandleDnsMessage(const std::string& udpMsg)
+bool DnsResolver::HandleDnsMessage(const std::string& udpMsg)
 {
     DEBUG("Handle dns message\n");
     DnsMessage dnsMsg;
     dnsMsg.Parse(udpMsg);
     auto answers = dnsMsg.GetAnswer();
-    IPAddress ipAddr;
     for (const auto& answer : answers) {
-        if (answer.GetType() == DnsBaseType::DnsType::A) {
-            ipAddr = std::any_cast<IPAddress>(answer.GetData());
-            break;
+        if (answer.GetType() != DnsBaseType::DnsType::A) {
+            continue;
         }
+        auto ipAddr = std::any_cast<IPAddress>(answer.GetData());
+        if (callback_ != nullptr) {
+            callback_(ipAddr);
+        }
+        return true;
     }
-    if (callback_ != nullptr) {
-        callback_(ipAddr);
-    }
+    return false;
 }
 
 void DnsResolver::SendDnsRequest([[maybe_unused]] ChannelPtr chan)

@@ -34,29 +34,24 @@ void DnsAnswer::Parse(const std::string& udpMsg, size_t& pos)
 {
     const char* udpMsgPtr = udpMsg.data();
     domainName_ = ParseDomain(udpMsg, pos);
-    DEBUG("{}\n", domainName_);
 
     uint16_t ansTypeInt;
     ::memcpy(&ansTypeInt, udpMsgPtr + pos, sizeof(uint16_t));
     ansType_ = static_cast<DnsBaseType::DnsType>(ntohs(ansTypeInt));
     pos += sizeof(ansTypeInt);
-    DEBUG("{}\n", ansType_);
 
     uint16_t ansClassInt;
     ::memcpy(&ansClassInt, udpMsgPtr + pos, sizeof(uint16_t));
     ansClass_ = static_cast<DnsBaseType::DnsClass>(ntohs(ansClassInt));
     pos += sizeof(ansClassInt);
-    DEBUG("{}\n", ansClass_);
 
     ::memcpy(&ansTtl_, udpMsgPtr + pos, sizeof(uint32_t));
     ansTtl_ = ntohl(ansTtl_);
     pos += sizeof(ansTtl_);
-    DEBUG("{}\n", ansTtl_);
 
     ::memcpy(&ansDataLen_, udpMsgPtr + pos, sizeof(uint16_t));
     ansDataLen_ = ntohs(ansDataLen_);
     pos += sizeof(ansDataLen_);
-    DEBUG("{}\n", ansDataLen_);
 
     switch (ansType_) {
     case DnsBaseType::DnsType::A:

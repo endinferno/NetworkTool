@@ -51,10 +51,6 @@ std::string DnsMessage::Stringify() const
 
 void DnsMessage::Parse(const std::string& udpMsg)
 {
-    for (auto& udpMsgCh : udpMsg) {
-        INFO("0x{:02X} ", static_cast<unsigned char>(udpMsgCh));
-    }
-    INFO("\n\n");
     size_t pos = 0;
     header_.Parse(udpMsg, pos);
     uint8_t quesCnt = header_.GetQuestionCount();

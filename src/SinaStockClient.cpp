@@ -7,7 +7,7 @@ SinaStockClient::SinaStockClient(EventPollerPtr& poller)
 
 void SinaStockClient::Connect()
 {
-    httpClient_.Connect(IPAddress(sinaStockIp_), sinaStockPort_);
+    httpClient_.Connect(sinaStockDomain_, sinaStockPort_);
 }
 
 void SinaStockClient::GetStock(const std::string& stockId)

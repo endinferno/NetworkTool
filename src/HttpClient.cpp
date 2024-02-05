@@ -1,15 +1,25 @@
 #include "HttpClient.hpp"
-#include "Utils/Logger.hpp"
 
 HttpClient::HttpClient(EventPollerPtr& poller)
-    : tcpClient_(poller)
+    : resolver_(std::make_shared<DnsResolver>(poller))
+    , tcpClient_(poller)
 {}
 
 void HttpClient::Connect(IPAddress serverIp, uint16_t serverPort)
 {
+    resolver_.reset();
+    tcpClient_.SetOnMessageCallback([this](const std::string& httpMsg) -> bool {
+        return OnMessage(httpMsg);
+    });
     tcpClient_.Connect(serverIp, serverPort);
-    tcpClient_.SetOnMessageCallback(
-        [this](const std::string& httpMsg) { OnMessage(httpMsg); });
+}
+
+void HttpClient::Connect(const std::string& serverName, uint16_t serverPort)
+{
+    resolver_->SetDnsMessageCallback([this, serverPort](IPAddress serverIp) {
+        Connect(serverIp, serverPort);
+    });
+    resolver_->RequestIp(serverName);
 }
 
 void HttpClient::Request(const HttpRequest& httpReq)
@@ -22,7 +32,7 @@ void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback callback)
     callback_ = std::move(callback);
 }
 
-void HttpClient::OnMessage(const std::string& httpMsg)
+bool HttpClient::OnMessage(const std::string& httpMsg)
 {
     response_.Parse(httpMsg);
     int statusCode = response_.GetStatus();
@@ -34,4 +44,5 @@ void HttpClient::OnMessage(const std::string& httpMsg)
     if (callback_ != nullptr) {
         callback_(response_.GetBody());
     }
+    return false;
 }
