@@ -5,9 +5,14 @@
 #include <array>
 #include <string>
 
+#include "fmt/format.h"
+
 class IPAddress
 {
 public:
+    explicit IPAddress()
+        : hostIp_(0)
+    {}
     explicit IPAddress(uint32_t hostIpAddr)
         : hostIp_(hostIpAddr)
     {}
@@ -36,4 +41,19 @@ public:
 
 private:
     uint32_t hostIp_;
+};
+
+template<>
+struct fmt::formatter<IPAddress>
+{
+    template<typename ParseContext>
+    constexpr auto parse(ParseContext& ctx)
+    {
+        return ctx.begin();
+    }
+    template<typename FormatContext>
+    auto format(const IPAddress& ipAddr, FormatContext& ctx)
+    {
+        return fmt::format_to(ctx.out(), "{}", ipAddr.Stringify());
+    }
 };

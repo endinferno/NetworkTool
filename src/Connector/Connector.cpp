@@ -43,11 +43,6 @@ void Connector::SetNewConnectionCallback(NewConnectionCallback callback)
     callback_ = std::move(callback);
 }
 
-Connector::NewConnectionCallback Connector::GetNewConnectionCallback() const
-{
-    return callback_;
-}
-
 void Connector::SetConnectProcedure(ConnectProcedure procedure)
 {
     handleConnect_ = std::move(procedure);

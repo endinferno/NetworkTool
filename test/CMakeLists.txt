@@ -15,7 +15,8 @@ add_executable(${BINARY_NAME}
     ${UTILS_SRC_LIST}
     ConnectorTest.cpp
     SinaStockParserTest.cpp
-    IPAddressTest.cpp)
+    IPAddressTest.cpp
+    DnsResolverTest.cpp)
 
 target_link_libraries(${BINARY_NAME} pthread)
 target_link_libraries(${BINARY_NAME} fmt)

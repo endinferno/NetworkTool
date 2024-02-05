@@ -21,7 +21,6 @@ public:
     void HandleReadEvent(ChannelPtr chan) override;
     void HandleWriteEvent(ChannelPtr chan) override;
     virtual void SetNewConnectionCallback(NewConnectionCallback callback);
-    [[nodiscard]] NewConnectionCallback GetNewConnectionCallback() const;
     void Connect(IPAddress serverIp, uint16_t serverPort);
     ~Connector() override = default;
 

@@ -15,6 +15,7 @@ void Client::HandleErrorEvent([[maybe_unused]] ChannelPtr chan)
 
 void Client::HandleReadEvent(ChannelPtr chan)
 {
+    DEBUG("Handle read event\n");
     auto sock = chan->GetSock();
     while (true) {
         // TODO: maybe there is a better way
@@ -33,16 +34,18 @@ void Client::HandleReadEvent(ChannelPtr chan)
             ERROR("Connection closed\n");
             break;
         }
-        if (callback_ != nullptr) {
+        DEBUG("Call message callback\n");
+        if (onMessageCallback_ != nullptr) {
             // TODO: maybe there is a better way
             readBuf_.resize(readBytes);
-            callback_(readBuf_);
+            onMessageCallback_(readBuf_);
         }
     }
 }
 
 void Client::HandleWriteEvent([[maybe_unused]] ChannelPtr chan)
 {
+    DEBUG("Handle write event\n");
     conn_.SetConnectStatus(true);
 }
 
@@ -63,7 +66,12 @@ void Client::Connect(IPAddress serverIp, uint16_t serverPort)
 
 void Client::SetOnMessageCallback(OnMessageCallback callback)
 {
-    callback_ = std::move(callback);
+    onMessageCallback_ = std::move(callback);
+}
+
+void Client::SetConnectDoneCallback(ConnectDoneCallback callback)
+{
+    connectDoneCallback_ = std::move(callback);
 }
 
 void Client::HandleNewConnection(ChannelPtr chan)
@@ -87,4 +95,8 @@ void Client::HandleNewConnection(ChannelPtr chan)
 #elif defined(USE_SELECT)
     AddEvent(chan, Pollable::Event::EventIn);
 #endif
+    DEBUG("Call connect done callback\n");
+    if (connectDoneCallback_ != nullptr) {
+        connectDoneCallback_(chan);
+    }
 }
