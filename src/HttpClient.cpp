@@ -28,7 +28,7 @@ void HttpClient::Request(const HttpRequest& httpReq)
     tcpClient_.Write(httpReq.Stringify());
 }
 
-void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback callback)
+void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback&& callback)
 {
     callback_ = std::move(callback);
 }
