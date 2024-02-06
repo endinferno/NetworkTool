@@ -48,7 +48,7 @@ void Connector::SetConnectProcedure(ConnectProcedure&& procedure)
     handleConnect_ = std::move(procedure);
 }
 
-void Connector::Connect(IPAddress serverIp, uint16_t serverPort)
+void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
 {
     auto sock = sockFactory_.Create(sockType_);
     sock->SetReuseAddr();
