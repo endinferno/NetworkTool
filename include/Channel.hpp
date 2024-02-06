@@ -12,7 +12,7 @@ using Channels = std::vector<Channel*>;
 class Channel : public std::enable_shared_from_this<Channel>
 {
 public:
-    using EventCallback = std::function<void(ChannelPtr)>;
+    using EventCallback = std::function<void(ChannelPtr&&)>;
 
     explicit Channel(SocketPtr& sock);
     void SetReadCallback(EventCallback&& callback);
