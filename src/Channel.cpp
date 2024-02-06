@@ -7,17 +7,17 @@ Channel::Channel(SocketPtr& sock)
     , errorCallback_(nullptr)
 {}
 
-void Channel::SetReadCallback(EventCallback callback)
+void Channel::SetReadCallback(EventCallback&& callback)
 {
     readCallback_ = std::move(callback);
 }
 
-void Channel::SetWriteCallback(EventCallback callback)
+void Channel::SetWriteCallback(EventCallback&& callback)
 {
     writeCallback_ = std::move(callback);
 }
 
-void Channel::SetErrorCallback(EventCallback callback)
+void Channel::SetErrorCallback(EventCallback&& callback)
 {
     errorCallback_ = std::move(callback);
 }

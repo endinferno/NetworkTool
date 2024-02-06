@@ -15,9 +15,9 @@ public:
     using EventCallback = std::function<void(ChannelPtr)>;
 
     explicit Channel(SocketPtr& sock);
-    void SetReadCallback(EventCallback callback);
-    void SetWriteCallback(EventCallback callback);
-    void SetErrorCallback(EventCallback callback);
+    void SetReadCallback(EventCallback&& callback);
+    void SetWriteCallback(EventCallback&& callback);
+    void SetErrorCallback(EventCallback&& callback);
     void OnReadable();
     void OnWritable();
     void OnErrorable();
