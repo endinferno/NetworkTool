@@ -58,7 +58,8 @@ int Socket::GetSockOpt(int level, int optName) const
     return opt;
 }
 
-void Socket::Connect(IPAddress serverIp, uint16_t serverPort) const
+void Socket::Connect(const IPAddress& serverIp,
+                     const uint16_t& serverPort) const
 {
     struct sockaddr_in serverAddr;
 
