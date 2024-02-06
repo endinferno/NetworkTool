@@ -17,8 +17,8 @@ public:
     void HandleWriteEvent(ChannelPtr chan) override;
     void Write(const std::string& writeBuf);
     void Connect(IPAddress serverIp, uint16_t serverPort);
-    void SetOnMessageCallback(OnMessageCallback callback);
-    void SetConnectDoneCallback(ConnectDoneCallback callback);
+    void SetOnMessageCallback(OnMessageCallback&& callback);
+    void SetConnectDoneCallback(ConnectDoneCallback&& callback);
     ~Client() override = default;
 
 private:
