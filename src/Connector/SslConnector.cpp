@@ -18,7 +18,7 @@ void SslConnector::TcpConnectCallback(ChannelPtr chan)
         return HandleSslConnect(chan);
     });
     // Set callback_ with user-defined callback after ssl connection construct
-    Connector::SetNewConnectionCallback(newConnectionCallback_);
+    Connector::SetNewConnectionCallback(std::move(newConnectionCallback_));
 
     ssl_.SetFd(chan->GetSock()->GetFd());
     ssl_.SetConnectState();
@@ -48,7 +48,7 @@ bool SslConnector::HandleSslConnect(ChannelPtr& chan)
     return false;
 }
 
-void SslConnector::SetNewConnectionCallback(NewConnectionCallback callback)
+void SslConnector::SetNewConnectionCallback(NewConnectionCallback&& callback)
 {
     // Store user-defined callback to a new callback variable
     newConnectionCallback_ = std::move(callback);

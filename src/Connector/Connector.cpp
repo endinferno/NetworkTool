@@ -38,12 +38,12 @@ void Connector::HandleWriteEvent(ChannelPtr chan)
     }
 }
 
-void Connector::SetNewConnectionCallback(NewConnectionCallback callback)
+void Connector::SetNewConnectionCallback(NewConnectionCallback&& callback)
 {
     callback_ = std::move(callback);
 }
 
-void Connector::SetConnectProcedure(ConnectProcedure procedure)
+void Connector::SetConnectProcedure(ConnectProcedure&& procedure)
 {
     handleConnect_ = std::move(procedure);
 }

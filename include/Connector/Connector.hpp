@@ -20,12 +20,12 @@ public:
     void HandleErrorEvent(ChannelPtr chan) override;
     void HandleReadEvent(ChannelPtr chan) override;
     void HandleWriteEvent(ChannelPtr chan) override;
-    virtual void SetNewConnectionCallback(NewConnectionCallback callback);
+    virtual void SetNewConnectionCallback(NewConnectionCallback&& callback);
     void Connect(IPAddress serverIp, uint16_t serverPort);
     ~Connector() override = default;
 
 protected:
-    void SetConnectProcedure(ConnectProcedure procedure);
+    void SetConnectProcedure(ConnectProcedure&& procedure);
 
 private:
     SocketFactory sockFactory_;
