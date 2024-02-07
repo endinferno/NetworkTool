@@ -74,7 +74,7 @@ void Client::SetConnectDoneCallback(ConnectDoneCallback&& callback)
     connectDoneCallback_ = std::move(callback);
 }
 
-void Client::HandleNewConnection(ChannelPtr chan)
+void Client::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
     conn_.Bind(chan->GetSock());

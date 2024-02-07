@@ -22,7 +22,7 @@ public:
     ~Client() override = default;
 
 private:
-    void HandleNewConnection(ChannelPtr chan);
+    void HandleNewConnection(ChannelPtr& chan);
 
     constexpr static int MAX_READ_BUFFER = 2048;
     ConnectorFactory connectorFactory_;
