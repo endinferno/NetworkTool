@@ -17,9 +17,10 @@ void HttpClient::Connect(IPAddress serverIp, uint16_t serverPort)
 
 void HttpClient::Connect(const std::string& serverName, uint16_t serverPort)
 {
-    resolver_->SetDnsMessageCallback([this, serverPort](IPAddress serverIp) {
-        Connect(serverIp, serverPort);
-    });
+    resolver_->SetDnsMessageCallback(
+        [this, serverPort](const IPAddress& serverIp) {
+            Connect(serverIp, serverPort);
+        });
     resolver_->RequestIp(serverName);
 }
 

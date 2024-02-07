@@ -21,12 +21,12 @@ void DnsResolver::RequestIp(const std::string& domainName)
     client_.Connect(IPAddress(dnsServerIp_), dnsServerPort_);
 }
 
-void DnsResolver::SetDnsMessageCallback(DnsMessageCallback callback)
+void DnsResolver::SetDnsMessageCallback(DnsMessageCallback&& callback)
 {
     callback_ = std::move(callback);
 }
 
-void DnsResolver::HandleDnsMessage(ChannelPtr chan, const std::string& udpMsg)
+void DnsResolver::HandleDnsMessage(ChannelPtr& chan, const std::string& udpMsg)
 {
     DEBUG("Handle dns message\n");
     DnsMessage dnsMsg;
@@ -45,7 +45,7 @@ void DnsResolver::HandleDnsMessage(ChannelPtr chan, const std::string& udpMsg)
     }
 }
 
-void DnsResolver::SendDnsRequest([[maybe_unused]] ChannelPtr chan)
+void DnsResolver::SendDnsRequest([[maybe_unused]] ChannelPtr& chan)
 {
     DEBUG("Send dns request\n");
     auto reqMsg = request_.Stringify();
