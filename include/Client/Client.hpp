@@ -7,8 +7,8 @@ class Client : public EpollHandler
 {
 public:
     using OnMessageCallback =
-        std::function<void(ChannelPtr, const std::string& msg)>;
-    using ConnectDoneCallback = std::function<void(ChannelPtr)>;
+        std::function<void(ChannelPtr&, const std::string& msg)>;
+    using ConnectDoneCallback = std::function<void(ChannelPtr&)>;
 
     explicit Client(EventPollerPtr& poller,
                     enum Connector::ConnectorType connectorType);
@@ -16,7 +16,7 @@ public:
     void HandleReadEvent(ChannelPtr&& chan) override;
     void HandleWriteEvent(ChannelPtr&& chan) override;
     void Write(const std::string& writeBuf);
-    void Connect(IPAddress serverIp, uint16_t serverPort);
+    void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     void SetOnMessageCallback(OnMessageCallback&& callback);
     void SetConnectDoneCallback(ConnectDoneCallback&& callback);
     ~Client() override = default;

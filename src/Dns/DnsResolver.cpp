@@ -5,11 +5,11 @@ DnsResolver::DnsResolver(EventPollerPtr& poller)
     : client_(poller)
 {
     client_.SetOnMessageCallback(
-        [this](ChannelPtr&& chan, const std::string& udpMsg) {
+        [this](ChannelPtr& chan, const std::string& udpMsg) {
             HandleDnsMessage(chan, udpMsg);
         });
     client_.SetConnectDoneCallback(
-        [this](ChannelPtr&& chan) { SendDnsRequest(chan); });
+        [this](ChannelPtr& chan) { SendDnsRequest(chan); });
 }
 
 void DnsResolver::RequestIp(const std::string& domainName)

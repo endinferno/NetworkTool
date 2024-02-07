@@ -57,7 +57,7 @@ void Client::Write(const std::string& writeBuf)
     conn_.Write(writeBuf);
 }
 
-void Client::Connect(IPAddress serverIp, uint16_t serverPort)
+void Client::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
 {
     connector_->SetNewConnectionCallback(
         [this](ChannelPtr& chan) { HandleNewConnection(chan); });

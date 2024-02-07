@@ -5,17 +5,18 @@ HttpClient::HttpClient(EventPollerPtr& poller)
     , tcpClient_(poller)
 {}
 
-void HttpClient::Connect(IPAddress serverIp, uint16_t serverPort)
+void HttpClient::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
 {
     resolver_.reset();
     tcpClient_.SetOnMessageCallback(
-        [this]([[maybe_unused]] ChannelPtr chan, const std::string& httpMsg) {
+        [this]([[maybe_unused]] ChannelPtr& chan, const std::string& httpMsg) {
             OnMessage(httpMsg);
         });
     tcpClient_.Connect(serverIp, serverPort);
 }
 
-void HttpClient::Connect(const std::string& serverName, uint16_t serverPort)
+void HttpClient::Connect(const std::string& serverName,
+                         const uint16_t& serverPort)
 {
     resolver_->SetDnsMessageCallback(
         [this, serverPort](const IPAddress& serverIp) {
