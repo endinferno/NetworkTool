@@ -7,13 +7,13 @@ SslConnector::SslConnector(EventPollerPtr& poller)
     // Set callback_ with TcpConnectCallback which used to get ready to
     // construct ssl construction after tcp connection construct
     Connector::SetNewConnectionCallback(
-        [this](ChannelPtr&& chan) { TcpConnectCallback(chan); });
+        [this](ChannelPtr& chan) { TcpConnectCallback(chan); });
 }
 
-void SslConnector::TcpConnectCallback(ChannelPtr chan)
+void SslConnector::TcpConnectCallback(ChannelPtr& chan)
 {
     // Set ssl connection procedure
-    SetConnectProcedure([this](ChannelPtr&& chan) -> bool {
+    SetConnectProcedure([this](ChannelPtr& chan) -> bool {
         DelEvent(chan);
         return HandleSslConnect(chan);
     });

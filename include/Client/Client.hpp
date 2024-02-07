@@ -12,9 +12,9 @@ public:
 
     explicit Client(EventPollerPtr& poller,
                     enum Connector::ConnectorType connectorType);
-    void HandleErrorEvent(ChannelPtr chan) override;
-    void HandleReadEvent(ChannelPtr chan) override;
-    void HandleWriteEvent(ChannelPtr chan) override;
+    void HandleErrorEvent(ChannelPtr&& chan) override;
+    void HandleReadEvent(ChannelPtr&& chan) override;
+    void HandleWriteEvent(ChannelPtr&& chan) override;
     void Write(const std::string& writeBuf);
     void Connect(IPAddress serverIp, uint16_t serverPort);
     void SetOnMessageCallback(OnMessageCallback&& callback);

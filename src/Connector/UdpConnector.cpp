@@ -5,10 +5,10 @@ UdpConnector::UdpConnector(EventPollerPtr& poller)
     : Connector(poller, Socket::SocketType::UDP)
 {
     SetConnectProcedure(
-        [this](ChannelPtr&& chan) -> bool { return HandleConnect(chan); });
+        [this](ChannelPtr& chan) -> bool { return HandleConnect(chan); });
 }
 
-bool UdpConnector::HandleConnect([[maybe_unused]] ChannelPtr chan)
+bool UdpConnector::HandleConnect([[maybe_unused]] ChannelPtr& chan)
 {
     DelEvent(chan);
     INFO("Success to connect\n");

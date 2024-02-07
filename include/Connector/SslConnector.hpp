@@ -11,7 +11,7 @@ public:
     ~SslConnector() override = default;
 
 private:
-    void TcpConnectCallback(ChannelPtr chan);
+    void TcpConnectCallback(ChannelPtr& chan);
     bool HandleSslConnect(ChannelPtr& chan);
 
     SslWrapper ssl_;

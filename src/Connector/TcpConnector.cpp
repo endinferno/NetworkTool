@@ -7,10 +7,10 @@ TcpConnector::TcpConnector(EventPollerPtr& poller)
     : Connector(poller, Socket::SocketType::TCP)
 {
     SetConnectProcedure(
-        [this](ChannelPtr&& chan) -> bool { return HandleConnect(chan); });
+        [this](ChannelPtr& chan) -> bool { return HandleConnect(chan); });
 }
 
-bool TcpConnector::HandleConnect(ChannelPtr chan)
+bool TcpConnector::HandleConnect(ChannelPtr& chan)
 {
     auto sock = chan->GetSock();
     int opt = sock->GetSockOpt(SOL_SOCKET, SO_ERROR);

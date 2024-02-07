@@ -7,12 +7,12 @@ Connector::Connector(EventPollerPtr& poller, enum Socket::SocketType sockType)
     , sockType_(sockType)
 {}
 
-void Connector::HandleErrorEvent([[maybe_unused]] ChannelPtr chan)
+void Connector::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     ERROR("Fail to connect\n");
 }
 
-void Connector::HandleReadEvent([[maybe_unused]] ChannelPtr chan)
+void Connector::HandleReadEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     if (handleConnect_ == nullptr) {
         return;
@@ -25,7 +25,7 @@ void Connector::HandleReadEvent([[maybe_unused]] ChannelPtr chan)
     }
 }
 
-void Connector::HandleWriteEvent(ChannelPtr chan)
+void Connector::HandleWriteEvent(ChannelPtr&& chan)
 {
     if (handleConnect_ == nullptr) {
         return;
@@ -57,11 +57,12 @@ void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
     sock->Connect(serverIp, serverPort);
 
     auto chan = std::make_shared<Channel>(sock);
-    chan->SetReadCallback([this](ChannelPtr&& chan) { HandleReadEvent(chan); });
+    chan->SetReadCallback(
+        [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });
     chan->SetWriteCallback(
-        [this](ChannelPtr&& chan) { HandleWriteEvent(chan); });
+        [this](ChannelPtr&& chan) { HandleWriteEvent(std::move(chan)); });
     chan->SetErrorCallback(
-        [this](ChannelPtr&& chan) { HandleErrorEvent(chan); });
+        [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
 #if defined(USE_EPOLL)
     AddEvent(chan,

@@ -12,14 +12,14 @@ public:
         TCP,
         SSL
     };
-    using NewConnectionCallback = std::function<void(ChannelPtr)>;
-    using ConnectProcedure = std::function<bool(ChannelPtr)>;
+    using NewConnectionCallback = std::function<void(ChannelPtr&)>;
+    using ConnectProcedure = std::function<bool(ChannelPtr&)>;
 
     explicit Connector(EventPollerPtr& poller,
                        enum Socket::SocketType sockType);
-    void HandleErrorEvent(ChannelPtr chan) override;
-    void HandleReadEvent(ChannelPtr chan) override;
-    void HandleWriteEvent(ChannelPtr chan) override;
+    void HandleErrorEvent(ChannelPtr&& chan) override;
+    void HandleReadEvent(ChannelPtr&& chan) override;
+    void HandleWriteEvent(ChannelPtr&& chan) override;
     virtual void SetNewConnectionCallback(NewConnectionCallback&& callback);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     ~Connector() override = default;

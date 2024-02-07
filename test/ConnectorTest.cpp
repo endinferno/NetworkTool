@@ -8,7 +8,7 @@
 
 bool isConnect = false;
 
-void HandleNewConnection([[maybe_unused]] ChannelPtr chan)
+void HandleNewConnection([[maybe_unused]] ChannelPtr& chan)
 {
     isConnect = true;
 }
@@ -24,7 +24,7 @@ TEST(ConnectorTest, TcpConnector)
 
     TcpConnector connector(poller);
     connector.SetNewConnectionCallback(
-        [](ChannelPtr&& chan) { HandleNewConnection(chan); });
+        [](ChannelPtr& chan) { HandleNewConnection(chan); });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -42,7 +42,7 @@ TEST(ConnectorTest, UdpConnector)
 
     UdpConnector connector(poller);
     connector.SetNewConnectionCallback(
-        [](ChannelPtr&& chan) { HandleNewConnection(chan); });
+        [](ChannelPtr& chan) { HandleNewConnection(chan); });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -60,7 +60,7 @@ TEST(ConnectorTest, SslConnector)
 
     SslConnector connector(poller);
     connector.SetNewConnectionCallback(
-        [](ChannelPtr&& chan) { HandleNewConnection(chan); });
+        [](ChannelPtr& chan) { HandleNewConnection(chan); });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
