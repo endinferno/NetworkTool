@@ -76,6 +76,7 @@ bool DnsAnswer::IsDomainCompress(uint8_t domainCnt)
     return (domainCnt & 0xC0) == 0xC0;
 }
 
+// NOLINTNEXTLINE(misc-no-recursion)
 std::string DnsAnswer::ParseDomain(const std::string& udpMsg, size_t& pos)
 {
     std::string domainName;
@@ -110,5 +111,4 @@ IPAddress DnsAnswer::ParseAData(const std::string& udpMsg, size_t& pos)
         ntohl(*reinterpret_cast<const uint32_t*>(udpMsg.data() + pos));
     pos += sizeof(uint32_t);
     return IPAddress(ipAddrInt);
-    ;
 }

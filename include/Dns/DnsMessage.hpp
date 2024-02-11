@@ -27,6 +27,7 @@ private:
     std::vector<DnsAnswer> answers_;
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<DnsMessage>
 {
@@ -55,3 +56,4 @@ struct fmt::formatter<DnsMessage>
             ctx.out(), "{} {} {}", header, questionsStr, answersStr);
     }
 };
+// NOLINTEND(readability-identifier-naming)

@@ -43,6 +43,7 @@ private:
     uint32_t hostIp_;
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<IPAddress>
 {
@@ -57,3 +58,4 @@ struct fmt::formatter<IPAddress>
         return fmt::format_to(ctx.out(), "{}", ipAddr.Stringify());
     }
 };
+// NOLINTEND(readability-identifier-naming)

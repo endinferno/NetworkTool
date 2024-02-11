@@ -2,10 +2,11 @@
 
 #include <iconv.h>
 
+#include <stdexcept>
 #include <string>
 
 #include "NonCopyable.hpp"
-#include "fmt/format.h"
+#include "fmt/core.h"
 
 class FormatConvertor : public NonCopyable
 {

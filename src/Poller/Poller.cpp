@@ -1,7 +1,7 @@
 #include <stdexcept>
 
-#include "Logger.hpp"
 #include "Poller/Poller.hpp"
+#include "Utils/Logger.hpp"
 
 Poller::Poller()
     : eventSet_(0)

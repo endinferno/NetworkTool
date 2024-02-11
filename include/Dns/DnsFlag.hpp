@@ -39,6 +39,7 @@ private:
     DnsBaseType::RespCodeFlag respCode_ = DnsBaseType::RespCodeFlag::Ok;
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<DnsFlag>
 {
@@ -62,3 +63,4 @@ struct fmt::formatter<DnsFlag>
                               flag.Encode());
     }
 };
+// NOLINTEND(readability-identifier-naming)

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+// NOLINTBEGIN(misc-non-private-member-variables-in-classes)
 class Stock
 {
 public:
@@ -36,3 +37,4 @@ public:
     std::string time;
     std::string closeStatus;
 };
+// NOLINTEND(misc-non-private-member-variables-in-classes)

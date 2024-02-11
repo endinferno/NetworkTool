@@ -42,6 +42,7 @@ public:
     [[nodiscard]] static std::string Stringify(const DnsClass& dnsClass);
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<DnsBaseType::DnsType>
 {
@@ -161,3 +162,4 @@ struct fmt::formatter<DnsBaseType::RespCodeFlag>
         }
     }
 };
+// NOLINTEND(readability-identifier-naming)

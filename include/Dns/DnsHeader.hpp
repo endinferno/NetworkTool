@@ -30,6 +30,7 @@ private:
     uint16_t addRecCnt_ = 0;
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<DnsHeader>
 {
@@ -54,3 +55,4 @@ struct fmt::formatter<DnsHeader>
             header.GetAdditionRecordCount());
     }
 };
+// NOLINTEND(readability-identifier-naming)

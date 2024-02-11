@@ -5,7 +5,6 @@
 
 #include "DnsBaseType.hpp"
 #include "Utils/IPAddress.hpp"
-#include "Utils/Logger.hpp"
 
 class DnsAnswer
 {
@@ -32,6 +31,7 @@ private:
     std::any ansData_;
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<DnsAnswer>
 {
@@ -74,3 +74,4 @@ struct fmt::formatter<DnsAnswer>
             formatData);
     }
 };
+// NOLINTEND(readability-identifier-naming)

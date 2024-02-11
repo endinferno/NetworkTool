@@ -75,6 +75,7 @@ bool DnsQuestion::IsDomainCompress(uint8_t domainCnt)
     return (domainCnt & 0xC0) == 0xC0;
 }
 
+// NOLINTNEXTLINE(misc-no-recursion)
 std::string DnsQuestion::ParseDomain(const std::string& udpMsg, size_t& pos)
 {
     std::string domainName;

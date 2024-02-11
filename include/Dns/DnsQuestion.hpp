@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DnsBaseType.hpp"
-#include "Utils/Logger.hpp"
 
 class DnsQuestion
 {
@@ -25,6 +24,7 @@ private:
     DnsBaseType::DnsClass quesClass_;
 };
 
+// NOLINTBEGIN(readability-identifier-naming)
 template<>
 struct fmt::formatter<DnsQuestion>
 {
@@ -43,3 +43,4 @@ struct fmt::formatter<DnsQuestion>
                               question.GetClass());
     }
 };
+// NOLINTEND(readability-identifier-naming)

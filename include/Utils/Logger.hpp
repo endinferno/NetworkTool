@@ -1,7 +1,5 @@
 #pragma once
 
-#include "fmt/format.h"
-
 #define INFO_ENABLE 1
 #ifdef NDEBUG
 #    define DEBUG_ENABLE 0

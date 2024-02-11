@@ -1,7 +1,7 @@
 #include <stdexcept>
 
 #include "HttpRequest.hpp"
-#include "Utils/Logger.hpp"
+#include "fmt/core.h"
 
 HttpRequest::HttpRequest()
     : reqType_(ReqType::UNKNOWN)
