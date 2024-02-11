@@ -46,15 +46,15 @@ void Client::HandleReadEvent(ChannelPtr&& chan)
 void Client::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     DEBUG("Handle write event\n");
-    conn_.SetConnectStatus(true);
+    conn_->SetConnectStatus(true);
 }
 
 void Client::Write(const std::string& writeBuf)
 {
-    if (!conn_.GetConnectStatus()) {
+    if (conn_ == nullptr || !conn_->GetConnectStatus()) {
         return;
     }
-    conn_.Write(writeBuf);
+    conn_->Write(writeBuf);
 }
 
 void Client::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
@@ -77,8 +77,9 @@ void Client::SetConnectDoneCallback(ConnectDoneCallback&& callback)
 void Client::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
-    conn_.Bind(chan->GetSock());
-    conn_.SetConnectStatus(true);
+    conn_ = std::make_shared<Connection>();
+    conn_->Bind(chan->GetSock());
+    conn_->SetConnectStatus(true);
 
     chan->SetReadCallback(
         [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });

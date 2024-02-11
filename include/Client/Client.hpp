@@ -27,7 +27,7 @@ private:
     constexpr static int MAX_READ_BUFFER = 2048;
     ConnectorFactory connectorFactory_;
     ConnectorPtr connector_;
-    Connection conn_;
+    ConnectionPtr conn_;
     std::string readBuf_;
     OnMessageCallback onMessageCallback_;
     ConnectDoneCallback connectDoneCallback_;
