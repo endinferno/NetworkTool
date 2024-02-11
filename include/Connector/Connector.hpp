@@ -29,7 +29,7 @@ protected:
 
 private:
     SocketFactory sockFactory_;
-    enum Socket::SocketType sockType_;
+    Socket::SocketType sockType_;
     NewConnectionCallback callback_;
     ConnectProcedure handleConnect_;
 };
