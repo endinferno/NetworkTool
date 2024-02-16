@@ -1,2 +1,2 @@
-# StockCrawler
-This repository is used to gather stock data on web. 
+# Network Tool
+This repository is used to develop network tools with C++.
