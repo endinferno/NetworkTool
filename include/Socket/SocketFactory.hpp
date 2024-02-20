@@ -9,7 +9,7 @@ class SocketFactory
 {
 public:
     SocketFactory() = default;
-    SocketPtr Create(enum Socket::SocketType type)
+    static SocketPtr Create(enum Socket::SocketType type)
     {
         switch (type) {
         case Socket::SocketType::TCP: return std::make_shared<TcpSocket>();

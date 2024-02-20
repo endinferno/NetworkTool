@@ -26,7 +26,6 @@ private:
 
     constexpr static int MAX_READ_BUFFER = 2048;
     Connector::ConnectorType connectorType_;
-    ConnectorFactory connectorFactory_;
     ConnectorPtr connector_;
     ConnectionPtr conn_;
     std::string readBuf_;

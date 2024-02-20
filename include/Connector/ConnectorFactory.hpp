@@ -11,8 +11,8 @@ class ConnectorFactory
 {
 public:
     ConnectorFactory() = default;
-    ConnectorPtr Create(EventPollerPtr& poller,
-                        enum Connector::ConnectorType type)
+    static ConnectorPtr Create(EventPollerPtr& poller,
+                               enum Connector::ConnectorType type)
     {
         switch (type) {
         case Connector::ConnectorType::TCP:

@@ -4,7 +4,7 @@
 Client::Client(EventPollerPtr& poller, Connector::ConnectorType connectorType)
     : EpollHandler(poller)
     , connectorType_(connectorType)
-    , connector_(connectorFactory_.Create(poller, connectorType))
+    , connector_(ConnectorFactory::Create(poller, connectorType))
     , readBuf_(MAX_READ_BUFFER, 0)
 {}
 

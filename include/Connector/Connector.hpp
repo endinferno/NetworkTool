@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EpollHandler.hpp"
-#include "Socket/SocketFactory.hpp"
 
 class Connector : public EpollHandler
 {
@@ -28,7 +27,6 @@ protected:
     void SetConnectProcedure(ConnectProcedure&& procedure);
 
 private:
-    SocketFactory sockFactory_;
     Socket::SocketType sockType_;
     NewConnectionCallback callback_;
     ConnectProcedure handleConnect_;

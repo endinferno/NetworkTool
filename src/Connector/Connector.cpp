@@ -1,5 +1,6 @@
 #include "Connector/Connector.hpp"
 #include "Channel.hpp"
+#include "Socket/SocketFactory.hpp"
 #include "Utils/Logger.hpp"
 
 Connector::Connector(EventPollerPtr& poller, enum Socket::SocketType sockType)
@@ -50,7 +51,7 @@ void Connector::SetConnectProcedure(ConnectProcedure&& procedure)
 
 void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
 {
-    auto sock = sockFactory_.Create(sockType_);
+    auto sock = SocketFactory::Create(sockType_);
     sock->SetReuseAddr();
     sock->SetReusePort();
     sock->SetNonBlock();
