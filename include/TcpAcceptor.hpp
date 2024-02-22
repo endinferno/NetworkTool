@@ -3,12 +3,12 @@
 #include "EpollHandler.hpp"
 #include "Socket/TcpSocket.hpp"
 
-class Acceptor : public NonCopyable, public EpollHandler
+class TcpAcceptor : public NonCopyable, public EpollHandler
 {
 public:
     using NewConnectionCallback = std::function<void(SocketPtr&&)>;
 
-    explicit Acceptor(EventPollerPtr& poller);
+    explicit TcpAcceptor(EventPollerPtr& poller);
     void HandleErrorEvent(ChannelPtr&& chan) override;
     void HandleReadEvent(ChannelPtr&& chan) override;
     void HandleWriteEvent(ChannelPtr&& chan) override;
@@ -20,4 +20,4 @@ private:
     NewConnectionCallback callback_;
 };
 
-using AcceptorPtr = std::shared_ptr<Acceptor>;
+using TcpAcceptorPtr = std::shared_ptr<TcpAcceptor>;

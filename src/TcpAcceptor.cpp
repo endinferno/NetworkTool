@@ -1,28 +1,28 @@
-#include "Acceptor.hpp"
+#include "TcpAcceptor.hpp"
 #include "Utils/Logger.hpp"
 
-Acceptor::Acceptor(EventPollerPtr& poller)
+TcpAcceptor::TcpAcceptor(EventPollerPtr& poller)
     : EpollHandler(poller)
 {}
 
-void Acceptor::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
+void TcpAcceptor::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     DEBUG("Fail to accept client\n");
 }
 
-void Acceptor::HandleReadEvent(ChannelPtr&& chan)
+void TcpAcceptor::HandleReadEvent(ChannelPtr&& chan)
 {
     auto tcpSock = std::dynamic_pointer_cast<TcpSocket>(chan->GetSock());
     DEBUG("HandleReadEvent\n");
     AcceptClient(tcpSock);
 }
 
-void Acceptor::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
+void TcpAcceptor::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     static_assert(true);
 }
 
-void Acceptor::Accept(const IPAddress& localIp, const uint16_t& localPort)
+void TcpAcceptor::Accept(const IPAddress& localIp, const uint16_t& localPort)
 {
     auto tcpSock = std::make_shared<TcpSocket>();
     tcpSock->SetReuseAddr();
@@ -47,12 +47,12 @@ void Acceptor::Accept(const IPAddress& localIp, const uint16_t& localPort)
     AddEvent(chan, Pollable::READ_EVENT | Pollable::Event::EventEt);
 }
 
-void Acceptor::SetNewConnectionCallback(NewConnectionCallback&& callback)
+void TcpAcceptor::SetNewConnectionCallback(NewConnectionCallback&& callback)
 {
     callback_ = std::move(callback);
 }
 
-void Acceptor::AcceptClient(TcpSocketPtr& tcpSock)
+void TcpAcceptor::AcceptClient(TcpSocketPtr& tcpSock)
 {
     while (true) {
         struct sockaddr_in clientAddr;

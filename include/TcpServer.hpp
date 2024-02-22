@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Acceptor.hpp"
+#include "TcpAcceptor.hpp"
 #include "Utils/NonCopyable.hpp"
 
 class TcpServer : public NonCopyable, public EpollHandler
@@ -21,6 +21,6 @@ private:
 
     constexpr static int MAX_READ_BUFFER = 2048;
     std::string readBuf_;
-    AcceptorPtr acceptor_;
+    TcpAcceptorPtr tcpAcceptor_;
     OnMessageCallback callback_;
 };
