@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(BINARY_NAME StockCrawler)
-project(${BINARY_NAME})
+set(PROJECT_NAME NetworkTool)
+project(${PROJECT_NAME})
 
-set(SERVER_BINARY_NAME "${BINARY_NAME}Server")
-set(CLIENT_BINARY_NAME "${BINARY_NAME}Client")
+set(LIBRARY_NAME "${PROJECT_NAME}Lib")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -37,23 +36,23 @@ set(SOURCE_LIST
 
 set(INCLUDE_LIST ${PROJECT_SOURCE_DIR}/include)
 
-include_directories(${INCLUDE_LIST})
-
 add_subdirectory(dependencies)
 
-macro(EXECUTABLE BINARY_NAME MAIN_FILE)
-    add_executable(${BINARY_NAME} ${MAIN_FILE} ${SOURCE_LIST})
-
-    target_link_libraries(${BINARY_NAME} pthread)
-    target_link_libraries(${BINARY_NAME} fmt)
+macro(LINK_LIBRARY LIBRARY_NAME)
+    target_link_libraries(${LIBRARY_NAME} pthread)
+    target_link_libraries(${LIBRARY_NAME} fmt)
     if (CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        target_link_libraries(${BINARY_NAME} iconv)
+        target_link_libraries(${LIBRARY_NAME} iconv)
     endif()
-    target_link_libraries(${BINARY_NAME} ssl)
-    target_link_libraries(${BINARY_NAME} crypto)
+    target_link_libraries(${LIBRARY_NAME} ssl)
+    target_link_libraries(${LIBRARY_NAME} crypto)
 endmacro()
 
-EXECUTABLE(${SERVER_BINARY_NAME} Server.cpp)
-EXECUTABLE(${CLIENT_BINARY_NAME} Client.cpp)
+add_library(${LIBRARY_NAME} STATIC ${SOURCE_LIST})
+target_include_directories(${LIBRARY_NAME} PUBLIC ${INCLUDE_LIST})
+LINK_LIBRARY(${LIBRARY_NAME})
+install(TARGETS ${LIBRARY_NAME} DESTINATION lib)
+
+add_subdirectory(examples)
 
 add_subdirectory(test)
