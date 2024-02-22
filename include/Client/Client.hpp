@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Connection.hpp"
-#include "Connector/ConnectorFactory.hpp"
+#include "Connector/Connector.hpp"
 
 class Client : public EpollHandler
 {
@@ -12,9 +12,6 @@ public:
 
     explicit Client(EventPollerPtr& poller,
                     enum Connector::ConnectorType connectorType);
-    void HandleErrorEvent(ChannelPtr&& chan) override;
-    void HandleReadEvent(ChannelPtr&& chan) override;
-    void HandleWriteEvent(ChannelPtr&& chan) override;
     void Write(const std::string& writeBuf);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     void SetOnMessageCallback(OnMessageCallback&& callback);
@@ -22,6 +19,9 @@ public:
     ~Client() override = default;
 
 private:
+    void HandleErrorEvent(ChannelPtr&& chan) override;
+    void HandleReadEvent(ChannelPtr&& chan) override;
+    void HandleWriteEvent(ChannelPtr&& chan) override;
     void HandleNewConnection(ChannelPtr& chan);
 
     constexpr static int MAX_READ_BUFFER = 2048;

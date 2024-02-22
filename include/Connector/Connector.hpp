@@ -16,9 +16,6 @@ public:
 
     explicit Connector(EventPollerPtr& poller,
                        enum Socket::SocketType sockType);
-    void HandleErrorEvent(ChannelPtr&& chan) override;
-    void HandleReadEvent(ChannelPtr&& chan) override;
-    void HandleWriteEvent(ChannelPtr&& chan) override;
     virtual void SetNewConnectionCallback(NewConnectionCallback&& callback);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     ~Connector() override = default;
@@ -27,6 +24,10 @@ protected:
     void SetConnectProcedure(ConnectProcedure&& procedure);
 
 private:
+    void HandleErrorEvent(ChannelPtr&& chan) override;
+    void HandleReadEvent(ChannelPtr&& chan) override;
+    void HandleWriteEvent(ChannelPtr&& chan) override;
+
     Socket::SocketType sockType_;
     NewConnectionCallback callback_;
     ConnectProcedure handleConnect_;
