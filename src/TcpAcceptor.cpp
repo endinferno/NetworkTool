@@ -34,10 +34,6 @@ void TcpAcceptor::HandleReadEvent(ChannelPtr&& chan)
              inet_ntoa(clientAddr.sin_addr),
              ntohs(clientAddr.sin_port));
 
-        clientSock->SetReuseAddr();
-        clientSock->SetReusePort();
-        clientSock->SetNonBlock();
-
         if (callback_ != nullptr) {
             callback_(std::move(clientSock));
         }

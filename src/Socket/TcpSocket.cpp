@@ -43,12 +43,16 @@ SocketPtr TcpSocket::Accept(struct sockaddr_in& clientAddr)
     int clientFd = ::accept(GetFd(),
                             reinterpret_cast<struct sockaddr*>(&clientAddr),
                             &clientAddrLen);
-    SetErrno(errno);
     if (clientFd == -1) {
+        SetErrno(errno);
         return nullptr;
-    } else {
-        return std::make_shared<TcpSocket>(clientFd);
     }
+    auto clientSock = std::make_shared<TcpSocket>(clientFd);
+    clientSock->SetReuseAddr();
+    clientSock->SetReusePort();
+    clientSock->SetNonBlock();
+
+    return clientSock;
 }
 
 TcpSocket::~TcpSocket()
