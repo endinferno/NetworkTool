@@ -20,6 +20,7 @@ public:
     void SetNonBlock() const;
     [[nodiscard]] int GetSockOpt(int level, int optName) const;
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort) const;
+    void Connect(struct sockaddr_in& serverAddr) const;
     ssize_t Write(const std::string& writeBuf);
     ssize_t Read(std::string& readBuf);
     [[nodiscard]] int GetFd() const;

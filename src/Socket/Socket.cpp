@@ -63,11 +63,18 @@ void Socket::Connect(const IPAddress& serverIp,
 {
     struct sockaddr_in serverAddr;
 
-    INFO("Connect to IP {} Port {}\n", serverIp.Stringify(), serverPort);
-
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(serverPort);
     serverAddr.sin_addr.s_addr = serverIp.GetNetIpAddr();
+
+    Connect(serverAddr);
+}
+
+void Socket::Connect(struct sockaddr_in& serverAddr) const
+{
+    INFO("Connect to IP {} Port {}\n",
+         inet_ntoa(serverAddr.sin_addr),
+         ntohs(serverAddr.sin_port));
 
     int ret = ::connect(sockFd_,
                         reinterpret_cast<struct sockaddr*>(&serverAddr),
