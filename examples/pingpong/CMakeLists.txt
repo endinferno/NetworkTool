@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.5)
 
-add_executable(PingPongTcpServer TcpServer.cpp)
+add_executable(PingPongTcpServer PingPongTcpServer.cpp)
 target_link_libraries(PingPongTcpServer NetworkToolLib)
 
-add_executable(PingPongTcpClient TcpClient.cpp)
+add_executable(PingPongTcpClient PingPongTcpClient.cpp)
 target_link_libraries(PingPongTcpClient NetworkToolLib)
 
-add_executable(PingPongUdpServer UdpServer.cpp)
+add_executable(PingPongUdpServer PingPongUdpServer.cpp)
 target_link_libraries(PingPongUdpServer NetworkToolLib)
 
-add_executable(PingPongUdpClient UdpClient.cpp)
+add_executable(PingPongUdpClient PingPongUdpClient.cpp)
 target_link_libraries(PingPongUdpClient NetworkToolLib)
