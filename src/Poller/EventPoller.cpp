@@ -57,14 +57,14 @@ void EventPoller::HandleEvent(Channels& chans)
     for (auto& chan : chans) {
         uint32_t event = chan->GetEvent();
         DEBUG("Poll event {:x}\n", event);
-        if ((event & Pollable::Event::EventErr) != 0) {
+        if ((event & Pollable::ERROR_EVENT) != 0) {
             chan->OnErrorable();
         }
-        if ((event & Pollable::Event::EventOut) != 0) {
-            chan->OnWritable();
-        }
-        if ((event & Pollable::Event::EventIn) != 0) {
+        if ((event & Pollable::READ_EVENT) != 0) {
             chan->OnReadable();
+        }
+        if ((event & Pollable::WRITE_EVENT) != 0) {
+            chan->OnWritable();
         }
     }
 }

@@ -26,9 +26,10 @@ public:
     [[nodiscard]] int GetErrno() const;
     virtual ~Socket() = default;
 
-private:
+protected:
     void SetErrno(int err);
 
+private:
     int sockFd_;
     int savedErrno_;
 };
