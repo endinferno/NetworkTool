@@ -4,15 +4,15 @@
 
 TcpServer::TcpServer(EventPollerPtr& poller)
     : EpollHandler(poller)
+    , tcpAcceptor_(poller)
     , readBuf_(MAX_READ_BUFFER, 0)
-    , tcpAcceptor_(std::make_shared<TcpAcceptor>(poller))
 {}
 
 void TcpServer::Run(const IPAddress& localIp, const uint16_t& localPort)
 {
-    tcpAcceptor_->SetNewConnectionCallback(
+    tcpAcceptor_.SetNewConnectionCallback(
         [this](SocketPtr&& sock) { HandleNewConnection(std::move(sock)); });
-    tcpAcceptor_->Accept(localIp, localPort);
+    tcpAcceptor_.Accept(localIp, localPort);
 }
 
 void TcpServer::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)

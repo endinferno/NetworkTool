@@ -21,7 +21,7 @@ private:
     void HandleNewConnection(SocketPtr&& sock);
 
     constexpr static int MAX_READ_BUFFER = 2048;
+    TcpAcceptor tcpAcceptor_;
     std::string readBuf_;
-    TcpAcceptorPtr tcpAcceptor_;
     OnMessageCallback callback_;
 };
