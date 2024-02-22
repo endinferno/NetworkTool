@@ -10,6 +10,7 @@ public:
     explicit TcpAcceptor(EventPollerPtr& poller);
     void Accept(const IPAddress& localIp, const uint16_t& localPort);
     void SetNewConnectionCallback(NewConnectionCallback&& callback);
+    ~TcpAcceptor() override = default;
 
 private:
     void HandleErrorEvent(ChannelPtr&& chan) override;
