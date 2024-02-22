@@ -3,7 +3,6 @@
 #include <unistd.h>
 
 #include "Socket/UdpSocket.hpp"
-#include "Utils/Logger.hpp"
 
 UdpSocket::UdpSocket()
     : Socket(::socket(AF_INET, SOCK_DGRAM, 0))
@@ -36,8 +35,7 @@ void UdpSocket::Listen()
 
 SocketPtr UdpSocket::Accept(struct sockaddr_in& clientAddr)
 {
-    // std::string readBuf(1024, '0');
-    std::string readBuf;
+    std::string readBuf(1024, '0');
     ssize_t readBytes = Recvfrom(readBuf, clientAddr);
 
     if (readBytes < 0) {
