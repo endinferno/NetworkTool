@@ -13,40 +13,15 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-if (NOT POLL_TYPE)
-    set(POLL_TYPE Epoll)
-endif()
-
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g2 -ggdb")
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
     set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall -Werror -DNDEBUG")
 endif()
 
-if (POLL_TYPE MATCHES Epoll)
-    file(GLOB POLLER_SRC
-        src/Poller/Epoller.cpp
-        src/Poller/EventPoller.cpp)
-    add_compile_definitions(USE_EPOLL)
-elseif(POLL_TYPE MATCHES Poll)
-    file(GLOB POLLER_SRC
-        src/Poller/Poller.cpp
-        src/Poller/EventPoller.cpp)
-    add_compile_definitions(USE_POLL)
-elseif(POLL_TYPE MATCHES Select)
-    file(GLOB POLLER_SRC
-        src/Poller/Selector.cpp
-        src/Poller/EventPoller.cpp)
-    add_compile_definitions(USE_SELECT)
-else()
-    file(GLOB POLLER_SRC
-        src/Poller/Epoller.cpp
-        src/Poller/EventPoller.cpp)
-    add_compile_definitions(USE_EPOLL)
-endif()
-
 aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Socket SOCKET_SRC_LIST)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/Poller POLLER_SRC)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Connector CONNECTOR_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Client CLIENT_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Utils UTILS_SRC_LIST)

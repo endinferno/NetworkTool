@@ -65,17 +65,7 @@ void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
     chan->SetErrorCallback(
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
-#if defined(USE_EPOLL)
     AddEvent(chan,
              Pollable::Event::EventIn | Pollable::Event::EventOut |
                  Pollable::Event::EventErr | Pollable::Event::EventEt);
-#elif defined(USE_POLL)
-    AddEvent(chan,
-             Pollable::Event::EventIn | Pollable::Event::EventOut |
-                 Pollable::Event::EventErr);
-#elif defined(USE_SELECT)
-    AddEvent(chan,
-             Pollable::Event::EventIn | Pollable::Event::EventOut |
-                 Pollable::Event::EventErr);
-#endif
 }

@@ -88,15 +88,9 @@ void Client::HandleNewConnection(ChannelPtr& chan)
     chan->SetErrorCallback(
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
-#if defined(USE_EPOLL)
     AddEvent(chan,
              Pollable::Event::EventIn | Pollable::Event::EventOut |
                  Pollable::Event::EventEt);
-#elif defined(USE_POLL)
-    AddEvent(chan, Pollable::Event::EventIn);
-#elif defined(USE_SELECT)
-    AddEvent(chan, Pollable::Event::EventIn);
-#endif
     DEBUG("Call connect done callback\n");
     if (connectDoneCallback_ != nullptr) {
         connectDoneCallback_(chan);

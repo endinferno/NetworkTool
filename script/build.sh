@@ -10,12 +10,6 @@ PrintBuildType() {
     echo " Version"
 }
 
-PrintPollType() {
-    echo -e "Compiling with \c"
-    PrintWithColor "\e[31m" $POLL_TYPE
-    echo " Poll Type"
-}
-
 CMakePhase() {
     PrintWithColor "\e[32m" "CMake Phase"
     echo ""
@@ -23,8 +17,7 @@ CMakePhase() {
 
     cmake -B $BUILD_PATH \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
-        -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
-        -DPOLL_TYPE=$POLL_TYPE ..
+        -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
 
     popd > /dev/null
 }
@@ -46,28 +39,6 @@ GetBuildType() {
     fi
 }
 
-GetPollType() {
-    POLL_PARAM=$1
-    POLL_TYPE=${POLL_PARAM,,}
-    if [ $POLL_TYPE != "epoll" ] && [ $POLL_TYPE != "poll" ] && [ $POLL_TYPE != "select" ];
-    then
-        POLL_TYPE=epoll
-    fi
-}
-
-InitPollType() {
-    unames=$(uname -s)
-    if [ $unames == "Darwin" ]
-    then
-        POLL_TYPE=poll
-    elif [ $unames == "Linux" ]
-    then
-        POLL_TYPE=epoll
-    else
-        POLL_TYPE=epoll
-    fi
-}
-
 BUILD_DIR=$(pwd)/build
 # Create build directory
 if [ ! -d $BUILD_DIR ];
@@ -77,21 +48,14 @@ fi
 
 # Read Build Type
 BUILD_TYPE=debug
-InitPollType
 if [ $# -eq 1 ];
 then
     GetBuildType $1
-elif [ $# -eq 2 ];
-then
-    GetBuildType $1
-    GetPollType $2
 fi
 
 BUILD_PATH=${BUILD_TYPE}
 BUILD_TYPE=${BUILD_TYPE^}
-POLL_TYPE=${POLL_TYPE^}
 
 PrintBuildType
-PrintPollType
 CMakePhase
 MakePhase

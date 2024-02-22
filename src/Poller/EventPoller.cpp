@@ -1,21 +1,9 @@
 #include "Poller/EventPoller.hpp"
+#include "Poller/Epoller.hpp"
 #include "Utils/Logger.hpp"
-#if defined(USE_EPOLL)
-#    include "Poller/Epoller.hpp"
-#elif defined(USE_POLL)
-#    include "Poller/Poller.hpp"
-#elif defined(USE_SELECT)
-#    include "Poller/Selector.hpp"
-#endif
 
 EventPoller::EventPoller()
-#if defined(USE_EPOLL)
     : poller_(std::make_unique<Epoller>())
-#elif defined(USE_POLL)
-    : poller_(std::make_unique<Poller>())
-#elif defined(USE_SELECT)
-    : poller_(std::make_unique<Selector>())
-#endif
 {}
 
 void EventPoller::AddEvent(ChannelPtr& chan, uint32_t event)
