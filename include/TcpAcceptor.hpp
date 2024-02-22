@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EpollHandler.hpp"
-#include "Socket/TcpSocket.hpp"
 
 class TcpAcceptor : public NonCopyable, public EpollHandler
 {
@@ -16,7 +15,6 @@ private:
     void HandleErrorEvent(ChannelPtr&& chan) override;
     void HandleReadEvent(ChannelPtr&& chan) override;
     void HandleWriteEvent(ChannelPtr&& chan) override;
-    void AcceptClient(TcpSocketPtr& tcpSock);
 
     NewConnectionCallback callback_;
 };
