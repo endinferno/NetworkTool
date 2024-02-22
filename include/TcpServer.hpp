@@ -12,6 +12,7 @@ public:
     explicit TcpServer(EventPollerPtr& poller);
     void Run(const IPAddress& localIp, const uint16_t& localPort);
     void SetOnMessageCallback(OnMessageCallback&& callback);
+    ~TcpServer() override = default;
 
 private:
     void HandleErrorEvent(ChannelPtr&& chan) override;
