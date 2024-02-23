@@ -65,12 +65,12 @@ void Client::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
     connector_->Connect(serverIp, serverPort);
 }
 
-void Client::SetMessageCallback(OnMessageCallback&& callback)
+void Client::SetMessageCallback(MessageCallback&& callback)
 {
     messageCallback_ = std::move(callback);
 }
 
-void Client::SetConnectCallback(ConnectDoneCallback&& callback)
+void Client::SetConnectCallback(ConnectCallback&& callback)
 {
     connectCallback_ = std::move(callback);
 }
