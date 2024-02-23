@@ -1,27 +1,12 @@
 #pragma once
 
-#include "Acceptor/TcpAcceptor.hpp"
-#include "Utils/NonCopyable.hpp"
+#include "Server.hpp"
 
-class TcpServer : public NonCopyable, public EpollHandler
+class TcpServer : public Server
 {
 public:
-    using OnMessageCallback =
-        std::function<void(ChannelPtr&, const std::string& msg)>;
-
-    explicit TcpServer(EventPollerPtr& poller);
-    void Run(const IPAddress& localIp, const uint16_t& localPort);
-    void SetOnMessageCallback(OnMessageCallback&& callback);
+    explicit TcpServer(EventPollerPtr& poller)
+        : Server(poller, Acceptor::AcceptorType::TCP)
+    {}
     ~TcpServer() override = default;
-
-private:
-    void HandleErrorEvent(ChannelPtr&& chan) override;
-    void HandleReadEvent(ChannelPtr&& chan) override;
-    void HandleWriteEvent(ChannelPtr&& chan) override;
-    void HandleNewConnection(SocketPtr&& sock);
-
-    constexpr static int MAX_READ_BUFFER = 2048;
-    TcpAcceptor tcpAcceptor_;
-    std::string readBuf_;
-    OnMessageCallback callback_;
 };

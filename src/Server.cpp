@@ -1,33 +1,34 @@
-#include "TcpServer.hpp"
-#include "EpollHandler.hpp"
+#include "Server.hpp"
+#include "Acceptor/AcceptorFactory.hpp"
 #include "Utils/Logger.hpp"
 
-TcpServer::TcpServer(EventPollerPtr& poller)
+Server::Server(EventPollerPtr& poller, enum Acceptor::AcceptorType acceptorType)
     : EpollHandler(poller)
-    , tcpAcceptor_(poller)
+    , acceptor_(AcceptorFactory::Create(poller, acceptorType))
     , readBuf_(MAX_READ_BUFFER, 0)
 {}
 
-void TcpServer::Run(const IPAddress& localIp, const uint16_t& localPort)
+void Server::Run(const IPAddress& localIp, const uint16_t& localPort)
 {
-    tcpAcceptor_.SetNewConnectionCallback(
+    acceptor_->SetNewConnectionCallback(
         [this](SocketPtr&& sock) { HandleNewConnection(std::move(sock)); });
-    tcpAcceptor_.Accept(localIp, localPort);
+    acceptor_->Accept(localIp, localPort);
 }
 
-void TcpServer::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
+void Server::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     DEBUG("Connection closed\n");
     DelEvent(chan);
 }
 
-void TcpServer::HandleReadEvent(ChannelPtr&& chan)
+void Server::HandleReadEvent(ChannelPtr&& chan)
 {
     auto sock = chan->GetSock();
     while (true) {
         // TODO: maybe there is a better way
         readBuf_.resize(MAX_READ_BUFFER);
         ssize_t readBytes = sock->Read(readBuf_);
+        DEBUG("read bytes {}\n", readBytes);
         int savedErr = sock->GetErrno();
         if (readBytes == -1) {
             if (savedErr == EINTR || savedErr == EWOULDBLOCK ||
@@ -52,10 +53,10 @@ void TcpServer::HandleReadEvent(ChannelPtr&& chan)
     }
 }
 
-void TcpServer::HandleWriteEvent(ChannelPtr&& chan)
+void Server::HandleWriteEvent(ChannelPtr&& chan)
 {}
 
-void TcpServer::HandleNewConnection(SocketPtr&& sock)
+void Server::HandleNewConnection(SocketPtr&& sock)
 {
     DEBUG("HandleNewConnection\n");
     auto chan = std::make_shared<Channel>(sock);
@@ -71,7 +72,7 @@ void TcpServer::HandleNewConnection(SocketPtr&& sock)
                  Pollable::Event::EventEt);
 }
 
-void TcpServer::SetOnMessageCallback(OnMessageCallback&& callback)
+void Server::SetOnMessageCallback(OnMessageCallback&& callback)
 {
     callback_ = std::move(callback);
 }
