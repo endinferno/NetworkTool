@@ -60,8 +60,7 @@ TEST(ConnectorTest, SslConnector)
 
     SslConnector connector(poller);
     connector.SetNewConnectionCallback(
-        [](ChannelPtr& chan,
-           [[maybe_unused]] std::unique_ptr<SslWrapper>&& ssl) {
+        [](ChannelPtr& chan, [[maybe_unused]] SslWrapperPtr&& ssl) {
             HandleNewConnection(chan);
         });
     connector.Connect(serverIp, serverPort);

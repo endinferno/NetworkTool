@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <openssl/ssl.h>
 
 class SslWrapper
@@ -16,3 +18,5 @@ private:
     SSL_CTX* sslContext_;
     SSL* sslHandle_;
 };
+
+using SslWrapperPtr = std::unique_ptr<SslWrapper>;
