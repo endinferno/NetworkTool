@@ -36,10 +36,10 @@ void Client::HandleReadEvent(ChannelPtr&& chan)
             break;
         }
         DEBUG("Call message callback\n");
-        if (onMessageCallback_ != nullptr) {
+        if (messageCallback_ != nullptr) {
             // TODO: maybe there is a better way
             readBuf_.resize(readBytes);
-            onMessageCallback_(chan, readBuf_);
+            messageCallback_(chan, readBuf_);
         }
     }
 }
@@ -65,14 +65,14 @@ void Client::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
     connector_->Connect(serverIp, serverPort);
 }
 
-void Client::SetOnMessageCallback(OnMessageCallback&& callback)
+void Client::SetMessageCallback(OnMessageCallback&& callback)
 {
-    onMessageCallback_ = std::move(callback);
+    messageCallback_ = std::move(callback);
 }
 
-void Client::SetConnectDoneCallback(ConnectDoneCallback&& callback)
+void Client::SetConnectCallback(ConnectDoneCallback&& callback)
 {
-    connectDoneCallback_ = std::move(callback);
+    connectCallback_ = std::move(callback);
 }
 
 void Client::HandleNewConnection(ChannelPtr& chan)
@@ -93,7 +93,7 @@ void Client::HandleNewConnection(ChannelPtr& chan)
              Pollable::Event::EventIn | Pollable::Event::EventOut |
                  Pollable::Event::EventEt);
     DEBUG("Call connect done callback\n");
-    if (connectDoneCallback_ != nullptr) {
-        connectDoneCallback_(chan);
+    if (connectCallback_ != nullptr) {
+        connectCallback_(chan);
     }
 }

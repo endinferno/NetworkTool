@@ -14,8 +14,8 @@ public:
                     enum Connector::ConnectorType connectorType);
     void Write(const std::string& writeBuf);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
-    void SetOnMessageCallback(OnMessageCallback&& callback);
-    void SetConnectDoneCallback(ConnectDoneCallback&& callback);
+    void SetMessageCallback(OnMessageCallback&& callback);
+    void SetConnectCallback(ConnectDoneCallback&& callback);
     ~Client() override = default;
 
 private:
@@ -29,8 +29,8 @@ private:
     ConnectorPtr connector_;
     ConnectionPtr conn_;
     std::string readBuf_;
-    OnMessageCallback onMessageCallback_;
-    ConnectDoneCallback connectDoneCallback_;
+    OnMessageCallback messageCallback_;
+    ConnectDoneCallback connectCallback_;
 };
 
 using ClientPtr = std::shared_ptr<Client>;

@@ -14,7 +14,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     poller->Run();
 
     UdpClient client(poller);
-    client.SetOnMessageCallback([](ChannelPtr& chan, const std::string& msg) {
+    client.SetMessageCallback([](ChannelPtr& chan, const std::string& msg) {
         OnMessageCallback(chan, msg);
         std::this_thread::sleep_for(std::chrono::seconds(1));
     });

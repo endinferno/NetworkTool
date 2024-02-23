@@ -8,7 +8,7 @@ HttpClient::HttpClient(EventPollerPtr& poller)
 void HttpClient::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
 {
     resolver_.reset();
-    tcpClient_.SetOnMessageCallback(
+    tcpClient_.SetMessageCallback(
         [this]([[maybe_unused]] ChannelPtr& chan, const std::string& httpMsg) {
             OnMessage(httpMsg);
         });

@@ -4,11 +4,11 @@
 DnsResolver::DnsResolver(EventPollerPtr& poller)
     : client_(poller)
 {
-    client_.SetOnMessageCallback(
+    client_.SetMessageCallback(
         [this](ChannelPtr& chan, const std::string& udpMsg) {
             HandleDnsMessage(chan, udpMsg);
         });
-    client_.SetConnectDoneCallback(
+    client_.SetConnectCallback(
         [this](ChannelPtr& chan) { SendDnsRequest(chan); });
 }
 
