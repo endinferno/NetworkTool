@@ -1,25 +1,27 @@
-#include "TcpAcceptor.hpp"
-#include "Socket/TcpSocket.hpp"
+#include "Acceptor.hpp"
+#include "Socket/Socket.hpp"
+#include "Socket/SocketFactory.hpp"
 #include "Utils/Logger.hpp"
 
-TcpAcceptor::TcpAcceptor(EventPollerPtr& poller)
+Acceptor::Acceptor(EventPollerPtr& poller, Socket::SocketType sockType)
     : EpollHandler(poller)
+    , sockType_(sockType)
 {}
 
-void TcpAcceptor::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
+void Acceptor::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     DEBUG("Fail to accept client\n");
 }
 
-void TcpAcceptor::HandleReadEvent(ChannelPtr&& chan)
+void Acceptor::HandleReadEvent(ChannelPtr&& chan)
 {
-    auto tcpSock = std::dynamic_pointer_cast<TcpSocket>(chan->GetSock());
+    auto sock = chan->GetSock();
     while (true) {
         struct sockaddr_in clientAddr;
 
-        auto clientSock = tcpSock->Accept(clientAddr);
+        auto clientSock = sock->Accept(clientAddr);
         if (clientSock == nullptr) {
-            int err = tcpSock->GetErrno();
+            int err = sock->GetErrno();
             if ((err == EAGAIN) || (err == EWOULDBLOCK)) {
                 INFO("Success to accept all coming connections\n");
                 break;
@@ -40,25 +42,23 @@ void TcpAcceptor::HandleReadEvent(ChannelPtr&& chan)
     }
 }
 
-void TcpAcceptor::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
+void Acceptor::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     static_assert(true);
 }
 
-void TcpAcceptor::Accept(const IPAddress& localIp, const uint16_t& localPort)
+void Acceptor::Accept(const IPAddress& localIp, const uint16_t& localPort)
 {
-    auto tcpSock = std::make_shared<TcpSocket>();
-    tcpSock->SetReuseAddr();
-    tcpSock->SetReusePort();
-    tcpSock->SetNonBlock();
-    tcpSock->Bind(localIp, localPort);
-    tcpSock->Listen();
+    auto sock = SocketFactory::Create(sockType_);
+    sock->SetReuseAddr();
+    sock->SetReusePort();
+    sock->SetNonBlock();
+    sock->Bind(localIp, localPort);
+    sock->Listen();
     INFO("Socket {} Start to listen at {}:{}\n",
-         tcpSock->GetFd(),
+         sock->GetFd(),
          localIp,
          localPort);
-
-    auto sock = std::dynamic_pointer_cast<Socket>(tcpSock);
 
     auto chan = std::make_shared<Channel>(sock);
     chan->SetReadCallback(
@@ -70,7 +70,7 @@ void TcpAcceptor::Accept(const IPAddress& localIp, const uint16_t& localPort)
     AddEvent(chan, Pollable::READ_EVENT | Pollable::Event::EventEt);
 }
 
-void TcpAcceptor::SetNewConnectionCallback(NewConnectionCallback&& callback)
+void Acceptor::SetNewConnectionCallback(NewConnectionCallback&& callback)
 {
     callback_ = std::move(callback);
 }

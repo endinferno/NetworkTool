@@ -1,23 +1,14 @@
 #pragma once
 
-#include "EpollHandler.hpp"
+#include "Acceptor.hpp"
 
-class TcpAcceptor : public NonCopyable, public EpollHandler
+class TcpAcceptor : public Acceptor
 {
 public:
-    using NewConnectionCallback = std::function<void(SocketPtr&&)>;
-
-    explicit TcpAcceptor(EventPollerPtr& poller);
-    void Accept(const IPAddress& localIp, const uint16_t& localPort);
-    void SetNewConnectionCallback(NewConnectionCallback&& callback);
+    explicit TcpAcceptor(EventPollerPtr& poller)
+        : Acceptor(poller, Socket::SocketType::TCP)
+    {}
     ~TcpAcceptor() override = default;
-
-private:
-    void HandleErrorEvent(ChannelPtr&& chan) override;
-    void HandleReadEvent(ChannelPtr&& chan) override;
-    void HandleWriteEvent(ChannelPtr&& chan) override;
-
-    NewConnectionCallback callback_;
 };
 
 using TcpAcceptorPtr = std::shared_ptr<TcpAcceptor>;
