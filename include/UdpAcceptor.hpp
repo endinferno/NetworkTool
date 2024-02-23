@@ -23,4 +23,4 @@ private:
     NewConnectionCallback callback_;
 };
 
-using UdpAcceptorPtr = std::shared_ptr<UdpAcceptor>();
+using UdpAcceptorPtr = std::shared_ptr<UdpAcceptor>;
