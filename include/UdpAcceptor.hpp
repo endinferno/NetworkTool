@@ -13,6 +13,7 @@ public:
     explicit UdpAcceptor(EventPollerPtr& poller);
     void Accept(const IPAddress& localIp, const uint16_t& localPort);
     void SetNewConnectionCallback(NewConnectionCallback&& callback);
+    ~UdpAcceptor() override = default;
 
 private:
     void HandleErrorEvent(ChannelPtr&& chan) override;
