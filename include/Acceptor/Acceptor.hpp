@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EpollHandler.hpp"
-#include "Utils/NonCopyable.hpp"
 
 class Acceptor : public NonCopyable, public EpollHandler
 {
