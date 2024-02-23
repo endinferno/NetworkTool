@@ -6,6 +6,10 @@
 #include "Utils/IPAddress.hpp"
 #include "Utils/NonCopyable.hpp"
 
+class Socket;
+
+using SocketPtr = std::shared_ptr<Socket>;
+
 class Socket : public NonCopyable
 {
 public:
@@ -25,6 +29,11 @@ public:
     ssize_t Read(std::string& readBuf);
     [[nodiscard]] int GetFd() const;
     [[nodiscard]] int GetErrno() const;
+    ssize_t Recvfrom(std::string& readBuf,
+                     struct sockaddr_in& clientAddr) const;
+    virtual void Bind(const IPAddress& localIp, const uint16_t& localPort) = 0;
+    virtual void Listen() = 0;
+    virtual SocketPtr Accept(struct sockaddr_in& clientAddr) = 0;
     virtual ~Socket() = default;
 
 protected:
@@ -34,5 +43,3 @@ private:
     int sockFd_;
     int savedErrno_;
 };
-
-using SocketPtr = std::shared_ptr<Socket>;

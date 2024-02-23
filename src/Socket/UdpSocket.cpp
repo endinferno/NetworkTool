@@ -52,19 +52,6 @@ SocketPtr UdpSocket::Accept(struct sockaddr_in& clientAddr)
     return sock;
 }
 
-ssize_t UdpSocket::Recvfrom(std::string& readBuf,
-                            struct sockaddr_in& clientAddr)
-{
-    socklen_t clientAddrLen = sizeof(clientAddr);
-
-    return ::recvfrom(GetFd(),
-                      readBuf.data(),
-                      readBuf.size(),
-                      0,
-                      reinterpret_cast<struct sockaddr*>(&clientAddr),
-                      &clientAddrLen);
-}
-
 UdpSocket::~UdpSocket()
 {
     ::close(GetFd());

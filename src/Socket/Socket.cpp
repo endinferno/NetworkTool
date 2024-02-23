@@ -100,6 +100,19 @@ ssize_t Socket::Read(std::string& readBuf)
     return readBytes;
 }
 
+ssize_t Socket::Recvfrom(std::string& readBuf,
+                         struct sockaddr_in& clientAddr) const
+{
+    socklen_t clientAddrLen = sizeof(clientAddr);
+
+    return ::recvfrom(sockFd_,
+                      readBuf.data(),
+                      readBuf.size(),
+                      0,
+                      reinterpret_cast<struct sockaddr*>(&clientAddr),
+                      &clientAddrLen);
+}
+
 int Socket::GetErrno() const
 {
     return savedErrno_;
