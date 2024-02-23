@@ -14,6 +14,7 @@ public:
                     enum Connector::ConnectorType connectorType);
     void Write(const std::string& writeBuf);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
+    void Shutdown(ChannelPtr& chan);
     void SetMessageCallback(MessageCallback&& callback);
     void SetConnectCallback(ConnectCallback&& callback);
     ~Client() override = default;

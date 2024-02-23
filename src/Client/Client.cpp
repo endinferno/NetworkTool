@@ -65,6 +65,11 @@ void Client::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
     connector_->Connect(serverIp, serverPort);
 }
 
+void Client::Shutdown(ChannelPtr& chan)
+{
+    DelEvent(chan);
+}
+
 void Client::SetMessageCallback(MessageCallback&& callback)
 {
     messageCallback_ = std::move(callback);

@@ -40,7 +40,7 @@ void DnsResolver::HandleDnsMessage(ChannelPtr& chan, const std::string& udpMsg)
         if (callback_ != nullptr) {
             callback_(ipAddr);
         }
-        client_.DelEvent(chan);
+        client_.Shutdown(chan);
         break;
     }
 }
