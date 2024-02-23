@@ -2,35 +2,30 @@
 
 #include "EpollHandler.hpp"
 
-class Connector : public EpollHandler
+class Connector : public NonCopyable, public EpollHandler
 {
 public:
     enum ConnectorType
     {
         UDP,
         TCP,
-        SSL
     };
     using NewConnectionCallback = std::function<void(ChannelPtr&)>;
-    using ConnectProcedure = std::function<bool(ChannelPtr&)>;
 
     explicit Connector(EventPollerPtr& poller,
                        enum Socket::SocketType sockType);
-    virtual void SetNewConnectionCallback(NewConnectionCallback&& callback);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
+    void SetNewConnectionCallback(NewConnectionCallback&& callback);
     ~Connector() override = default;
 
-protected:
-    void SetConnectProcedure(ConnectProcedure&& procedure);
-
 private:
+    virtual bool HandleConnect(ChannelPtr& chan) = 0;
     void HandleErrorEvent(ChannelPtr&& chan) override;
     void HandleReadEvent(ChannelPtr&& chan) override;
     void HandleWriteEvent(ChannelPtr&& chan) override;
 
     Socket::SocketType sockType_;
     NewConnectionCallback callback_;
-    ConnectProcedure handleConnect_;
 };
 
-using ConnectorPtr = std::unique_ptr<Connector>;
+using ConnectorPtr = std::shared_ptr<Connector>;

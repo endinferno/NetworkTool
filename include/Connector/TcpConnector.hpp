@@ -9,5 +9,5 @@ public:
     ~TcpConnector() override = default;
 
 private:
-    bool HandleConnect(ChannelPtr& chan);
+    bool HandleConnect(ChannelPtr& chan) override;
 };

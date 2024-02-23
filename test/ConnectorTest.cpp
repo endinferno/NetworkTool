@@ -60,7 +60,10 @@ TEST(ConnectorTest, SslConnector)
 
     SslConnector connector(poller);
     connector.SetNewConnectionCallback(
-        [](ChannelPtr& chan) { HandleNewConnection(chan); });
+        [](ChannelPtr& chan,
+           [[maybe_unused]] std::unique_ptr<SslWrapper>&& ssl) {
+            HandleNewConnection(chan);
+        });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));

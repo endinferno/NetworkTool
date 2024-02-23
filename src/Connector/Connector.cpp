@@ -15,23 +15,12 @@ void Connector::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void Connector::HandleReadEvent([[maybe_unused]] ChannelPtr&& chan)
 {
-    if (handleConnect_ == nullptr) {
-        return;
-    }
-    if (!handleConnect_(chan)) {
-        return;
-    }
-    if (callback_ != nullptr) {
-        callback_(chan);
-    }
+    // Do nothing
 }
 
 void Connector::HandleWriteEvent(ChannelPtr&& chan)
 {
-    if (handleConnect_ == nullptr) {
-        return;
-    }
-    if (!handleConnect_(chan)) {
+    if (!HandleConnect(chan)) {
         return;
     }
     if (callback_ != nullptr) {
@@ -44,11 +33,6 @@ void Connector::SetNewConnectionCallback(NewConnectionCallback&& callback)
     callback_ = std::move(callback);
 }
 
-void Connector::SetConnectProcedure(ConnectProcedure&& procedure)
-{
-    handleConnect_ = std::move(procedure);
-}
-
 void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
 {
     auto sock = SocketFactory::Create(sockType_);
@@ -58,14 +42,13 @@ void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
     sock->Connect(serverIp, serverPort);
 
     auto chan = std::make_shared<Channel>(sock);
-    chan->SetReadCallback(
-        [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });
+    chan->SetReadCallback(nullptr);
     chan->SetWriteCallback(
         [this](ChannelPtr&& chan) { HandleWriteEvent(std::move(chan)); });
     chan->SetErrorCallback(
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
     AddEvent(chan,
-             Pollable::Event::EventIn | Pollable::Event::EventOut |
-                 Pollable::Event::EventErr | Pollable::Event::EventEt);
+             Pollable::WRITE_EVENT | Pollable::ERROR_EVENT |
+                 Pollable::Event::EventEt);
 }

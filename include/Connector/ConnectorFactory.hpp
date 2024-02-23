@@ -3,7 +3,6 @@
 #include <memory>
 #include <stdexcept>
 
-#include "Connector/SslConnector.hpp"
 #include "Connector/TcpConnector.hpp"
 #include "Connector/UdpConnector.hpp"
 
@@ -19,8 +18,6 @@ public:
             return std::make_unique<TcpConnector>(poller);
         case Connector::ConnectorType::UDP:
             return std::make_unique<UdpConnector>(poller);
-        case Connector::ConnectorType::SSL:
-            return std::make_unique<SslConnector>(poller);
         default: throw std::runtime_error("No such socket type\n");
         }
     }

@@ -2,37 +2,71 @@
 #include "Utils/Logger.hpp"
 
 SslConnector::SslConnector(EventPollerPtr& poller)
-    : TcpConnector(poller)
+    : EpollHandler(poller)
+    , connector_(poller)
+    , ssl_(std::make_unique<SslWrapper>())
+{}
+
+void SslConnector::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 {
-    // Set callback_ with TcpConnectCallback which used to get ready to
-    // construct ssl construction after tcp connection construct
-    Connector::SetNewConnectionCallback(
-        [this](ChannelPtr& chan) { TcpConnectCallback(chan); });
+    ERROR("Fail to connect ssl\n");
+}
+
+void SslConnector::HandleReadEvent([[maybe_unused]] ChannelPtr&& chan)
+{
+    DelEvent(chan);
+    auto event = HandleSslConnect();
+    if (event.has_value()) {
+        AddEvent(chan, event.value());
+        return;
+    }
+    if (callback_ != nullptr) {
+        callback_(chan, std::move(ssl_));
+    }
+}
+
+void SslConnector::HandleWriteEvent(ChannelPtr&& chan)
+{
+    DelEvent(chan);
+    auto event = HandleSslConnect();
+    if (event.has_value()) {
+        AddEvent(chan, event.value());
+        return;
+    }
+    if (callback_ != nullptr) {
+        callback_(chan, std::move(ssl_));
+    }
 }
 
 void SslConnector::TcpConnectCallback(ChannelPtr& chan)
 {
-    // Set ssl connection procedure
-    SetConnectProcedure([this](ChannelPtr& chan) -> bool {
-        DelEvent(chan);
-        return HandleSslConnect(chan);
-    });
-    // Set callback_ with user-defined callback after ssl connection construct
-    Connector::SetNewConnectionCallback(std::move(newConnectionCallback_));
+    chan->SetReadCallback(
+        [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });
+    chan->SetWriteCallback(
+        [this](ChannelPtr&& chan) { HandleWriteEvent(std::move(chan)); });
+    chan->SetErrorCallback(
+        [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
-    ssl_.SetFd(chan->GetSock()->GetFd());
-    ssl_.SetConnectState();
-    HandleSslConnect(chan);
+    ssl_->SetFd(chan->GetSock()->GetFd());
+    ssl_->SetConnectState();
+    auto event = HandleSslConnect();
+    if (event.has_value()) {
+        AddEvent(chan, event.value());
+        return;
+    }
+    if (callback_ != nullptr) {
+        callback_(chan, std::move(ssl_));
+    }
 }
 
-bool SslConnector::HandleSslConnect(ChannelPtr& chan)
+std::optional<uint32_t> SslConnector::HandleSslConnect()
 {
-    int ret = ssl_.ShakeHands();
+    int ret = ssl_->ShakeHands();
     if (ret == 1) {
         INFO("Success to construct SSL connection\n");
-        return true;
+        return std::nullopt;
     }
-    int err = ssl_.GetError(ret);
+    int err = ssl_->GetError(ret);
     uint32_t event = Pollable::Event::EventIn | Pollable::Event::EventOut |
                      Pollable::Event::EventEt;
     if (err == SSL_ERROR_WANT_WRITE) {
@@ -44,12 +78,18 @@ bool SslConnector::HandleSslConnect(ChannelPtr& chan)
     } else {
         ERROR("Fail to shake ssl hands\n");
     }
-    AddEvent(chan, event);
-    return false;
+    return event;
 }
 
-void SslConnector::SetNewConnectionCallback(NewConnectionCallback&& callback)
+void SslConnector::Connect(const IPAddress& serverIp,
+                           const uint16_t& serverPort)
 {
-    // Store user-defined callback to a new callback variable
-    newConnectionCallback_ = std::move(callback);
+    connector_.SetNewConnectionCallback(
+        [this](ChannelPtr& chan) { TcpConnectCallback(chan); });
+    connector_.Connect(serverIp, serverPort);
+}
+
+void SslConnector::SetNewConnectionCallback(SslConnectionCallback&& callback)
+{
+    callback_ = std::move(callback);
 }

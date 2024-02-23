@@ -5,10 +5,7 @@
 
 TcpConnector::TcpConnector(EventPollerPtr& poller)
     : Connector(poller, Socket::SocketType::TCP)
-{
-    SetConnectProcedure(
-        [this](ChannelPtr& chan) -> bool { return HandleConnect(chan); });
-}
+{}
 
 bool TcpConnector::HandleConnect(ChannelPtr& chan)
 {
