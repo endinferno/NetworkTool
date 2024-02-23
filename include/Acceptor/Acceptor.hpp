@@ -5,6 +5,11 @@
 class Acceptor : public NonCopyable, public EpollHandler
 {
 public:
+    enum AcceptorType
+    {
+        TCP,
+        UDP
+    };
     using NewConnectionCallback = std::function<void(SocketPtr&&)>;
 
     explicit Acceptor(EventPollerPtr& poller, Socket::SocketType sockType);
