@@ -15,9 +15,9 @@ public:
     {
         switch (type) {
         case Connector::ConnectorType::TCP:
-            return std::make_unique<TcpConnector>(poller);
+            return std::make_shared<TcpConnector>(poller);
         case Connector::ConnectorType::UDP:
-            return std::make_unique<UdpConnector>(poller);
+            return std::make_shared<UdpConnector>(poller);
         default: throw std::runtime_error("No such socket type\n");
         }
     }
