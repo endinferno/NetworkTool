@@ -95,7 +95,7 @@ void Client::HandleNewConnection(ChannelPtr& chan)
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
     AddEvent(chan,
-             Pollable::Event::EventIn | Pollable::Event::EventOut |
+             Pollable::READ_EVENT | Pollable::WRITE_EVENT |
                  Pollable::Event::EventEt);
     DEBUG("Call connect done callback\n");
     if (connectCallback_ != nullptr) {
