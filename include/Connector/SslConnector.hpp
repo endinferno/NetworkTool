@@ -8,12 +8,10 @@
 class SslConnector : public NonCopyable, public EpollHandler
 {
 public:
-    using SslConnectionCallback = std::function<void(ChannelPtr&)>;
-
     explicit SslConnector(EventPollerPtr& poller);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     void Shutdown(ChannelPtr& chan);
-    void SetNewConnectionCallback(SslConnectionCallback&& callback);
+    void SetNewConnectionCallback(Connector::NewConnectionCallback&& callback);
     ~SslConnector() override = default;
 
 private:
@@ -24,5 +22,5 @@ private:
     std::optional<uint32_t> HandleSslConnect(SslFdPtr& sslFd);
 
     TcpConnector connector_;
-    SslConnectionCallback callback_;
+    Connector::NewConnectionCallback callback_;
 };

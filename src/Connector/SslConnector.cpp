@@ -91,7 +91,8 @@ void SslConnector::Connect(const IPAddress& serverIp,
     connector_.Connect(serverIp, serverPort);
 }
 
-void SslConnector::SetNewConnectionCallback(SslConnectionCallback&& callback)
+void SslConnector::SetNewConnectionCallback(
+    Connector::NewConnectionCallback&& callback)
 {
     callback_ = std::move(callback);
 }
