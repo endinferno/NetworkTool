@@ -10,9 +10,10 @@ SslWrapper::SslWrapper()
     sslHandle_ = SSL_new(sslContext_);
 }
 
-void SslWrapper::SetFd(int sockFd)
+void SslWrapper::SetFd(SocketPtr sock)
 {
-    int ret = SSL_set_fd(sslHandle_, sockFd);
+    sock_ = std::move(sock);
+    int ret = SSL_set_fd(sslHandle_, sock_->GetFd());
     if (ret == 0) {
         throw std::runtime_error("Fail to set ssl fd\n");
     }
