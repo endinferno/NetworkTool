@@ -23,7 +23,7 @@ void Server::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void Server::HandleReadEvent(ChannelPtr&& chan)
 {
-    auto sock = chan->GetSock();
+    auto sock = std::dynamic_pointer_cast<Socket>(chan->GetFd());
     while (true) {
         // TODO: maybe there is a better way
         readBuf_.resize(MAX_READ_BUFFER);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EpollHandler.hpp"
+#include "Socket/Socket.hpp"
 
 class Acceptor : public NonCopyable, public EpollHandler
 {

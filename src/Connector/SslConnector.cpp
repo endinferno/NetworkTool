@@ -47,7 +47,7 @@ void SslConnector::TcpConnectCallback(ChannelPtr& chan)
     chan->SetErrorCallback(
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
-    ssl_->SetFd(chan->GetSock()->GetFd());
+    ssl_->SetFd(chan->GetFd()->GetFd());
     ssl_->SetConnectState();
     auto event = HandleSslConnect();
     if (event.has_value()) {

@@ -2,7 +2,7 @@
 
 #include <functional>
 
-#include "Socket/Socket.hpp"
+#include "PosixFd.hpp"
 
 class Channel;
 
@@ -14,7 +14,7 @@ class Channel : public std::enable_shared_from_this<Channel>
 public:
     using EventCallback = std::function<void(ChannelPtr&&)>;
 
-    explicit Channel(SocketPtr& sock);
+    explicit Channel(PosixFdPtr posixFd);
     void SetReadCallback(EventCallback&& callback);
     void SetWriteCallback(EventCallback&& callback);
     void SetErrorCallback(EventCallback&& callback);
@@ -23,11 +23,11 @@ public:
     void OnErrorable();
     void SetEvent(uint32_t event);
     [[nodiscard]] uint32_t GetEvent() const;
-    [[nodiscard]] SocketPtr GetSock() const;
+    [[nodiscard]] PosixFdPtr GetFd() const;
     ~Channel() = default;
 
 private:
-    SocketPtr sock_;
+    PosixFdPtr posixFd_;
     uint32_t epollEvt_;
     EventCallback readCallback_;
     EventCallback writeCallback_;

@@ -17,7 +17,7 @@ void Client::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 void Client::HandleReadEvent(ChannelPtr&& chan)
 {
     DEBUG("Handle read event\n");
-    auto sock = chan->GetSock();
+    auto sock = std::dynamic_pointer_cast<Socket>(chan->GetFd());
     while (true) {
         // TODO: maybe there is a better way
         readBuf_.resize(MAX_READ_BUFFER);
@@ -84,7 +84,7 @@ void Client::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
     conn_ = std::make_shared<Connection>();
-    conn_->Bind(chan->GetSock());
+    conn_->Bind(std::dynamic_pointer_cast<Socket>(chan->GetFd()));
     conn_->SetConnectStatus(true);
 
     chan->SetReadCallback(

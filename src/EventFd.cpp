@@ -1,22 +1,33 @@
+#include <type_traits>
 #include <unistd.h>
 
 #include "EventFd.hpp"
 
 EventFd::EventFd()
-    : eventFd_(eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC))
+    : PosixFd(eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC))
 {}
 
-int EventFd::Write(eventfd_t event) const
+int EventFd::Write(const eventfd_t& event) const
 {
-    return ::eventfd_write(eventFd_, event);
+    return ::eventfd_write(GetFd(), event);
 }
 
 int EventFd::Read(eventfd_t& event) const
 {
-    return ::eventfd_read(eventFd_, &event);
+    return ::eventfd_read(GetFd(), &event);
+}
+
+void EventFd::SetWritable(bool isWritable)
+{
+    isWritable_ = isWritable;
+}
+
+bool EventFd::IsWritable() const
+{
+    return isWritable_;
 }
 
 EventFd::~EventFd()
 {
-    ::close(eventFd_);
+    ::close(GetFd());
 }

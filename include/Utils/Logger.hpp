@@ -1,5 +1,7 @@
 #pragma once
 
+#include "fmt/core.h"
+
 #define INFO_ENABLE 1
 #ifdef NDEBUG
 #    define DEBUG_ENABLE 0

@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include <sys/epoll.h>
 #include <unistd.h>
 
@@ -44,7 +42,7 @@ void Epoller::EventCtl(Channel* chan, enum EventCtl opera, uint32_t event)
     epollEvt.events = event;
 
     int ret = ::epoll_ctl(
-        epollFd_, static_cast<int>(opera), chan->GetSock()->GetFd(), &epollEvt);
+        epollFd_, static_cast<int>(opera), chan->GetFd()->GetFd(), &epollEvt);
     if (ret == -1) {
         throw std::runtime_error(fmt::format(
             "Fail to {} epoll event {}\n", static_cast<int>(opera), event));

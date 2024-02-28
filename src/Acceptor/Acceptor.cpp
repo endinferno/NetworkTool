@@ -14,7 +14,7 @@ void Acceptor::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void Acceptor::HandleReadEvent(ChannelPtr&& chan)
 {
-    auto sock = chan->GetSock();
+    auto sock = std::dynamic_pointer_cast<Socket>(chan->GetFd());
     while (true) {
         struct sockaddr_in clientAddr;
 

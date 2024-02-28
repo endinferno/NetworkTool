@@ -17,7 +17,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         OnMessageCallback(chan, msg);
     });
     IPAddress localIp("127.0.0.1");
-    uint16_t localPort = 8888;
+    uint16_t localPort = 2222;
     server.Run(localIp, localPort);
 
     while (true) {}

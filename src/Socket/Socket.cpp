@@ -10,13 +10,13 @@
 #include "Utils/Logger.hpp"
 
 Socket::Socket(int sockFd)
-    : sockFd_(sockFd)
+    : PosixFd(sockFd)
 {}
 
 void Socket::SetReuseAddr() const
 {
     int opt = 1;
-    int ret = ::setsockopt(sockFd_,
+    int ret = ::setsockopt(GetFd(),
                            SOL_SOCKET,
                            SO_REUSEADDR,
                            reinterpret_cast<const void*>(&opt),
@@ -29,7 +29,7 @@ void Socket::SetReuseAddr() const
 void Socket::SetReusePort() const
 {
     int opt = 1;
-    int ret = ::setsockopt(sockFd_,
+    int ret = ::setsockopt(GetFd(),
                            SOL_SOCKET,
                            SO_REUSEPORT,
                            reinterpret_cast<const void*>(&opt),
@@ -41,8 +41,8 @@ void Socket::SetReusePort() const
 
 void Socket::SetNonBlock() const
 {
-    int oldSockFlag = ::fcntl(sockFd_, F_GETFL, 0);
-    ::fcntl(sockFd_, F_SETFL, oldSockFlag | O_NONBLOCK);
+    int oldSockFlag = ::fcntl(GetFd(), F_GETFL, 0);
+    ::fcntl(GetFd(), F_SETFL, oldSockFlag | O_NONBLOCK);
 }
 
 int Socket::GetSockOpt(int level, int optName) const
@@ -50,7 +50,7 @@ int Socket::GetSockOpt(int level, int optName) const
     int opt;
     socklen_t len = sizeof(int);
     int ret = ::getsockopt(
-        sockFd_, level, optName, reinterpret_cast<void*>(&opt), &len);
+        GetFd(), level, optName, reinterpret_cast<void*>(&opt), &len);
     if (ret == -1) {
         throw std::runtime_error(
             fmt::format("Fail to get sock option {}\n", errno));
@@ -76,7 +76,7 @@ void Socket::Connect(struct sockaddr_in& serverAddr) const
          inet_ntoa(serverAddr.sin_addr),
          ntohs(serverAddr.sin_port));
 
-    int ret = ::connect(sockFd_,
+    int ret = ::connect(GetFd(),
                         reinterpret_cast<struct sockaddr*>(&serverAddr),
                         sizeof(serverAddr));
     if (ret == 0 || (ret < 0 && errno == EINPROGRESS)) {
@@ -88,14 +88,14 @@ void Socket::Connect(struct sockaddr_in& serverAddr) const
 
 ssize_t Socket::Write(const std::string& writeBuf)
 {
-    ssize_t writeBytes = ::write(sockFd_, writeBuf.data(), writeBuf.size());
+    ssize_t writeBytes = ::write(GetFd(), writeBuf.data(), writeBuf.size());
     SetErrno(errno);
     return writeBytes;
 }
 
 ssize_t Socket::Read(std::string& readBuf)
 {
-    ssize_t readBytes = ::read(sockFd_, readBuf.data(), readBuf.size());
+    ssize_t readBytes = ::read(GetFd(), readBuf.data(), readBuf.size());
     SetErrno(errno);
     return readBytes;
 }
@@ -105,7 +105,7 @@ ssize_t Socket::Recvfrom(std::string& readBuf,
 {
     socklen_t clientAddrLen = sizeof(clientAddr);
 
-    return ::recvfrom(sockFd_,
+    return ::recvfrom(GetFd(),
                       readBuf.data(),
                       readBuf.size(),
                       0,
@@ -121,9 +121,4 @@ int Socket::GetErrno() const
 void Socket::SetErrno(int err)
 {
     savedErrno_ = err;
-}
-
-int Socket::GetFd() const
-{
-    return sockFd_;
 }

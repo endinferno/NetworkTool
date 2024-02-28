@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
-Channel::Channel(SocketPtr& sock)
-    : sock_(sock)
+Channel::Channel(PosixFdPtr posixFd)
+    : posixFd_(std::move(posixFd))
     , readCallback_(nullptr)
     , writeCallback_(nullptr)
     , errorCallback_(nullptr)
@@ -53,7 +53,7 @@ uint32_t Channel::GetEvent() const
     return epollEvt_;
 }
 
-SocketPtr Channel::GetSock() const
+PosixFdPtr Channel::GetFd() const
 {
-    return sock_;
+    return posixFd_;
 }
