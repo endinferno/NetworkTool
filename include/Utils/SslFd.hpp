@@ -13,6 +13,8 @@ public:
     void SetConnectState();
     int ShakeHands();
     int GetError(int shakeHandRet);
+    int Write(const std::string& writeBuf);
+    int Read(std::string& readBuf);
     ~SslFd() override;
 
 private:

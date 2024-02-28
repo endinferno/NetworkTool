@@ -1,4 +1,5 @@
 #include "Utils/SslFd.hpp"
+#include <openssl/ssl.h>
 
 SslFd::SslFd(SocketPtr& sock)
     : PosixFd(sock->GetFd())
@@ -31,6 +32,20 @@ int SslFd::ShakeHands()
 int SslFd::GetError(int shakeHandRet)
 {
     return ::SSL_get_error(sslHandle_, shakeHandRet);
+}
+
+int SslFd::Write(const std::string& writeBuf)
+{
+    return ::SSL_write(sslHandle_,
+                       reinterpret_cast<const void*>(writeBuf.data()),
+                       static_cast<int>(writeBuf.size()));
+}
+
+int SslFd::Read(std::string& readBuf)
+{
+    return ::SSL_read(sslHandle_,
+                      reinterpret_cast<void*>(readBuf.data()),
+                      static_cast<int>(readBuf.size()));
 }
 
 SslFd::~SslFd()
