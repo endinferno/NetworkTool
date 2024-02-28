@@ -4,7 +4,6 @@
 SslConnector::SslConnector(EventPollerPtr& poller)
     : EpollHandler(poller)
     , connector_(poller)
-    , ssl_(std::make_unique<SslWrapper>())
 {}
 
 void SslConnector::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
@@ -14,25 +13,27 @@ void SslConnector::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void SslConnector::HandleReadEvent([[maybe_unused]] ChannelPtr&& chan)
 {
-    auto event = HandleSslConnect();
+    auto sslFd = std::dynamic_pointer_cast<SslFd>(chan->GetFd());
+    auto event = HandleSslConnect(sslFd);
     if (event.has_value()) {
         ModEvent(chan, event.value());
         return;
     }
     if (callback_ != nullptr) {
-        callback_(chan, std::move(ssl_));
+        callback_(chan);
     }
 }
 
 void SslConnector::HandleWriteEvent(ChannelPtr&& chan)
 {
-    auto event = HandleSslConnect();
+    auto sslFd = std::dynamic_pointer_cast<SslFd>(chan->GetFd());
+    auto event = HandleSslConnect(sslFd);
     if (event.has_value()) {
         ModEvent(chan, event.value());
         return;
     }
     if (callback_ != nullptr) {
-        callback_(chan, std::move(ssl_));
+        callback_(chan);
     }
 }
 
@@ -45,26 +46,29 @@ void SslConnector::TcpConnectCallback(ChannelPtr& chan)
     chan->SetErrorCallback(
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
-    ssl_->SetFd(std::dynamic_pointer_cast<Socket>(chan->GetFd()));
-    ssl_->SetConnectState();
-    auto event = HandleSslConnect();
+    auto sock = std::dynamic_pointer_cast<Socket>(chan->GetFd());
+    auto sslFd = std::make_shared<SslFd>(sock);
+    sslFd->SetFd();
+    sslFd->SetConnectState();
+    chan->SetFd(sslFd);
+    auto event = HandleSslConnect(sslFd);
     if (event.has_value()) {
         ModEvent(chan, event.value());
         return;
     }
     if (callback_ != nullptr) {
-        callback_(chan, std::move(ssl_));
+        callback_(chan);
     }
 }
 
-std::optional<uint32_t> SslConnector::HandleSslConnect()
+std::optional<uint32_t> SslConnector::HandleSslConnect(SslFdPtr& sslFd)
 {
-    int ret = ssl_->ShakeHands();
+    int ret = sslFd->ShakeHands();
     if (ret == 1) {
         INFO("Success to construct SSL connection\n");
         return std::nullopt;
     }
-    int err = ssl_->GetError(ret);
+    int err = sslFd->GetError(ret);
     uint32_t event = Pollable::Event::EventIn | Pollable::Event::EventOut |
                      Pollable::Event::EventEt;
     if (err == SSL_ERROR_WANT_WRITE) {

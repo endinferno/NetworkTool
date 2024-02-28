@@ -63,11 +63,10 @@ TEST(ConnectorTest, SslConnector)
     poller->Run();
 
     SslConnector connector(poller);
-    connector.SetNewConnectionCallback(
-        [&connector](ChannelPtr& chan, [[maybe_unused]] SslWrapperPtr&& ssl) {
-            HandleNewConnection(chan);
-            connector.Shutdown(chan);
-        });
+    connector.SetNewConnectionCallback([&connector](ChannelPtr& chan) {
+        HandleNewConnection(chan);
+        connector.Shutdown(chan);
+    });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));

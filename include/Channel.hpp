@@ -23,6 +23,7 @@ public:
     void OnErrorable();
     void SetEvent(uint32_t event);
     [[nodiscard]] uint32_t GetEvent() const;
+    void SetFd(PosixFdPtr posixFd);
     [[nodiscard]] PosixFdPtr GetFd() const;
     ~Channel() = default;
 

@@ -53,6 +53,11 @@ uint32_t Channel::GetEvent() const
     return epollEvt_;
 }
 
+void Channel::SetFd(PosixFdPtr posixFd)
+{
+    posixFd_ = std::move(posixFd);
+}
+
 PosixFdPtr Channel::GetFd() const
 {
     return posixFd_;
