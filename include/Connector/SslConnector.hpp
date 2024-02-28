@@ -13,6 +13,7 @@ public:
 
     explicit SslConnector(EventPollerPtr& poller);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
+    void Shutdown(ChannelPtr& chan);
     void SetNewConnectionCallback(SslConnectionCallback&& callback);
     ~SslConnector() override = default;
 

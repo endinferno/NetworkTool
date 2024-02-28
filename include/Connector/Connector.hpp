@@ -17,6 +17,7 @@ public:
                        enum Socket::SocketType sockType);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     void SetNewConnectionCallback(NewConnectionCallback&& callback);
+    void Shutdown(ChannelPtr& chan);
     ~Connector() override = default;
 
 private:

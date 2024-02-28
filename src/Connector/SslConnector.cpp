@@ -14,10 +14,9 @@ void SslConnector::HandleErrorEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void SslConnector::HandleReadEvent([[maybe_unused]] ChannelPtr&& chan)
 {
-    DelEvent(chan);
     auto event = HandleSslConnect();
     if (event.has_value()) {
-        AddEvent(chan, event.value());
+        ModEvent(chan, event.value());
         return;
     }
     if (callback_ != nullptr) {
@@ -27,10 +26,9 @@ void SslConnector::HandleReadEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void SslConnector::HandleWriteEvent(ChannelPtr&& chan)
 {
-    DelEvent(chan);
     auto event = HandleSslConnect();
     if (event.has_value()) {
-        AddEvent(chan, event.value());
+        ModEvent(chan, event.value());
         return;
     }
     if (callback_ != nullptr) {
@@ -51,7 +49,7 @@ void SslConnector::TcpConnectCallback(ChannelPtr& chan)
     ssl_->SetConnectState();
     auto event = HandleSslConnect();
     if (event.has_value()) {
-        AddEvent(chan, event.value());
+        ModEvent(chan, event.value());
         return;
     }
     if (callback_ != nullptr) {
@@ -92,4 +90,9 @@ void SslConnector::Connect(const IPAddress& serverIp,
 void SslConnector::SetNewConnectionCallback(SslConnectionCallback&& callback)
 {
     callback_ = std::move(callback);
+}
+
+void SslConnector::Shutdown(ChannelPtr& chan)
+{
+    DelEvent(chan);
 }

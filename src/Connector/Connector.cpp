@@ -52,3 +52,8 @@ void Connector::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
              Pollable::WRITE_EVENT | Pollable::ERROR_EVENT |
                  Pollable::Event::EventEt);
 }
+
+void Connector::Shutdown(ChannelPtr& chan)
+{
+    DelEvent(chan);
+}
