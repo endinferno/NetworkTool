@@ -7,7 +7,6 @@ UdpConnector::UdpConnector(EventPollerPtr& poller)
 
 bool UdpConnector::HandleConnect([[maybe_unused]] ChannelPtr& chan)
 {
-    DelEvent(chan);
     INFO("Success to connect\n");
     return true;
 }

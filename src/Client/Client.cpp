@@ -48,6 +48,7 @@ void Client::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     DEBUG("Handle write event\n");
     conn_->SetConnectStatus(true);
+    ModEvent(chan, Pollable::READ_EVENT | Pollable::Event::EventEt);
 }
 
 void Client::Write(const std::string& writeBuf)
@@ -94,9 +95,7 @@ void Client::HandleNewConnection(ChannelPtr& chan)
     chan->SetErrorCallback(
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
-    AddEvent(chan,
-             Pollable::READ_EVENT | Pollable::WRITE_EVENT |
-                 Pollable::Event::EventEt);
+    ModEvent(chan, Pollable::WRITE_EVENT | Pollable::Event::EventEt);
     DEBUG("Call connect done callback\n");
     if (connectCallback_ != nullptr) {
         connectCallback_(chan);

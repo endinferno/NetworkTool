@@ -16,7 +16,6 @@ bool TcpConnector::HandleConnect(ChannelPtr& chan)
         ERROR("Fail to connect {}", opt);
         return false;
     }
-    DelEvent(chan);
     INFO("Success to connect\n");
     return true;
 }
