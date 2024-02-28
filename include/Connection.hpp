@@ -5,9 +5,7 @@
 class Connection
 {
 public:
-    Connection();
-    explicit Connection(SocketPtr& sock);
-    void Bind(const SocketPtr& sock);
+    explicit Connection(SocketPtr sock);
     void Write(const std::string& writeBuf);
     void SetConnectStatus(bool status);
     [[nodiscard]] bool GetConnectStatus() const;

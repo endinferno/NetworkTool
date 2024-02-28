@@ -84,8 +84,8 @@ void Client::SetConnectCallback(ConnectCallback&& callback)
 void Client::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
-    conn_ = std::make_shared<Connection>();
-    conn_->Bind(std::dynamic_pointer_cast<Socket>(chan->GetFd()));
+    conn_ = std::make_shared<Connection>(
+        std::dynamic_pointer_cast<Socket>(chan->GetFd()));
     conn_->SetConnectStatus(true);
 
     chan->SetReadCallback(

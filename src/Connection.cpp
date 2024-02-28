@@ -2,20 +2,10 @@
 
 #include "Connection.hpp"
 
-Connection::Connection()
-    : sock_(nullptr)
+Connection::Connection(SocketPtr sock)
+    : sock_(std::move(sock))
     , isConnect_(false)
 {}
-
-Connection::Connection(SocketPtr& sock)
-    : sock_(sock)
-    , isConnect_(false)
-{}
-
-void Connection::Bind(const SocketPtr& sock)
-{
-    sock_ = sock;
-}
 
 void Connection::SetConnectStatus(bool status)
 {
