@@ -22,6 +22,7 @@ aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Socket SOCKET_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Poller POLLER_SRC)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Connector CONNECTOR_SRC_LIST)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src/Connection CONNECTION_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Client CLIENT_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Acceptor ACCEPTOR_SRC_LIST)
 aux_source_directory(${PROJECT_SOURCE_DIR}/src/Server SERVER_SRC_LIST)
@@ -32,6 +33,7 @@ set(SOURCE_LIST
     ${POLLER_SRC}
     ${SOCKET_SRC_LIST}
     ${CONNECTOR_SRC_LIST}
+    ${CONNECTION_SRC_LIST}
     ${CLIENT_SRC_LIST}
     ${ACCEPTOR_SRC_LIST}
     ${SERVER_SRC_LIST}

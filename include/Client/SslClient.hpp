@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Client/Client.hpp"
+#include "Connection/Connection.hpp"
 #include "Connector/SslConnector.hpp"
-#include "SslConnection.hpp"
 
 class SslClient : public EpollHandler
 {
@@ -23,7 +23,7 @@ private:
 
     constexpr static int MAX_READ_BUFFER = 2048;
     SslConnector connector_;
-    SslConnectionPtr conn_;
+    ConnectionPtr conn_;
     std::string readBuf_;
     Client::MessageCallback messageCallback_;
     Client::ConnectCallback connectCallback_;

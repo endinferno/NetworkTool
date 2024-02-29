@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Connection.hpp"
+#include "Connection/Connection.hpp"
 #include "Connector/Connector.hpp"
 
 class Client : public EpollHandler

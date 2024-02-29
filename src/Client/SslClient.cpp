@@ -1,4 +1,5 @@
 #include "Client/SslClient.hpp"
+#include "Connection/SslConnection.hpp"
 #include "Utils/Logger.hpp"
 
 SslClient::SslClient(EventPollerPtr& poller)
