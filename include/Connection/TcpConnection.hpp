@@ -6,16 +6,8 @@
 class TcpConnection : public Connection
 {
 public:
-    explicit TcpConnection(SocketPtr sock)
-        : sock_(std::move(sock))
-    {}
-    void Write(const std::string& writeBuf) override
-    {
-        ssize_t writeBytes = sock_->Write(writeBuf);
-        if (writeBytes != static_cast<ssize_t>(writeBuf.size())) {
-            throw std::runtime_error("Fail to write to socket\n");
-        }
-    }
+    explicit TcpConnection(SocketPtr sock);
+    void Write(const std::string& writeBuf) override;
     ~TcpConnection() override = default;
 
 private:

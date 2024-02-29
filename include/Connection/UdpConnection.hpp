@@ -6,16 +6,8 @@
 class UdpConnection : public Connection
 {
 public:
-    explicit UdpConnection(SocketPtr sock)
-        : sock_(std::move(sock))
-    {}
-    void Write(const std::string& writeBuf) override
-    {
-        ssize_t writeBytes = sock_->Write(writeBuf);
-        if (writeBytes != static_cast<ssize_t>(writeBuf.size())) {
-            throw std::runtime_error("Fail to write to socket\n");
-        }
-    }
+    explicit UdpConnection(SocketPtr sock);
+    void Write(const std::string& writeBuf) override;
     ~UdpConnection() override = default;
 
 private:
