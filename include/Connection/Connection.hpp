@@ -19,7 +19,7 @@ public:
     virtual ~Connection() = default;
 
 private:
-    bool isConnect_;
+    bool isConnect_ = false;
 };
 
 using ConnectionPtr = std::shared_ptr<Connection>;

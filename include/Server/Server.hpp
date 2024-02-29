@@ -20,7 +20,7 @@ private:
     void HandleWriteEvent(ChannelPtr&& chan) override;
     void HandleNewConnection(SocketPtr&& sock);
 
-    constexpr static int MAX_READ_BUFFER = 2048;
+    constexpr static int MAX_READ_BUFFER = 65535;
     AcceptorPtr acceptor_;
     std::string readBuf_;
     MessageCallback callback_;

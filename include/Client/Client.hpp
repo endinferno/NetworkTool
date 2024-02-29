@@ -25,7 +25,7 @@ private:
     void HandleWriteEvent(ChannelPtr&& chan) override;
     void HandleNewConnection(ChannelPtr& chan);
 
-    constexpr static int MAX_READ_BUFFER = 2048;
+    constexpr static int MAX_READ_BUFFER = 65535;
     Connector::ConnectorType connectorType_;
     ConnectorPtr connector_;
     ConnectionPtr conn_;
