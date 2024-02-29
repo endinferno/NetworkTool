@@ -1,5 +1,3 @@
-#pragma once
-
 #include "SslConnection.hpp"
 
 SslConnection::SslConnection(SslFdPtr sslFd)
