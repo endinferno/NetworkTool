@@ -5,13 +5,13 @@
 class Server : public NonCopyable, public EpollHandler
 {
 public:
-    using OnMessageCallback =
+    using MessageCallback =
         std::function<void(ChannelPtr&, const std::string& msg)>;
 
     explicit Server(EventPollerPtr& poller,
                     enum Acceptor::AcceptorType acceptorType);
     void Run(const IPAddress& localIp, const uint16_t& localPort);
-    void SetOnMessageCallback(OnMessageCallback&& callback);
+    void SetMessageCallback(MessageCallback&& callback);
     ~Server() override = default;
 
 private:
@@ -23,5 +23,5 @@ private:
     constexpr static int MAX_READ_BUFFER = 2048;
     AcceptorPtr acceptor_;
     std::string readBuf_;
-    OnMessageCallback callback_;
+    MessageCallback callback_;
 };

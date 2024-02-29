@@ -13,7 +13,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     poller->Run();
 
     UdpServer server(poller);
-    server.SetOnMessageCallback([](ChannelPtr& chan, const std::string& msg) {
+    server.SetMessageCallback([](ChannelPtr& chan, const std::string& msg) {
         OnMessageCallback(chan, msg);
     });
     IPAddress localIp(INADDR_ANY);

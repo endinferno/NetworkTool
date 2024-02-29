@@ -72,7 +72,7 @@ void Server::HandleNewConnection(SocketPtr&& sock)
                  Pollable::Event::EventEt);
 }
 
-void Server::SetOnMessageCallback(OnMessageCallback&& callback)
+void Server::SetMessageCallback(MessageCallback&& callback)
 {
     callback_ = std::move(callback);
 }
