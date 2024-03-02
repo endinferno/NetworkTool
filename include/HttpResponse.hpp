@@ -24,9 +24,6 @@ public:
     ~HttpResponse() = default;
 
 private:
-    void ParseStatusLine(const std::string& line);
-    void ParseHeader(const std::string& line);
-
     std::string version_;
     HttpStatusCode statusCode_;
     std::unordered_map<std::string, std::string> headerMap_;
