@@ -3,15 +3,11 @@
 #include "Client/TcpClient.hpp"
 #include "Dns/DnsResolver.hpp"
 #include "HttpRequest.hpp"
-#include "HttpResponse.hpp"
+#include "HttpRespParser.hpp"
 
 class HttpClient
 {
 public:
-    enum HttpStatusCode
-    {
-        OK = 200,
-    };
     using MessageDecodeCallback = std::function<void(const std::string& msg)>;
 
     explicit HttpClient(EventPollerPtr& poller);
@@ -26,6 +22,6 @@ private:
 
     DnsResolverPtr resolver_;
     TcpClient tcpClient_;
-    HttpResponse response_;
+    HttpRespParser parser_;
     MessageDecodeCallback callback_;
 };

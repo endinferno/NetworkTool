@@ -37,14 +37,18 @@ void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback&& callback)
 
 void HttpClient::OnMessage(const std::string& httpMsg)
 {
-    response_.Parse(httpMsg);
-    int statusCode = response_.GetStatus();
-    if (statusCode != HttpStatusCode::OK) {
-        throw std::runtime_error(
-            fmt::format("Wrong http status code {}\n", statusCode));
+    auto httpRespOption = parser_.Parse(httpMsg);
+    if (!httpRespOption.has_value()) {
+        return;
+    }
+    auto httpResp = httpRespOption.value();
+    auto statusCode = httpResp.GetStatus();
+    if (statusCode != HttpResponse::HttpStatusCode::OK) {
+        throw std::runtime_error(fmt::format("Wrong http status code {}\n",
+                                             static_cast<int>(statusCode)));
     }
 
     if (callback_ != nullptr) {
-        callback_(response_.GetBody());
+        callback_(httpResp.GetBody());
     }
 }

@@ -6,12 +6,21 @@
 class HttpResponse
 {
 public:
+    enum HttpStatusCode
+    {
+        OK = 200,
+        UNKNOWN = -1,
+    };
     HttpResponse() = default;
     std::string GetVersion() const;
+    void SetVersion(const std::string& version);
     std::string GetHeader(const std::string& header) const;
-    int GetStatus() const;
+    void AddHeader(const std::string& key, const std::string& value);
+    HttpStatusCode GetStatus() const;
+    void SetStatus(const HttpStatusCode& status);
     std::string GetBody() const;
-    void Parse(const std::string& httpResp);
+    void SetBody(const std::string& body);
+    void Clear();
     ~HttpResponse() = default;
 
 private:
@@ -19,7 +28,7 @@ private:
     void ParseHeader(const std::string& line);
 
     std::string version_;
-    int statusCode_;
+    HttpStatusCode statusCode_;
     std::unordered_map<std::string, std::string> headerMap_;
     std::string body_;
 };

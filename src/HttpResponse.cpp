@@ -1,12 +1,14 @@
-#include <cstdio>
-#include <sstream>
-
 #include "HttpResponse.hpp"
 #include "fmt/core.h"
 
 std::string HttpResponse::GetVersion() const
 {
     return version_;
+}
+
+void HttpResponse::SetVersion(const std::string& version)
+{
+    version_ = version;
 }
 
 std::string HttpResponse::GetHeader(const std::string& header) const
@@ -18,9 +20,19 @@ std::string HttpResponse::GetHeader(const std::string& header) const
     return headerIt->second;
 }
 
-int HttpResponse::GetStatus() const
+void HttpResponse::AddHeader(const std::string& key, const std::string& value)
+{
+    headerMap_.insert({ key, value });
+}
+
+HttpResponse::HttpStatusCode HttpResponse::GetStatus() const
 {
     return statusCode_;
+}
+
+void HttpResponse::SetStatus(const HttpResponse::HttpStatusCode& status)
+{
+    statusCode_ = status;
 }
 
 std::string HttpResponse::GetBody() const
@@ -28,57 +40,15 @@ std::string HttpResponse::GetBody() const
     return body_;
 }
 
-void HttpResponse::ParseStatusLine(const std::string& line)
+void HttpResponse::SetBody(const std::string& body)
 {
-    version_.resize(3);
-    std::sscanf(line.data(), "HTTP/%s %d \n", version_.data(), &statusCode_);
+    body_ = body;
 }
 
-void HttpResponse::ParseHeader(const std::string& line)
+void HttpResponse::Clear()
 {
-    auto pos = line.find(':');
-    if (pos == std::string::npos) {
-        return;
-    }
-    std::string key(line.substr(0, pos));
-    std::string value(line.substr(pos + 2, line.size() - (pos + 2)));
-    headerMap_.insert({ key, value });
-}
-
-void HttpResponse::Parse(const std::string& httpResp)
-{
-    enum HttpPart
-    {
-        HttpStatusLine,
-        HttpHeader,
-        HttpBody,
-    };
-    HttpPart part = HttpStatusLine;
-    std::string line;
-    std::istringstream inputStream(httpResp);
-    while (std::getline(inputStream, line)) {
-        switch (part) {
-        case HttpStatusLine:
-        {
-            ParseStatusLine(line);
-            part = HttpHeader;
-            break;
-        }
-        case HttpHeader:
-        {
-            if (line.size() == 1) {
-                part = HttpBody;
-                break;
-            }
-            ParseHeader(line);
-            break;
-        }
-        case HttpBody:
-        {
-            body_.append(line);
-            break;
-        }
-        default: throw std::runtime_error("No such HTTP part\n");
-        }
-    }
+    version_.clear();
+    statusCode_ = HttpStatusCode::UNKNOWN;
+    headerMap_.clear();
+    body_.clear();
 }

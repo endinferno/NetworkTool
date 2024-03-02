@@ -23,8 +23,7 @@ void SslClient::HandleReadEvent(ChannelPtr&& chan)
         DEBUG("readBytes {}\n", readBytes);
         if (readBytes < 0) {
             int savedErr = sslFd->GetError(readBytes);
-            if (savedErr == EINTR || savedErr == EWOULDBLOCK ||
-                savedErr == EAGAIN) {
+            if (savedErr == SSL_ERROR_WANT_READ) {
                 break;
             } else {
                 ERROR("Fail to read {}\n", savedErr);

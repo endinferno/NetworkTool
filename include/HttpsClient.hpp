@@ -22,6 +22,6 @@ private:
 
     DnsResolverPtr resolver_;
     SslClient sslClient_;
-    HttpResponse response_;
+    HttpRespParser parser_;
     HttpClient::MessageDecodeCallback callback_;
 };
