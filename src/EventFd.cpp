@@ -1,4 +1,3 @@
-#include <type_traits>
 #include <unistd.h>
 
 #include "EventFd.hpp"
