@@ -62,3 +62,8 @@ PosixFdPtr Channel::GetFd() const
 {
     return posixFd_;
 }
+
+void Channel::SetConnection(ConnectionPtr& conn)
+{
+    conn_ = conn;
+}

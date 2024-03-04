@@ -23,7 +23,7 @@ private:
 
     constexpr static int MAX_READ_BUFFER = 65535;
     SslConnector connector_;
-    ConnectionPtr conn_;
+    std::weak_ptr<Connection> conn_;
     std::string readBuf_;
     Client::MessageCallback messageCallback_;
     Client::WriteCompleteCallback writeCompleteCallback_;

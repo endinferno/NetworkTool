@@ -2,6 +2,7 @@
 
 #include <functional>
 
+#include "Connection.hpp"
 #include "PosixFd.hpp"
 
 class Channel;
@@ -25,9 +26,11 @@ public:
     [[nodiscard]] uint32_t GetEvent() const;
     void SetFd(PosixFdPtr posixFd);
     [[nodiscard]] PosixFdPtr GetFd() const;
+    void SetConnection(ConnectionPtr& conn);
     ~Channel() = default;
 
 private:
+    ConnectionPtr conn_;
     PosixFdPtr posixFd_;
     uint32_t epollEvt_;
     EventCallback readCallback_;

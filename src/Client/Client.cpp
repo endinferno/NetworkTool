@@ -47,7 +47,8 @@ void Client::HandleReadEvent(ChannelPtr&& chan)
 void Client::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
 {
     DEBUG("Handle write event\n");
-    conn_->SetConnectStatus(true);
+    auto conn = conn_.lock();
+    conn->SetConnectStatus(true);
     ModEvent(chan, Pollable::READ_EVENT | Pollable::Event::EventEt);
     if (writeCompleteCallback_ != nullptr) {
         writeCompleteCallback_(chan);
@@ -56,10 +57,14 @@ void Client::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
 
 void Client::Write(const std::string& writeBuf)
 {
-    if (conn_ == nullptr || !conn_->GetConnectStatus()) {
+    if (conn_.expired()) {
+        DEBUG("The connection has expired\n");
         return;
     }
-    conn_->Write(writeBuf);
+    auto conn = conn_.lock();
+    if (conn->GetConnectStatus()) {
+        conn->Write(writeBuf);
+    }
 }
 
 void Client::Connect(const IPAddress& serverIp, const uint16_t& serverPort)
@@ -87,8 +92,10 @@ void Client::SetWriteCompleteCallback(WriteCompleteCallback&& callback)
 void Client::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
-    conn_ = std::make_shared<Connection>(chan->GetFd());
+    auto conn = std::make_shared<Connection>(chan->GetFd());
 
+    conn_ = conn;
+    chan->SetConnection(conn);
     chan->SetReadCallback(
         [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });
     chan->SetWriteCallback(
