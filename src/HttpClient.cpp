@@ -32,7 +32,13 @@ void HttpClient::Request(const HttpRequest& httpReq)
 
 void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback&& callback)
 {
-    callback_ = std::move(callback);
+    messageDecodeCallback_ = std::move(callback);
+}
+
+void HttpClient::SetWriteCompleteCallback(
+    Client::WriteCompleteCallback&& callback)
+{
+    writeCompleteCallback_ = std::move(callback);
 }
 
 void HttpClient::OnMessage(const std::string& httpMsg)

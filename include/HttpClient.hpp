@@ -15,6 +15,7 @@ public:
     void Connect(const std::string& serverName, const uint16_t& serverPort);
     void Request(const HttpRequest& httpReq);
     void SetMessageDecodeCallback(MessageDecodeCallback&& callback);
+    void SetWriteCompleteCallback(Client::WriteCompleteCallback&& callback);
     ~HttpClient() = default;
 
 private:
@@ -23,5 +24,6 @@ private:
     DnsResolverPtr resolver_;
     TcpClient tcpClient_;
     HttpRespParser parser_;
-    MessageDecodeCallback callback_;
+    MessageDecodeCallback messageDecodeCallback_;
+    Client::WriteCompleteCallback writeCompleteCallback_;
 };
