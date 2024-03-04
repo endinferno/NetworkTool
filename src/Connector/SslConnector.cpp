@@ -96,8 +96,3 @@ void SslConnector::SetNewConnectionCallback(
 {
     callback_ = std::move(callback);
 }
-
-void SslConnector::Shutdown(ChannelPtr& chan)
-{
-    DelEvent(chan);
-}

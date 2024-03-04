@@ -16,7 +16,6 @@ public:
     explicit Connector(EventPollerPtr& poller,
                        enum Socket::SocketType sockType);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
-    void Shutdown(ChannelPtr& chan);
     void SetNewConnectionCallback(NewConnectionCallback&& callback);
     ~Connector() override = default;
 

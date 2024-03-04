@@ -23,10 +23,8 @@ TEST(ConnectorTest, TcpConnector)
     poller->Run();
 
     TcpConnector connector(poller);
-    connector.SetNewConnectionCallback([&connector](ChannelPtr& chan) {
-        HandleNewConnection(chan);
-        connector.Shutdown(chan);
-    });
+    connector.SetNewConnectionCallback(
+        [](ChannelPtr& chan) { HandleNewConnection(chan); });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -43,10 +41,8 @@ TEST(ConnectorTest, UdpConnector)
     poller->Run();
 
     UdpConnector connector(poller);
-    connector.SetNewConnectionCallback([&connector](ChannelPtr& chan) {
-        HandleNewConnection(chan);
-        connector.Shutdown(chan);
-    });
+    connector.SetNewConnectionCallback(
+        [](ChannelPtr& chan) { HandleNewConnection(chan); });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -63,10 +59,8 @@ TEST(ConnectorTest, SslConnector)
     poller->Run();
 
     SslConnector connector(poller);
-    connector.SetNewConnectionCallback([&connector](ChannelPtr& chan) {
-        HandleNewConnection(chan);
-        connector.Shutdown(chan);
-    });
+    connector.SetNewConnectionCallback(
+        [](ChannelPtr& chan) { HandleNewConnection(chan); });
     connector.Connect(serverIp, serverPort);
 
     std::this_thread::sleep_for(std::chrono::seconds(1));

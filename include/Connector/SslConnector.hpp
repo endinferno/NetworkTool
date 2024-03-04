@@ -10,7 +10,6 @@ class SslConnector : public NonCopyable, public EpollHandler
 public:
     explicit SslConnector(EventPollerPtr& poller);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
-    void Shutdown(ChannelPtr& chan);
     void SetNewConnectionCallback(Connector::NewConnectionCallback&& callback);
     ~SslConnector() override = default;
 
