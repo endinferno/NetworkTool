@@ -50,6 +50,9 @@ void Client::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
     DEBUG("Handle write event\n");
     conn_->SetConnectStatus(true);
     ModEvent(chan, Pollable::READ_EVENT | Pollable::Event::EventEt);
+    if (writeCompleteCallback_ != nullptr) {
+        writeCompleteCallback_(chan);
+    }
 }
 
 void Client::Write(const std::string& writeBuf)
@@ -77,9 +80,9 @@ void Client::SetMessageCallback(MessageCallback&& callback)
     messageCallback_ = std::move(callback);
 }
 
-void Client::SetConnectCallback(ConnectCallback&& callback)
+void Client::SetWriteCompleteCallback(WriteCompleteCallback&& callback)
 {
-    connectCallback_ = std::move(callback);
+    writeCompleteCallback_ = std::move(callback);
 }
 
 void Client::HandleNewConnection(ChannelPtr& chan)
@@ -87,7 +90,6 @@ void Client::HandleNewConnection(ChannelPtr& chan)
     INFO("New connection construct\n");
     conn_ = ConnectionFactory::Create(
         std::dynamic_pointer_cast<Socket>(chan->GetFd()), connectorType_);
-    conn_->SetConnectStatus(true);
 
     chan->SetReadCallback(
         [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });
@@ -97,8 +99,4 @@ void Client::HandleNewConnection(ChannelPtr& chan)
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
     ModEvent(chan, Pollable::WRITE_EVENT | Pollable::Event::EventEt);
-    DEBUG("Call connect done callback\n");
-    if (connectCallback_ != nullptr) {
-        connectCallback_(chan);
-    }
 }

@@ -78,7 +78,7 @@ void SslClient::SetMessageCallback(Client::MessageCallback&& callback)
 }
 
 void SslClient::SetWriteCompleteCallback(
-    SslClient::WriteCompleteCallback&& callback)
+    Client::WriteCompleteCallback&& callback)
 {
     writeCompleteCallback_ = std::move(callback);
 }

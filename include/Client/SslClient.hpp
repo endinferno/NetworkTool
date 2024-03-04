@@ -7,14 +7,12 @@
 class SslClient : public EpollHandler
 {
 public:
-    using WriteCompleteCallback = std::function<void(ChannelPtr&)>;
-
     explicit SslClient(EventPollerPtr& poller);
     void Write(const std::string& writeBuf);
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort);
     void Shutdown(ChannelPtr& chan);
     void SetMessageCallback(Client::MessageCallback&& callback);
-    void SetWriteCompleteCallback(WriteCompleteCallback&& callback);
+    void SetWriteCompleteCallback(Client::WriteCompleteCallback&& callback);
     ~SslClient() override = default;
 
 private:
@@ -28,7 +26,7 @@ private:
     ConnectionPtr conn_;
     std::string readBuf_;
     Client::MessageCallback messageCallback_;
-    WriteCompleteCallback writeCompleteCallback_;
+    Client::WriteCompleteCallback writeCompleteCallback_;
 };
 
 using SslClientPtr = std::shared_ptr<SslClient>;

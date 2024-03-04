@@ -8,7 +8,7 @@ DnsResolver::DnsResolver(EventPollerPtr& poller)
         [this](ChannelPtr& chan, const std::string& udpMsg) {
             HandleDnsMessage(chan, udpMsg);
         });
-    client_.SetConnectCallback(
+    client_.SetWriteCompleteCallback(
         [this](ChannelPtr& chan) { SendDnsRequest(chan); });
 }
 

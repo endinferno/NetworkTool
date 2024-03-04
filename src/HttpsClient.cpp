@@ -37,7 +37,7 @@ void HttpsClient::SetMessageDecodeCallback(
 }
 
 void HttpsClient::SetWriteCompleteCallback(
-    SslClient::WriteCompleteCallback&& callback)
+    Client::WriteCompleteCallback&& callback)
 {
     sslClient_.SetWriteCompleteCallback(std::move(callback));
 }
