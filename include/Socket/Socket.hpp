@@ -25,8 +25,8 @@ public:
     [[nodiscard]] int GetSockOpt(int level, int optName) const;
     void Connect(const IPAddress& serverIp, const uint16_t& serverPort) const;
     void Connect(struct sockaddr_in& serverAddr) const;
-    ssize_t Write(const std::string& writeBuf);
-    ssize_t Read(std::string& readBuf);
+    ssize_t Write(const std::string& writeBuf) override;
+    ssize_t Read(std::string& readBuf) override;
     [[nodiscard]] int GetErrno() const;
     ssize_t Recvfrom(std::string& readBuf,
                      struct sockaddr_in& clientAddr) const;

@@ -19,10 +19,10 @@ void SslClient::HandleReadEvent(ChannelPtr&& chan)
     while (true) {
         // TODO: maybe there is a better way
         readBuf_.resize(MAX_READ_BUFFER);
-        int readBytes = sslFd->Read(readBuf_);
+        ssize_t readBytes = sslFd->Read(readBuf_);
         DEBUG("readBytes {}\n", readBytes);
         if (readBytes < 0) {
-            int savedErr = sslFd->GetError(readBytes);
+            int savedErr = sslFd->GetError(static_cast<int>(readBytes));
             if (savedErr == SSL_ERROR_WANT_READ) {
                 break;
             } else {

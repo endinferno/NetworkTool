@@ -12,6 +12,8 @@ public:
     explicit PosixFd(int posixFd)
         : posixFd_(posixFd)
     {}
+    virtual ssize_t Write(const std::string& writeBuf) = 0;
+    virtual ssize_t Read(std::string& readBuf) = 0;
     [[nodiscard]] int GetFd() const
     {
         return posixFd_;
