@@ -1,4 +1,4 @@
-#include "Connection/Connection.hpp"
+#include "Connection.hpp"
 
 Connection::Connection(PosixFdPtr posixFd)
     : posixFd_(std::move(posixFd))

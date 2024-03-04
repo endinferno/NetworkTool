@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client/Client.hpp"
-#include "Connection/Connection.hpp"
+#include "Connection.hpp"
 #include "Connector/SslConnector.hpp"
 
 class SslClient : public EpollHandler
