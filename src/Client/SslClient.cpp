@@ -47,6 +47,9 @@ void SslClient::HandleWriteEvent([[maybe_unused]] ChannelPtr&& chan)
     DEBUG("Handle write event\n");
     conn_->SetConnectStatus(true);
     ModEvent(chan, Pollable::READ_EVENT | Pollable::Event::EventEt);
+    if (writeCompleteCallback_ != nullptr) {
+        writeCompleteCallback_(chan);
+    }
 }
 
 void SslClient::Write(const std::string& writeBuf)
@@ -74,9 +77,10 @@ void SslClient::SetMessageCallback(Client::MessageCallback&& callback)
     messageCallback_ = std::move(callback);
 }
 
-void SslClient::SetConnectCallback(Client::ConnectCallback&& callback)
+void SslClient::SetWriteCompleteCallback(
+    SslClient::WriteCompleteCallback&& callback)
 {
-    connectCallback_ = std::move(callback);
+    writeCompleteCallback_ = std::move(callback);
 }
 
 void SslClient::HandleNewConnection(ChannelPtr& chan)
@@ -93,8 +97,4 @@ void SslClient::HandleNewConnection(ChannelPtr& chan)
         [this](ChannelPtr&& chan) { HandleErrorEvent(std::move(chan)); });
 
     ModEvent(chan, Pollable::WRITE_EVENT | Pollable::Event::EventEt);
-    DEBUG("Call connect done callback\n");
-    if (connectCallback_ != nullptr) {
-        connectCallback_(chan);
-    }
 }

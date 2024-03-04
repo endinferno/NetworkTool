@@ -36,6 +36,12 @@ void HttpsClient::SetMessageDecodeCallback(
     callback_ = std::move(callback);
 }
 
+void HttpsClient::SetWriteCompleteCallback(
+    SslClient::WriteCompleteCallback&& callback)
+{
+    sslClient_.SetWriteCompleteCallback(std::move(callback));
+}
+
 void HttpsClient::OnMessage(const std::string& httpMsg)
 {
     auto httpRespOption = parser_.Parse(httpMsg);

@@ -15,6 +15,7 @@ public:
     void Connect(const std::string& serverName, const uint16_t& serverPort);
     void Request(const HttpRequest& httpReq);
     void SetMessageDecodeCallback(HttpClient::MessageDecodeCallback&& callback);
+    void SetWriteCompleteCallback(SslClient::WriteCompleteCallback&& callback);
     ~HttpsClient() = default;
 
 private:

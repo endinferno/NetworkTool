@@ -30,7 +30,9 @@ std::optional<HttpResponse> HttpRespParser::Parse(const std::string& httpMsg)
         }
         case ParsePhase::Body:
         {
-            ParseBody(httpMsgView);
+            auto leftMsgView =
+                httpMsgView.substr(idx, httpMsgView.size() - idx);
+            ParseBody(leftMsgView);
             if (parsePhase_ == ParsePhase::Body) {
                 savedHttpMsg_ = msg.substr(idx, msg.size() - idx);
                 return std::nullopt;
@@ -99,6 +101,8 @@ void HttpRespParser::ParseBody(const std::string_view& httpMsgView)
 {
     auto contentLenStr = httpResp_.GetHeader("Content-Length");
     size_t contentLen = ::strtoul(contentLenStr.data(), nullptr, 10);
+    DEBUG("{}\n", httpMsgView);
+    DEBUG("Content Len {} Size {}\n", contentLen, httpMsgView.size());
     if (httpMsgView.size() == contentLen) {
         httpResp_.SetBody(std::string(httpMsgView));
         parsePhase_ = ParsePhase::Finish;
