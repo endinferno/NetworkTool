@@ -38,7 +38,7 @@ void HttpClient::SetMessageDecodeCallback(MessageDecodeCallback&& callback)
 void HttpClient::SetWriteCompleteCallback(
     Client::WriteCompleteCallback&& callback)
 {
-    writeCompleteCallback_ = std::move(callback);
+    tcpClient_.SetWriteCompleteCallback(std::move(callback));
 }
 
 void HttpClient::OnMessage(const std::string& httpMsg)
@@ -54,7 +54,7 @@ void HttpClient::OnMessage(const std::string& httpMsg)
                                              static_cast<int>(statusCode)));
     }
 
-    if (callback_ != nullptr) {
-        callback_(httpResp.GetBody());
+    if (messageDecodeCallback_ != nullptr) {
+        messageDecodeCallback_(httpResp.GetBody());
     }
 }
