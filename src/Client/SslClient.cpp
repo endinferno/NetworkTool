@@ -1,5 +1,4 @@
 #include "Client/SslClient.hpp"
-#include "Connection/SslConnection.hpp"
 #include "Utils/Logger.hpp"
 
 SslClient::SslClient(EventPollerPtr& poller)
@@ -86,8 +85,7 @@ void SslClient::SetWriteCompleteCallback(
 void SslClient::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
-    conn_ = std::make_shared<SslConnection>(
-        std::dynamic_pointer_cast<SslFd>(chan->GetFd()));
+    conn_ = std::make_shared<Connection>(chan->GetFd());
 
     chan->SetReadCallback(
         [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });

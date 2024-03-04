@@ -1,5 +1,4 @@
 #include "Client/Client.hpp"
-#include "Connection/ConnectionFactory.hpp"
 #include "Connector/ConnectorFactory.hpp"
 #include "Utils/Logger.hpp"
 
@@ -88,8 +87,7 @@ void Client::SetWriteCompleteCallback(WriteCompleteCallback&& callback)
 void Client::HandleNewConnection(ChannelPtr& chan)
 {
     INFO("New connection construct\n");
-    conn_ = ConnectionFactory::Create(
-        std::dynamic_pointer_cast<Socket>(chan->GetFd()), connectorType_);
+    conn_ = std::make_shared<Connection>(chan->GetFd());
 
     chan->SetReadCallback(
         [this](ChannelPtr&& chan) { HandleReadEvent(std::move(chan)); });

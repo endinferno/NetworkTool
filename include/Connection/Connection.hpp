@@ -3,22 +3,19 @@
 #include <memory>
 #include <string>
 
+#include "PosixFd.hpp"
+
 class Connection
 {
 public:
-    Connection() = default;
-    virtual void Write(const std::string& writeBuf) = 0;
-    void SetConnectStatus(bool status)
-    {
-        isConnect_ = status;
-    }
-    [[nodiscard]] bool GetConnectStatus() const
-    {
-        return isConnect_;
-    }
+    explicit Connection(PosixFdPtr posixFd);
+    void Write(const std::string& writeBuf);
+    void SetConnectStatus(bool status);
+    [[nodiscard]] bool GetConnectStatus() const;
     virtual ~Connection() = default;
 
 private:
+    PosixFdPtr posixFd_;
     bool isConnect_ = false;
 };
 
