@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Utils/Base64.hpp"
 
 std::string Base64::Encode(const std::string_view& data, bool removePadding)

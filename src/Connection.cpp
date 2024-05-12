@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "Connection.hpp"
 
 Connection::Connection(PosixFdPtr posixFd)

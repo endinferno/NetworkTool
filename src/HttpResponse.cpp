@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "HttpResponse.hpp"
 #include "fmt/core.h"
 

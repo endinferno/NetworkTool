@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include "HttpRespParser.hpp"
 #include "Utils/Logger.hpp"
 
